@@ -1,19 +1,13 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import Index from "./src/client/Index.js";
+export default Index;
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-    </View>
-  );
-}
+import TextInput from "react-native";
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+// all TextInputs will have a blue cursor
+TextInput.selectionColor = "#568BB1";
+
+// all TextInputs will have a white underline
+TextInput.underlineColorAndroid = "#EFF3F5";
+
+// disable yellow Expo warning boxes
+console.disableYellowBox = true;
