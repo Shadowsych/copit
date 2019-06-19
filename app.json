@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "FreeUT",
-    "slug": "free-ut",
+    "name": "Frea",
+    "slug": "frea",
     "privacy": "public",
     "sdkVersion": "33.0.0",
     "platforms": [
@@ -24,7 +24,11 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "com.frea.frea",
       "supportsTablet": true
+    },
+    "android": {
+      "package": "com.frea.frea"
     }
   }
 }
