@@ -93,7 +93,7 @@ class Login extends React.Component {
 
   // login as a guest
   loginGuest() {
-    this.props.navigation.navigate("Home", {
+    this.props.navigation.replace("Home", {
       isGuest: true
     });
   }

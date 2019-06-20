@@ -41,23 +41,13 @@ const handleCustomTransition = ({ scenes }) => {
 // create the stackNavigator that holds all the pages (Intents)
 const Navigation = createStackNavigator({
   Loading: {
-    screen: Loading,
+    screen: Loading
   },
   Login: {
-    screen: Login,
-    navigationOptions: {
-      header: null,
-      headerLeft: null,
-      gesturesEnabled: false
-    }
+    screen: Login
   },
   Home: {
-    screen: Home,
-    navigationOptions: {
-      header: null,
-      headerLeft: null,
-      gesturesEnabled: false
-    }
+    screen: Home
   },
   Pings: {
     screen: Pings

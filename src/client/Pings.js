@@ -1,6 +1,5 @@
 // react packages
 import React from "react";
-import {NavigationActions} from 'react-navigation';
 
 // styling packages
 import {StyleSheet, Image, Text, View} from "react-native";
@@ -110,7 +109,7 @@ class Pings extends React.Component {
 
   // go back a page
   goBackPage() {
-    this.props.navigation.dispatch(NavigationActions.back());
+    this.props.navigation.goBack();
   }
 }
 export default Pings;

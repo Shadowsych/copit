@@ -61,6 +61,10 @@ class Home extends React.Component {
       location: {
         longitude: -97.73675,
         latitude: 30.28265
+      },
+      locationDelta: {
+        longitudeDelta: 0.015,
+        latitudeDelta: 0.015
       }
     }
   }
@@ -80,6 +84,10 @@ class Home extends React.Component {
           location: {
             longitude: position.coords.longitude,
             latitude: position.coords.latitude
+          },
+          locationDelta: {
+            longitudeDelta: 0.015,
+            latitudeDelta: 0.015
           }
         });
         return;
@@ -109,9 +117,9 @@ class Home extends React.Component {
           style={styles.map}
           region={{
             longitude: this.state.location.longitude,
-            longitudeDelta: 0.015,
+            longitudeDelta: this.state.locationDelta.longitudeDelta,
             latitude: this.state.location.latitude,
-            latitudeDelta: 0.015,
+            latitudeDelta: this.state.locationDelta.latitudeDelta,
           }}
         />
         <GestureRecognizer

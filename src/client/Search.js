@@ -1,6 +1,5 @@
 // react packages
 import React from "react";
-import {NavigationActions} from 'react-navigation';
 
 // styling packages
 import {StyleSheet, Picker, ScrollView, Text, View} from "react-native";
@@ -39,15 +38,11 @@ const styles = StyleSheet.create({
     marginRight: 0,
     marginBottom: 0
   },
-  swipe_up_container: {
+  go_back_container: {
     flex: 0.10,
-    alignItems: "center",
+    width: "90%",
+    alignItems: "flex-start",
     justifyContent: "center"
-  },
-  swipe_up_text: {
-    color: "#75B1DE",
-    fontWeight: "bold",
-    fontSize: 12
   }
 });
 
@@ -120,22 +115,17 @@ class Search extends React.Component {
                   title="VIEW PING" />
             </Card>
           </ScrollView>
-          <GestureRecognizer
-            onSwipeUp={() => this.goBackPage()}
-            config={gestureConfig}
-            style={styles.swipe_up_container}>
-              <Animatable.View animation="pulse" iterationCount="infinite">
-                <Text style={styles.swipe_up_text}>Swipe to go back!</Text>
-                <Icon name="arrow-up" type="feather" color="#1C7ED7" />
-              </Animatable.View>
-          </GestureRecognizer>
+          <View style={styles.go_back_container}>
+            <Icon name="chevron-left" onPress={() => this.goBackPage()}
+              type="entypo" color="#D3D3D3" size={22} />
+          </View>
         </View>
     );
   }
 
   // go back a page
   goBackPage() {
-    this.props.navigation.dispatch(NavigationActions.back());
+    this.props.navigation.goBack();
   }
 }
 export default Search;

@@ -36,7 +36,7 @@ class Loading extends React.Component {
   loadLoginPage() {
     const waitTime = 1000;
     setTimeout(() => {
-      this.props.navigation.navigate("Login");
+      this.props.navigation.replace("Login");
     }, waitTime);
   }
 }
