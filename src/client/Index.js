@@ -4,7 +4,7 @@ import {Platform, StatusBar} from 'react-native';
 import {createStackNavigator, createAppContainer} from 'react-navigation';
 
 // style packages
-import {fadeIn, fromBottom, fromTop, zoomIn} from 'react-navigation-transitions'
+import {fadeIn, fromBottom, fromTop, fromLeft, zoomIn} from 'react-navigation-transitions'
 
 // pages
 import Loading from "./Loading";
@@ -12,6 +12,7 @@ import Login from "./Login";
 import Home from "./Home";
 import Pings from "./Pings";
 import Search from "./Search";
+import Menu from "./Menu";
 
 // custom animation transitions
 const handleCustomTransition = ({ scenes }) => {
@@ -33,6 +34,11 @@ const handleCustomTransition = ({ scenes }) => {
     && nextScene.route.routeName == "Search") {
       // transition from the top from the home to search page
       return fromTop();
+    } else if(prevScene
+    && prevScene.route.routeName == "Home"
+    && nextScene.route.routeName == "Menu") {
+      // transition from the left from the home to menu page
+      return fromLeft();
     }
   // by default, open the page by zooming in
   return zoomIn();
@@ -54,6 +60,9 @@ const Navigation = createStackNavigator({
   },
   Search: {
     screen: Search
+  },
+  Menu: {
+    screen: Menu
   }
 }, {
   // create a padding to avoid overlapping the navbar of the device

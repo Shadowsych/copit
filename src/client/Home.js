@@ -5,9 +5,9 @@ import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
 
 // styling packages
-import {StyleSheet, Image, TouchableOpacity, Text, View} from "react-native";
+import {StyleSheet, Image, TouchableOpacity, Text, Alert, View} from "react-native";
 import GestureRecognizer from 'react-native-swipe-gestures';
-import {Header, Icon} from "react-native-elements";
+import {Icon} from "react-native-elements";
 import * as Animatable from 'react-native-animatable';
 
 // style sheet
@@ -17,14 +17,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center"
   },
-  navbar: {
+  menu_btn: {
     position: "absolute",
-    backgroundColor: "rgba(0, 0, 0, 0)",
-    borderBottomWidth: 0,
-    width: "100%",
-    height: 50,
-    top: 0,
-    left: 0
+    top: 10,
+    left: 15
+  },
+  search_btn: {
+    position: "absolute",
+    top: 10,
+    left: 85
   },
   map: {
     flex: 1,
@@ -63,8 +64,8 @@ class Home extends React.Component {
         latitude: 30.28265
       },
       locationDelta: {
-        longitudeDelta: 0.015,
-        latitudeDelta: 0.015
+        longitudeDelta: 0.005,
+        latitudeDelta: 0.005
       }
     }
   }
@@ -86,14 +87,16 @@ class Home extends React.Component {
             latitude: position.coords.latitude
           },
           locationDelta: {
-            longitudeDelta: 0.015,
-            latitudeDelta: 0.015
+            longitudeDelta: 0.005,
+            latitudeDelta: 0.005
           }
         });
         return;
       }).catch((error) => {
-        alert(error + ": " + "Please make sure your location (GPS) is turned on.");
+        Alert.alert("GPS Error", "Please make sure your location (GPS) is turned on.");
       });
+    } else {
+      Alert.alert("Permissions Error", "Please make sure to grant location permissions.");
     }
   }
 
@@ -107,12 +110,10 @@ class Home extends React.Component {
 
     return (
       <View style={styles.container}>
-        <Header containerStyle={styles.navbar} placement="left">
-          <Icon raised name="menu" onPress={() => this.loadMenuPage()}
-            color="#1C7ED7" size={22} />
-          <Icon raised name="search" onPress={() => this.loadSearchPage()}
-            color="#1C7ED7" size={22} />
-        </Header>
+        <Icon containerStyle={styles.menu_btn} raised name="menu"
+          onPress={() => this.loadMenuPage()} color="#1C7ED7" size={22} />
+        <Icon containerStyle={styles.search_btn} raised name="search"
+          onPress={() => this.loadSearchPage()} color="#1C7ED7" size={22} />
         <MapView
           style={styles.map}
           region={{
@@ -120,8 +121,14 @@ class Home extends React.Component {
             longitudeDelta: this.state.locationDelta.longitudeDelta,
             latitude: this.state.location.latitude,
             latitudeDelta: this.state.locationDelta.latitudeDelta,
-          }}
-        />
+          }}>
+            <MapView.Marker
+              coordinate={{
+                longitude: this.state.location.longitude,
+                latitude: this.state.location.latitude
+              }}
+              title="You Are Here"/>
+        </MapView>
         <GestureRecognizer
           onSwipeUp={() => this.loadPingsPage()}
           config={gestureConfig}
@@ -141,7 +148,7 @@ class Home extends React.Component {
 
   // load the menu page
   loadMenuPage() {
-
+    this.props.navigation.navigate("Menu");
   }
 
   // load the search page

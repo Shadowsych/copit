@@ -77,16 +77,16 @@ class Search extends React.Component {
             selectedValue={this.state.category}
             onValueChange={(option) => this.setState({category: option})}>
              <Picker.Item color="#C0C0C0" label="All Categories" value="All Categories" />
-             <Picker.Item color="#C0C0C0" label="Food" value="Food" />
-             <Picker.Item color="#C0C0C0" label="Clothes" value="Clothes" />
-             <Picker.Item color="#C0C0C0" label="Clothes" value="Clothes" />
-             <Picker.Item color="#C0C0C0" label="School" value="School" />
-             <Picker.Item color="#C0C0C0" label="Discounts" value="Discounts" />
-             <Picker.Item color="#C0C0C0" label="Party" value="Party" />
-             <Picker.Item color="#C0C0C0" label="Org Events" value="Org Events" />
-             <Picker.Item color="#C0C0C0" label="Emergencies" value="Emergencies" />
-             <Picker.Item color="#C0C0C0" label="Conctraceptives" value="Conctraceptives" />
-             <Picker.Item color="#C0C0C0" label="Other" value="Other" />
+             <Picker.Item color="#909090" label="Food" value="Food" />
+             <Picker.Item color="#909090" label="Clothes" value="Clothes" />
+             <Picker.Item color="#909090" label="Clothes" value="Clothes" />
+             <Picker.Item color="#909090" label="School" value="School" />
+             <Picker.Item color="#909090" label="Discounts" value="Discounts" />
+             <Picker.Item color="#909090" label="Party" value="Party" />
+             <Picker.Item color="#909090" label="Org Events" value="Org Events" />
+             <Picker.Item color="#909090" label="Emergencies" value="Emergencies" />
+             <Picker.Item color="#909090" label="Conctraceptives" value="Conctraceptives" />
+             <Picker.Item color="#909090" label="Other" value="Other" />
           </Picker>
           <ScrollView style={styles.scroll_view}>
             <Card
