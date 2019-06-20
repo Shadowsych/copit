@@ -60,12 +60,10 @@ class Login extends React.Component {
             onPress={() => this.loginGoogle()}
             title='Connect with Google'/>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.login_btn}>
-          <Text
-            onPress={() => this.loginGuest()}
-            style={styles.guest_btn_text}>
-              Login as Guest
-          </Text>
+        <TouchableOpacity activeOpacity={0.8}
+          onPress={() => this.loginGuest()}
+          style={styles.login_btn}>
+            <Text style={styles.guest_btn_text}>Login as Guest</Text>
         </TouchableOpacity>
       </View>
     );

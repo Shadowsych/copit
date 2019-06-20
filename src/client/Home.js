@@ -6,7 +6,7 @@ import * as Permissions from "expo-permissions";
 
 // styling packages
 import {StyleSheet, Image, TouchableOpacity, Text, View} from "react-native";
-import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
+import GestureRecognizer from 'react-native-swipe-gestures';
 import {Header, Icon} from "react-native-elements";
 import * as Animatable from 'react-native-animatable';
 
@@ -100,8 +100,10 @@ class Home extends React.Component {
     return (
       <View style={styles.container}>
         <Header containerStyle={styles.navbar} placement="left">
-          <Icon raised name="menu" color="#1C7ED7" size={22} />
-          <Icon raised name="search" color="#1C7ED7" size={22} />
+          <Icon raised name="menu" onPress={() => this.loadMenuPage()}
+            color="#1C7ED7" size={22} />
+          <Icon raised name="search" onPress={() => this.loadSearchPage()}
+            color="#1C7ED7" size={22} />
         </Header>
         <MapView
           style={styles.map}
@@ -117,7 +119,7 @@ class Home extends React.Component {
           config={gestureConfig}
           style={styles.swipe_up_container}>
             <Animatable.View animation="pulse" iterationCount="infinite">
-              <Text style={styles.swipe_up_text}>Swipe up!</Text>
+              <Text style={styles.swipe_up_text}>Swipe to add ping!</Text>
               <Icon name="arrow-up" type="feather" color="#1C7ED7" />
             </Animatable.View>
         </GestureRecognizer>
@@ -127,6 +129,16 @@ class Home extends React.Component {
         </TouchableOpacity>
       </View>
     );
+  }
+
+  // load the menu page
+  loadMenuPage() {
+
+  }
+
+  // load the search page
+  loadSearchPage() {
+    this.props.navigation.navigate("Search");
   }
 
   // load the pings page
