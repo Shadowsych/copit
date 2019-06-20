@@ -4,7 +4,6 @@ import React from "react";
 // styling packages
 import {StyleSheet, Picker, ScrollView, Text, View} from "react-native";
 import {SearchBar, Icon, Button, Card} from 'react-native-elements';
-import GestureRecognizer from 'react-native-swipe-gestures';
 import * as Animatable from 'react-native-animatable';
 
 // style sheet
