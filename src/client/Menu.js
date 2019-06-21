@@ -20,10 +20,17 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0)"
   },
   small_spacing: {
-    flex: 0.15
+    flex: 0.15,
+    justifyContent: "center",
+    alignItems: "center"
   },
   large_spacing: {
     flex: 0.35
+  },
+  points_text: {
+    color: "#75B1DE",
+    fontWeight: "bold",
+    fontSize: 16
   },
   list_view: {
     flex: 0.875
@@ -43,6 +50,14 @@ const styles = StyleSheet.create({
 });
 
 class Menu extends React.Component {
+  // construct the state of the component
+  constructor(props) {
+    super(props);
+    this.state = {
+      points: 0
+    }
+  }
+
   // render the component's views
   render() {
     return (
@@ -55,7 +70,10 @@ class Menu extends React.Component {
           <View style={styles.large_spacing}></View>
           <Avatar rounded size="large" title="?" activeOpacity={0.7} />
           <View style={styles.large_spacing}></View>
-          <View style={styles.small_spacing}></View>
+          <View style={styles.small_spacing}>
+            <Icon name="trophy" type="simple-line-icon" color="#D3D3D3" size={22} />
+            <Text style={styles.points_text}>{this.state.points}</Text>
+          </View>
         </View>
         <View style={styles.list_view}>
         </View>
@@ -76,7 +94,7 @@ class Menu extends React.Component {
 
   // logout the page
   logOut() {
-    
+
   }
 }
 export default Menu;

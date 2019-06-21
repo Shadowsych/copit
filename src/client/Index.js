@@ -11,6 +11,7 @@ import Loading from "./Loading";
 import Login from "./Login";
 import Home from "./Home";
 import Pings from "./Pings";
+import Ping from "./Ping";
 import Search from "./Search";
 import Menu from "./Menu";
 
@@ -20,26 +21,26 @@ const handleCustomTransition = ({ scenes }) => {
   const nextScene = scenes[scenes.length - 1];
 
   if(prevScene
-    && prevScene.route.routeName == "Loading"
-    && nextScene.route.routeName == "Login") {
-      // fade in from the loading to login page
-      return fadeIn();
-    } else if(prevScene
     && prevScene.route.routeName == "Home"
     && nextScene.route.routeName == "Pings") {
       // transition from the bottom from the home to pings page
       return fromBottom();
-    } else if(prevScene
+  } else if(prevScene
     && prevScene.route.routeName == "Home"
     && nextScene.route.routeName == "Search") {
       // transition from the top from the home to search page
       return fromTop();
-    } else if(prevScene
+  } else if(prevScene
     && prevScene.route.routeName == "Home"
     && nextScene.route.routeName == "Menu") {
       // transition from the left from the home to menu page
       return fromLeft();
-    }
+  } else if(prevScene
+    && prevScene.route.routeName == "Pings"
+    && nextScene.route.routeName == "Ping") {
+      // transition fade in from the pings to the ping page
+      return fadeIn();
+  }
   // by default, open the page by zooming in
   return zoomIn();
 }
@@ -57,6 +58,9 @@ const Navigation = createStackNavigator({
   },
   Pings: {
     screen: Pings
+  },
+  Ping: {
+    screen: Ping
   },
   Search: {
     screen: Search

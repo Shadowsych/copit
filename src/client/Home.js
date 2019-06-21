@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
   menu_btn: {
     position: "absolute",
     top: 10,
-    left: 15
+    left: 10
   },
   search_btn: {
     position: "absolute",
