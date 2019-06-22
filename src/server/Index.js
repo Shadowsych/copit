@@ -3,12 +3,15 @@ var express = require("express");
 var socket = require("socket.io");
 var mysql = require('mysql');
 
+// file system packages
+var config = require("./server.json");
+
 // record classes
 let MarkerRecord = require("./MarkerRecord");
 
 // initiate an express server
 const app = express();
-const serverPort = 3000;
+const serverPort = config.serverPort;
 const server = app.listen(serverPort, () => {
   console.log("Express Server started on port " + serverPort + ".");
 });
@@ -18,11 +21,11 @@ app.use(express.static(__dirname));
 
 // mysql server credentials
 const dbConn = mysql.createConnection({
-  host: "localhost",
-  port: 3306,
-  user: "root",
-  password: "root",
-  database: "frea"
+  host: config.dbHost,
+  port: config.dbPort,
+  user: config.dbUser,
+  password: config.dbPassword,
+  database: config.dbName
 });
 
 // connect to the mysql server

@@ -7,7 +7,7 @@ import * as ImagePicker from 'expo-image-picker';
 // styling packages
 import {StyleSheet, Dimensions, Image, KeyboardAvoidingView,
   Text, Alert, TouchableOpacity, View} from "react-native";
-import {Header, Input, Icon} from "react-native-elements";
+import {Header, Input, CheckBox, Icon} from "react-native-elements";
 
 // style sheet
 const styles = StyleSheet.create({
@@ -53,6 +53,16 @@ const styles = StyleSheet.create({
   input_text: {
     color: "#909090"
   },
+  anonymous_checkbox_container: {
+    flex: 0.25
+  },
+  anonymous_checkbox_text: {
+    color: "#909090"
+  },
+  notice_text: {
+    color: "#909090",
+    fontSize: 12
+  },
   add_ping_btn: {
     flex: 0.075,
     width: "100%",
@@ -74,7 +84,8 @@ class Ping extends React.Component {
     this.state = {
       title: "",
       description: "",
-      picture_base64: undefined
+      picture_base64: undefined,
+      anonymous: false
     }
   }
 
@@ -129,6 +140,17 @@ class Ping extends React.Component {
               <Icon name="form" type="antdesign" color="#D3D3D3" size={28} />
             }
           />
+          <View style={styles.anonymous_checkbox_container}>
+            <CheckBox
+              textStyle={styles.anonymous_checkbox_text}
+              title="Post This Ping Anonymously"
+              checked={this.state.anonymous}
+              onPress={() => this.setState({anonymous: !this.state.anonymous})}
+            />
+          </View>
+          <Text style={styles.notice_text}>
+            Notice: This will ping your current location.
+          </Text>
         </KeyboardAvoidingView>
         <TouchableOpacity
           onPress={() => this.addPing()}
@@ -203,9 +225,17 @@ class Ping extends React.Component {
 
   // send the marker to the socket.io server
   async sendMarker(socket, position) {
+    // determine whether the author is anonymous
+    let author = this.props.navigation.state.params.name
+    if(this.state.anonymous) {
+      author = "Anonymous";
+    }
+
     // emit a message to add the marker
     socket.emit("addMarker", {
       message: {
+        author_id: this.props.navigation.state.params.id,
+        author: author,
         title: this.state.title,
         description: this.state.description,
         longitude: position.coords.longitude,

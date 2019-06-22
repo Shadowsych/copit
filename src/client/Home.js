@@ -129,7 +129,13 @@ class Home extends React.Component {
     });
     // listen for the markers from the server
     this.state.socket.on("receiveMarkers", (data) => {
-      console.log(data);
+      if(data.success) {
+        this.setState({
+          markers: JSON.parse(data.message)
+        });
+      } else {
+        Alert.alert("Database Error!", data.message);
+      }
     })
   }
 
@@ -161,8 +167,9 @@ class Home extends React.Component {
                 latitude: this.state.location.latitude
               }}
               title="You Are Here"/>
-            {this.state.markers.map(marker => (
+            {this.state.markers.map((marker, key) => (
               <MapView.Marker
+                key={key}
                 coordinate={{
                   longitude: marker.longitude,
                   latitude: marker.latitude
@@ -200,7 +207,9 @@ class Home extends React.Component {
   // load the pings page
   loadPingsPage() {
     this.props.navigation.navigate("Pings", {
-      socket: this.state.socket
+      socket: this.state.socket,
+      id: this.props.navigation.state.params.id,
+      name: this.props.navigation.state.params.name
     });
   }
 }
