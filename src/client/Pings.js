@@ -53,51 +53,51 @@ class Pings extends React.Component {
         <View style={styles.grid_container}>
           <View style={styles.row}>
             <View style={styles.column}>
-              <Icon reverse name="food" onPress={() => this.goPingPage()}
+              <Icon reverse name="food" onPress={() => this.goPingPage("Food")}
                 type="material-community" color="#FFB300" size={48} />
               <Text style={styles.icon_text}>Food</Text>
             </View>
             <View style={styles.column}>
-              <Icon reverse name="tshirt-crew-outline" onPress={() => this.goPingPage()}
+              <Icon reverse name="tshirt-crew-outline" onPress={() => this.goPingPage("Clothes")}
                 type="material-community" color="#E4181B" size={48} />
               <Text style={styles.icon_text}>Clothes</Text>
             </View>
             <View style={styles.column}>
-              <Icon reverse name="school" onPress={() => this.goPingPage()}
+              <Icon reverse name="school" onPress={() => this.goPingPage("School")}
                 type="material-community" color="#FF7A1D" size={48} />
               <Text style={styles.icon_text}>School</Text>
             </View>
           </View>
           <View style={styles.row}>
             <View style={styles.column}>
-              <Icon reverse name="percent" onPress={() => this.goPingPage()}
+              <Icon reverse name="percent" onPress={() => this.goPingPage("Discounts")}
                 type="feather" color="#3E9C35" size={48} />
               <Text style={styles.icon_text}>Discounts</Text>
             </View>
             <View style={styles.column}>
-              <Icon reverse name="drink" onPress={() => this.goPingPage()}
+              <Icon reverse name="drink" onPress={() => this.goPingPage("Party")}
                 type="entypo" color="#BD8DE3" size={48} />
               <Text style={styles.icon_text}>Party</Text>
             </View>
             <View style={styles.column}>
-              <Icon reverse name="calendar" onPress={() => this.goPingPage()}
+              <Icon reverse name="calendar" onPress={() => this.goPingPage("Org Events")}
                 type="font-awesome" color="#2F74B5" size={48} />
               <Text style={styles.icon_text}>Org Events</Text>
             </View>
           </View>
           <View style={styles.row}>
             <View style={styles.column}>
-              <Icon reverse name="warning" onPress={() => this.goPingPage()}
+              <Icon reverse name="warning" onPress={() => this.goPingPage("Emergencies")}
                 type="font-awesome" color="#FFCC00" size={48} />
               <Text style={styles.icon_text}>Emergencies</Text>
             </View>
             <View style={styles.column}>
-              <Icon reverse name="heart" onPress={() => this.goPingPage()}
+              <Icon reverse name="heart" onPress={() => this.goPingPage("Conctraceptives")}
                 type="feather" color="#E793A0" size={48} />
               <Text style={styles.icon_text}>Conctraceptives</Text>
             </View>
             <View style={styles.column}>
-              <Icon reverse name="rocket" onPress={() => this.goPingPage()}
+              <Icon reverse name="rocket" onPress={() => this.goPingPage("Other")}
                 type="simple-line-icon" color="#D9D9D9" size={48} />
               <Text style={styles.icon_text}>Other</Text>
             </View>
@@ -113,8 +113,10 @@ class Pings extends React.Component {
   }
 
   // go to the ping page
-  goPingPage() {
-    this.props.navigation.navigate("Ping");
+  goPingPage(category) {
+    this.props.navigation.navigate("Ping", {
+      category: category
+    });
   }
 }
 export default Pings;
