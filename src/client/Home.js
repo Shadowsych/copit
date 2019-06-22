@@ -102,10 +102,6 @@ class Home extends React.Component {
           location: {
             longitude: position.coords.longitude,
             latitude: position.coords.latitude
-          },
-          locationDelta: {
-            longitudeDelta: 0.005,
-            latitudeDelta: 0.005
           }
         });
         // receive the markers from the server
@@ -139,6 +135,16 @@ class Home extends React.Component {
     })
   }
 
+  // re-orientate the map
+  reOrientateMap() {
+    this.setState({
+      locationDelta: {
+        longitudeDelta: this.state.locationDelta.longitudeDelta,
+        latitudeDelta: this.state.locationDelta.latitudeDelta
+      }
+    });
+  }
+
   // render the component's views
   render() {
     // gesture configuration
@@ -161,12 +167,6 @@ class Home extends React.Component {
             latitude: this.state.location.latitude,
             latitudeDelta: this.state.locationDelta.latitudeDelta,
           }}>
-            <MapView.Marker
-              coordinate={{
-                longitude: this.state.location.longitude,
-                latitude: this.state.location.latitude
-              }}
-              title="You Are Here"/>
             {this.state.markers.map((marker, key) => (
               <MapView.Marker
                 key={key}
@@ -187,7 +187,7 @@ class Home extends React.Component {
             </Animatable.View>
         </GestureRecognizer>
         <TouchableOpacity activeOpacity={0.8} style={styles.reorientation_btn}>
-          <Icon raised name="target" onPress={() => this.updateLocation()}
+          <Icon raised name="target" onPress={() => this.reOrientateMap()}
             type="material-community" color="#1C7ED7" />
         </TouchableOpacity>
       </View>
