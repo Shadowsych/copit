@@ -10,6 +10,9 @@ import GestureRecognizer from 'react-native-swipe-gestures';
 import {Icon} from "react-native-elements";
 import * as Animatable from 'react-native-animatable';
 
+// socket.io packages
+import io from "socket.io-client";
+
 // style sheet
 const styles = StyleSheet.create({
   container: {
@@ -59,6 +62,7 @@ class Home extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      socket: undefined,
       location: {
         longitude: -97.73675,
         latitude: 30.28265
@@ -66,8 +70,21 @@ class Home extends React.Component {
       locationDelta: {
         longitudeDelta: 0.005,
         latitudeDelta: 0.005
-      }
+      },
+      markers: []
     }
+  }
+
+  // called before the component loads
+  componentWillMount() {
+    this.initiateSocketConnection();
+  }
+
+  // initiate the socket.io connection
+  async initiateSocketConnection() {
+    const serverDomain = "http://192.168.0.18";
+    const serverPort = "3000";
+    this.setState({socket: await io.connect(serverDomain + ":" + serverPort)});
   }
 
   // called whenever the component loads
@@ -91,13 +108,29 @@ class Home extends React.Component {
             latitudeDelta: 0.005
           }
         });
+        // receive the markers from the server
+        this.receiveMarkers(position);
         return;
       }).catch((error) => {
-        Alert.alert("GPS Error", "Please make sure your location (GPS) is turned on.");
+        Alert.alert("GPS Error!", "Please make sure your location (GPS) is turned on.");
       });
-    } else {
-      Alert.alert("Permissions Error", "Please make sure to grant location permissions.");
     }
+  }
+
+  // receive the markers to place on the map
+  async receiveMarkers(position) {
+    // emit a message to receive the markers
+    this.state.socket.emit("receiveMarkers", {
+      message: {
+        longitude: position.coords.longitude,
+        latitude: position.coords.latitude
+      },
+      handle: "handleReceiveMarkers"
+    });
+    // listen for the markers from the server
+    this.state.socket.on("receiveMarkers", (data) => {
+      console.log(data);
+    })
   }
 
   // render the component's views
@@ -128,6 +161,14 @@ class Home extends React.Component {
                 latitude: this.state.location.latitude
               }}
               title="You Are Here"/>
+            {this.state.markers.map(marker => (
+              <MapView.Marker
+                coordinate={{
+                  longitude: marker.longitude,
+                  latitude: marker.latitude
+                }}
+              />
+            ))}
         </MapView>
         <GestureRecognizer
           onSwipeUp={() => this.loadPingsPage()}
@@ -158,7 +199,9 @@ class Home extends React.Component {
 
   // load the pings page
   loadPingsPage() {
-    this.props.navigation.navigate("Pings");
+    this.props.navigation.navigate("Pings", {
+      socket: this.state.socket
+    });
   }
 }
 export default Home;

@@ -68,7 +68,9 @@ class Menu extends React.Component {
               type="entypo" color="#D3D3D3" size={22} />
           </View>
           <View style={styles.large_spacing}></View>
-          <Avatar rounded size="large" title="?" activeOpacity={0.7} />
+          <View>
+            <Avatar rounded size="large" title="?" activeOpacity={0.7} />
+          </View>
           <View style={styles.large_spacing}></View>
           <View style={styles.small_spacing}>
             <Icon name="trophy" type="simple-line-icon" color="#D3D3D3" size={22} />
@@ -94,7 +96,7 @@ class Menu extends React.Component {
 
   // logout the page
   logOut() {
-
+    this.props.navigation.replace("Login");
   }
 }
 export default Menu;

@@ -4,6 +4,7 @@ import Constants from 'expo-constants'
 
 // oauth packages
 import * as Facebook from 'expo-facebook';
+import {Google} from "expo";
 
 // styling packages
 import {StyleSheet, Image, TouchableOpacity, Button, Text, View} from "react-native";
@@ -78,23 +79,49 @@ class Login extends React.Component {
         permissions: ["public_profile", "email"]
     });
 
-    // handle the user's decision
+    // handle the user's login
     if(type == "success") {
-      console.log("Logged in!");
-    } else {
-      console.log("Cancelled");
+      const graphRequest = "https://graph.facebook.com/me?access_token="
+        + token + "&format=json&fields=id,name,email,picture.type(large)";
+      const profile = await fetch(graphRequest);
+
+      // load the home page
+      this.props.navigation.replace("Home", {
+        id: undefined,
+        name: undefined,
+        email: undefined,
+        profile_photo: undefined
+      });
     }
   }
 
   // login using google
   async loginGoogle() {
+    // request the user to login to google
+    const {type, accessToken, user} = await Google.logInAsync({
+      iosClientId: "",
+      androidClientId: "",
+      iosStandaloneAppClientId: "",
+      androidStandaloneAppClientId: ""
+    });
 
+    // handle the user's login
+    if(type == "success") {
+      // load the home page
+      this.props.navigation.replace("Home", {
+        id: undefined,
+        name: undefined,
+        email: undefined,
+        profile_photo: undefined
+      });
+    }
   }
 
   // login as a guest
   loginGuest() {
     this.props.navigation.replace("Home", {
-      isGuest: true
+      id: -1,
+      name: "Guest"
     });
   }
 }
