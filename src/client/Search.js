@@ -1,8 +1,10 @@
 // react packages
 import React from "react";
+import * as Location from "expo-location";
+import * as Permissions from "expo-permissions";
 
 // styling packages
-import {StyleSheet, Picker, ScrollView, Text, View} from "react-native";
+import {StyleSheet, Picker, ScrollView, Text, Alert, View} from "react-native";
 import {SearchBar, Icon, Button, Card} from 'react-native-elements';
 import * as Animatable from 'react-native-animatable';
 
@@ -50,6 +52,8 @@ class Search extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      socket: this.props.navigation.state.params.socket,
+      markers: this.props.navigation.state.params.markers,
       search: "",
       category: "",
     }
@@ -63,19 +67,22 @@ class Search extends React.Component {
       directionalOffsetThreshold: 80
     };
 
+    // miles to feet conversion rate
+    const toFeet = 5280;
+
     return (
         <View style={styles.container}>
           <SearchBar
             containerStyle={styles.search_bar}
             placeholder="Search..."
             platform="android"
-            onChangeText={(text) => this.setState({search: text})}
+            onChangeText={(text) => this.updateSearch(text, undefined)}
             value={this.state.search}
           />
           <Picker
             style={styles.picker}
             selectedValue={this.state.category}
-            onValueChange={(option) => this.setState({category: option})}>
+            onValueChange={(option) => this.updateSearch(undefined, option)}>
              <Picker.Item color="#C0C0C0" label="All Categories" value="All Categories" />
              <Picker.Item color="#909090" label="Food" value="Food" />
              <Picker.Item color="#909090" label="Clothes" value="Clothes" />
@@ -89,30 +96,24 @@ class Search extends React.Component {
              <Picker.Item color="#909090" label="Other" value="Other" />
           </Picker>
           <ScrollView style={styles.scroll_view}>
+          {this.state.markers.map((marker, key) => (
             <Card
-              title="Testing"
+              key={key}
+              title={marker.title}
               titleStyle={styles.card_title}
-              image={require("../../assets/icon.png")}>
+              image={{uri: marker.picture}}>
+                <Text style={styles.card_text}>Pinged by {marker.author}</Text>
+                <Text style={styles.card_text}>Category: {marker.category}</Text>
                 <Text style={styles.card_text}>
-                  This is for testing purposes.
+                  Distance: {Math.round(marker.distance * toFeet)} ft
                 </Text>
+                <Text style={styles.card_text}>{marker.description}</Text>
                 <Button
                   backgroundColor="#1C7ED7"
                   buttonStyle={styles.card_btn}
                   title="VIEW PING" />
             </Card>
-            <Card
-              title="Testing"
-              titleStyle={styles.card_title}
-              image={require("../../assets/icon.png")}>
-                <Text style={styles.card_text}>
-                  This is for testing purposes.
-                </Text>
-                <Button
-                  backgroundColor="#1C7ED7"
-                  buttonStyle={styles.card_btn}
-                  title="VIEW PING" />
-            </Card>
+          ))}
           </ScrollView>
           <View style={styles.go_back_container}>
             <Icon name="chevron-left" onPress={() => this.goBackPage()}
@@ -120,6 +121,59 @@ class Search extends React.Component {
           </View>
         </View>
     );
+  }
+
+  // update the search
+  updateSearch(text, option) {
+    // update the searching state
+    if(text) {
+      this.setState({search: text});
+    } else if(option) {
+      this.setState({category: option});
+    }
+
+    // get the current location of the user
+    let position = this.getLocation();
+  }
+
+  // update the location of the user
+  async getLocation() {
+    let {status} = await Permissions.askAsync(Permissions.LOCATION);
+    let currentPosition = undefined;
+    if (status === "granted") {
+      Location.getCurrentPositionAsync({enableHighAccuracy: true}).then((position) => {
+        // set the current position
+        currentPosition = position;
+        this.searchMarkers(position);
+        return;
+      }).catch((error) => {
+        Alert.alert("GPS Error!", "Please make sure your location (GPS) is turned on.");
+      });
+    }
+  }
+
+  // search for markers from the position
+  async searchMarkers(position) {
+    // emit a message to search for specific markers
+    this.state.socket.emit("searchMarkers", {
+      message: {
+        longitude: position.coords.longitude,
+        latitude: position.coords.latitude,
+        search: this.state.search,
+        category: this.state.category
+      },
+      handle: "handleSearchMarkers"
+    });
+
+    // listen for the markers from the server
+    this.state.socket.on("searchMarkers", (data) => {
+      if(data.success) {
+        // set the markers
+        this.setState({
+          markers: JSON.parse(data.message)
+        });
+      }
+    });
   }
 
   // go back a page

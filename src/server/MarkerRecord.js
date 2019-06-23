@@ -11,6 +11,7 @@ class MasterRecord {
 
     // handle emissions from the client
     socket.on("receiveMarkers", (data) => {this.receiveMarkers(data)});
+    socket.on("searchMarkers", (data) => {this.searchMarkers(data)});
     socket.on("addMarker", (data) => {this.addMarker(data)});
   }
 
@@ -20,7 +21,7 @@ class MasterRecord {
     let longitude = data.message.longitude;
     let latitude = data.message.latitude;
 
-    // create a prepared statement query to receive the nearest markers
+    // create a prepared statement to receive the nearest markers
     const milesConstant = 3959;
     const mileRadius = 25;
     const nearestMarkers = 20;
@@ -41,9 +42,53 @@ class MasterRecord {
         });
       } else {
         // emit a message of failure to the client
+        console.log(error);
         this.socket.emit("receiveMarkers", {
           success: false,
           message: "Error querying into the Database to receive markers..."
+        });
+      }
+    });
+  }
+
+  // search markers from the databse, then send them to the client
+  async searchMarkers(data) {
+    // interpret the variables passed from the client
+    let longitude = data.message.longitude;
+    let latitude = data.message.latitude;
+    let search = data.message.search;
+    let category = data.message.category;
+    if(category == "All Categories") {
+      // set the category wildcard as blank
+      category = "";
+    }
+
+    // create a prepared statement to receive the nearest and searched markers
+    const milesConstant = 3959;
+    const mileRadius = 25;
+    const nearestMarkers = 20;
+    let query = "SELECT id, author, title, description, longitude, latitude, "
+      + "picture, category, created_date, expires, ("
+      + `${milesConstant} * acos(cos(radians(?)) * cos(radians(latitude)) * `
+      + "cos(radians(longitude) -radians(?)) + sin(radians(?)) * sin(radians(latitude)))"
+      + `) AS distance FROM MarkerRecord WHERE `
+      + `title LIKE '%${search}%' AND category LIKE '%${category}%' `
+      + `HAVING distance < ${mileRadius} ORDER BY distance LIMIT 0, ${nearestMarkers}`;
+
+    // query the database to search to find the markers
+    this.dbConn.query(query, [latitude, longitude, latitude], (error, result) => {
+      if(!error) {
+        // emit a message with the nearest markers to the client
+        this.socket.emit("searchMarkers", {
+          success: true,
+          message: JSON.stringify(result)
+        });
+      } else {
+        // emit a message of failure to the client
+        console.log(error);
+        this.socket.emit("searchMarkers", {
+          success: false,
+          message: "Error querying into the Database to search markers..."
         });
       }
     });
@@ -66,7 +111,7 @@ class MasterRecord {
     const hoursTillExpires = 4;
     let expires = this.getFutureTimeStamp(0, 0, 0, hoursTillExpires, 0, 0);
 
-    // create a prepared statement query to insert this marker
+    // create a prepared statement to insert this marker
     let query = "INSERT INTO MarkerRecord (author_id, author, title, description,"
       + " longitude, latitude, picture, category, created_date, expires) VALUES"
       + " (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -83,6 +128,7 @@ class MasterRecord {
         });
       } else {
         // emit a message of failure to the client
+        console.log(error);
         this.socket.emit("addMarker", {
           success: false,
           message: "Error querying into the Database to add ping..."
@@ -121,23 +167,17 @@ class MasterRecord {
   }
 
   // return a future time stamp from the current time
-  getFutureTimeStamp(yearIncrease, monthIncrease, dayIncrease,
-      hourIncrease, minuteIncrease, secondIncrease) {
+  getFutureTimeStamp(years, months, days, hours, minutes, seconds) {
     var today = new Date();
 
-    // get the modified date
-    var date = (today.getFullYear() + yearIncrease) + "-"
-      + (today.getMonth() + 1 + monthIncrease) + "-"
-      + (today.getDate() + dayIncrease);
-
-    // get the modified time
-    var time = (today.getHours() + hourIncrease) + ":"
-      + (today.getMinutes() + minuteIncrease) + ":"
-      + (today.getSeconds() + secondIncrease);
-
-    // concatenate the date and time, then return it
-    var dateTime = date + " " + time;
-    return dateTime;
+    // increase the date from today, then return the future timestamp as UTC
+    today.setUTCFullYear(today.getUTCFullYear() + years);
+    today.setUTCMonth(today.getUTCMonth() + months);
+    today.setUTCDate(today.getUTCDate() + days);
+    today.setUTCHours(today.getUTCHours() + hours);
+    today.setUTCMinutes(today.getUTCMinutes() + minutes);
+    today.setUTCSeconds(today.getUTCSeconds() + seconds);
+    return today.getTime();
   }
 }
 module.exports = MasterRecord;

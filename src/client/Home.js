@@ -10,6 +10,7 @@ import {StyleSheet, Image, TouchableOpacity,
 import GestureRecognizer from 'react-native-swipe-gestures';
 import {Icon, Overlay} from "react-native-elements";
 import * as Animatable from 'react-native-animatable';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 // socket.io packages
 import io from "socket.io-client";
@@ -42,7 +43,7 @@ const styles = StyleSheet.create({
     fontSize: 16
   },
   marker_modal_description: {
-    flex: 0.30,
+    flex: 0.25,
     color: "#D3D3D3",
     fontSize: 16
   },
@@ -92,12 +93,14 @@ class Home extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      loading: true,
       socket: undefined,
       marker_modal_picture: "",
       marker_modal_title: "",
       marker_modal_author: "",
       marker_modal_category: "",
       marker_modal_expires: "",
+      marker_modal_distance: "",
       marker_modal_description: "",
       marker_modal_visible: false,
       location: {
@@ -133,12 +136,13 @@ class Home extends React.Component {
   async updateLocation() {
     let {status} = await Permissions.askAsync(Permissions.LOCATION);
     if (status === "granted") {
+      this.setState({loading: true});
       Location.getCurrentPositionAsync({enableHighAccuracy: true}).then((position) => {
         // receive the markers from the server
         this.receiveMarkers(position);
         return;
       }).catch((error) => {
-        console.log(error);
+        this.setState({loading: false});
         Alert.alert("GPS Error!", "Please make sure your location (GPS) is turned on.");
       });
     }
@@ -154,11 +158,13 @@ class Home extends React.Component {
       },
       handle: "handleReceiveMarkers"
     });
+
     // listen for the markers from the server
     this.state.socket.on("receiveMarkers", (data) => {
       if(data.success) {
         // set the markers and update the current location
         this.setState({
+          loading: false,
           location: {
             longitude: position.coords.longitude,
             latitude: position.coords.latitude
@@ -170,9 +176,10 @@ class Home extends React.Component {
           markers: JSON.parse(data.message)
         });
       } else {
+        this.setState({loading: false});
         Alert.alert("Database Error!", data.message);
       }
-    })
+    });
   }
 
   // render the component's views
@@ -185,6 +192,7 @@ class Home extends React.Component {
 
     return (
       <View style={styles.container}>
+        <Spinner visible={this.state.loading} />
         <Overlay
           animationType="slide"
           transparent={true}
@@ -207,6 +215,9 @@ class Home extends React.Component {
             </Text>
             <Text style={styles.marker_modal_text}>
               {this.state.marker_modal_expires}
+            </Text>
+            <Text style={styles.marker_modal_text}>
+              Distance: {this.state.marker_modal_distance} ft
             </Text>
             <Text style={styles.marker_modal_description}>
               {this.state.marker_modal_description}
@@ -291,8 +302,8 @@ class Home extends React.Component {
   // open the modal for the marker
   openMarkerModal(marker) {
     // dates
-    expiresDate = new Date(marker.expires);
-    currentDate = new Date();
+    let expiresDate = new Date(marker.expires).getTime();
+    let currentDate = new Date().getTime();
 
     // time constants
     const msPerSecond = 1000;
@@ -309,12 +320,17 @@ class Home extends React.Component {
       expires = "This ping has expired.";
     }
 
+    // get the distance in feet
+    const toFeet = 5280;
+    let distanceFeet = Math.round(marker.distance * toFeet);
+
     this.setState({
       marker_modal_picture: marker.picture,
       marker_modal_title: marker.title,
       marker_modal_author: marker.author,
       marker_modal_category: marker.category,
       marker_modal_expires: expires,
+      marker_modal_distance: distanceFeet,
       marker_modal_description: marker.description,
       marker_modal_visible: true
     });
@@ -327,7 +343,13 @@ class Home extends React.Component {
 
   // load the search page
   loadSearchPage() {
-    this.props.navigation.navigate("Search");
+    // number of initial markers to load in the search page
+    const loadMarkers = 10;
+
+    this.props.navigation.navigate("Search", {
+      socket: this.state.socket,
+      markers: this.state.markers.slice(0, loadMarkers)
+    });
   }
 
   // load the pings page

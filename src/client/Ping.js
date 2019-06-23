@@ -8,6 +8,7 @@ import * as ImagePicker from 'expo-image-picker';
 import {StyleSheet, Dimensions, Image, KeyboardAvoidingView,
   Text, Alert, TouchableOpacity, View} from "react-native";
 import {Header, Input, CheckBox, Icon} from "react-native-elements";
+import Spinner from 'react-native-loading-spinner-overlay';
 
 // style sheet
 const styles = StyleSheet.create({
@@ -82,6 +83,7 @@ class Ping extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      loading: false,
       title: "",
       description: "",
       picture_base64: undefined,
@@ -93,6 +95,7 @@ class Ping extends React.Component {
   render() {
     return (
       <View style={styles.container}>
+        <Spinner visible={this.state.loading} />
         <Header containerStyle={styles.navbar}>
           <Icon name="chevron-left" onPress={() => this.goBackPage()}
             type="entypo" color="#D3D3D3" size={22} />
@@ -196,6 +199,8 @@ class Ping extends React.Component {
     if(!this.state.title || !this.state.description) {
       Alert.alert("Missing Information!", "Please fill out both the title and description.");
     } else if(socket.connected) {
+      // add the marker into the server
+      this.setState({loading: true});
       await this.addMarker(socket);
     } else {
       Alert.alert("Internet Error!", "Could not connect to the server, is your internet down?");
@@ -218,6 +223,7 @@ class Ping extends React.Component {
         this.sendMarker(socket, position);
         return;
       }).catch((error) => {
+        this.setState({loading: false});
         Alert.alert("GPS Error!", "Please make sure your location (GPS) is turned on.");
       });
     }
@@ -245,12 +251,15 @@ class Ping extends React.Component {
       },
       handle: "handleAddMarker"
     });
+
     // listen for a response from the server
     socket.on("addMarker", (data) => {
       if(data.success) {
+        this.setState({loading: false});
         Alert.alert("Added Ping!", data.message);
         this.props.navigation.popToTop();
       } else {
+        this.setState({loading: false});
         Alert.alert("Database Error!", data.message);
       }
     });
