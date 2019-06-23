@@ -4,7 +4,8 @@ import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
 
 // styling packages
-import {StyleSheet, Picker, ScrollView, Text, Alert, View} from "react-native";
+import {StyleSheet, Picker, ScrollView,
+  ActivityIndicator, Text, Alert, View} from "react-native";
 import {SearchBar, Icon, Button, Card} from 'react-native-elements';
 import * as Animatable from 'react-native-animatable';
 
@@ -44,6 +45,15 @@ const styles = StyleSheet.create({
     width: "90%",
     alignItems: "flex-start",
     justifyContent: "center"
+  },
+  loading: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    alignItems: "center",
+    justifyContent: "center"
   }
 });
 
@@ -52,6 +62,7 @@ class Search extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      loading: false,
       socket: this.props.navigation.state.params.socket,
       markers: this.props.navigation.state.params.markers,
       search: "",
@@ -96,29 +107,34 @@ class Search extends React.Component {
              <Picker.Item color="#909090" label="Other" value="Other" />
           </Picker>
           <ScrollView style={styles.scroll_view}>
-          {this.state.markers.map((marker, key) => (
-            <Card
-              key={key}
-              title={marker.title}
-              titleStyle={styles.card_title}
-              image={{uri: marker.picture}}>
-                <Text style={styles.card_text}>Pinged by {marker.author}</Text>
-                <Text style={styles.card_text}>Category: {marker.category}</Text>
-                <Text style={styles.card_text}>
-                  Distance: {Math.round(marker.distance * toFeet)} ft
-                </Text>
-                <Text style={styles.card_text}>{marker.description}</Text>
-                <Button
-                  backgroundColor="#1C7ED7"
-                  buttonStyle={styles.card_btn}
-                  title="VIEW PING" />
-            </Card>
-          ))}
+            {this.state.markers.map((marker, key) => (
+              <Card
+                key={key}
+                title={marker.title}
+                titleStyle={styles.card_title}
+                image={{uri: marker.picture}}>
+                  <Text style={styles.card_text}>Pinged by {marker.author}</Text>
+                  <Text style={styles.card_text}>Category: {marker.category}</Text>
+                  <Text style={styles.card_text}>
+                    Distance: {Math.round(marker.distance * toFeet)} ft
+                  </Text>
+                  <Text style={styles.card_text}>{marker.description}</Text>
+                  <Button
+                    backgroundColor="#1C7ED7"
+                    buttonStyle={styles.card_btn}
+                    title="VIEW PING" />
+              </Card>
+            ))}
           </ScrollView>
           <View style={styles.go_back_container}>
             <Icon name="chevron-left" onPress={() => this.goBackPage()}
               type="entypo" color="#D3D3D3" size={22} />
           </View>
+          {this.state.loading &&
+            <View style={styles.loading}>
+              <ActivityIndicator size="large" color="#CFD0D4" />
+            </View>
+          }
         </View>
     );
   }
@@ -141,12 +157,14 @@ class Search extends React.Component {
     let {status} = await Permissions.askAsync(Permissions.LOCATION);
     let currentPosition = undefined;
     if (status === "granted") {
+      this.setState({loading: true});
       Location.getCurrentPositionAsync({enableHighAccuracy: true}).then((position) => {
         // set the current position
         currentPosition = position;
         this.searchMarkers(position);
         return;
       }).catch((error) => {
+        this.setState({loading: false});
         Alert.alert("GPS Error!", "Please make sure your location (GPS) is turned on.");
       });
     }
@@ -172,6 +190,9 @@ class Search extends React.Component {
         this.setState({
           markers: JSON.parse(data.message)
         });
+        this.setState({loading: false});
+      } else {
+        this.setState({loading: false});
       }
     });
   }
