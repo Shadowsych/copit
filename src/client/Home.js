@@ -5,9 +5,10 @@ import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
 
 // styling packages
-import {StyleSheet, Image, TouchableOpacity, Text, Alert, View} from "react-native";
+import {StyleSheet, Image, TouchableOpacity,
+  Button, Text, Alert, View} from "react-native";
 import GestureRecognizer from 'react-native-swipe-gestures';
-import {Icon} from "react-native-elements";
+import {Icon, Overlay} from "react-native-elements";
 import * as Animatable from 'react-native-animatable';
 
 // socket.io packages
@@ -19,6 +20,35 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center"
+  },
+  marker_modal_container: {
+    flex: 1,
+    alignItems: "center"
+  },
+  marker_modal_picture: {
+    flex: 0.35,
+    width: "100%",
+    height: "100%"
+  },
+  marker_modal_title: {
+    flex: 0.10,
+    color: "#909090",
+    fontWeight: "bold",
+    fontSize: 24
+  },
+  marker_modal_text: {
+    flex: 0.05,
+    color: "#D3D3D3",
+    fontSize: 16
+  },
+  marker_modal_description: {
+    flex: 0.30,
+    color: "#D3D3D3",
+    fontSize: 16
+  },
+  marker_modal_close_btn: {
+    flex: 0.10,
+    width: "75%"
   },
   menu_btn: {
     position: "absolute",
@@ -63,6 +93,13 @@ class Home extends React.Component {
     super(props);
     this.state = {
       socket: undefined,
+      marker_modal_picture: "",
+      marker_modal_title: "",
+      marker_modal_author: "",
+      marker_modal_category: "",
+      marker_modal_expires: "",
+      marker_modal_description: "",
+      marker_modal_visible: false,
       location: {
         longitude: -97.73675,
         latitude: 30.28265
@@ -97,17 +134,11 @@ class Home extends React.Component {
     let {status} = await Permissions.askAsync(Permissions.LOCATION);
     if (status === "granted") {
       Location.getCurrentPositionAsync({enableHighAccuracy: true}).then((position) => {
-        // set the location
-        this.setState({
-          location: {
-            longitude: position.coords.longitude,
-            latitude: position.coords.latitude
-          }
-        });
         // receive the markers from the server
         this.receiveMarkers(position);
         return;
       }).catch((error) => {
+        console.log(error);
         Alert.alert("GPS Error!", "Please make sure your location (GPS) is turned on.");
       });
     }
@@ -126,23 +157,22 @@ class Home extends React.Component {
     // listen for the markers from the server
     this.state.socket.on("receiveMarkers", (data) => {
       if(data.success) {
+        // set the markers and update the current location
         this.setState({
+          location: {
+            longitude: position.coords.longitude,
+            latitude: position.coords.latitude
+          },
+          locationDelta: {
+            longitudeDelta: this.state.locationDelta.longitudeDelta,
+            latitudeDelta: this.state.locationDelta.latitudeDelta
+          },
           markers: JSON.parse(data.message)
         });
       } else {
         Alert.alert("Database Error!", data.message);
       }
     })
-  }
-
-  // re-orientate the map
-  reOrientateMap() {
-    this.setState({
-      locationDelta: {
-        longitudeDelta: this.state.locationDelta.longitudeDelta,
-        latitudeDelta: this.state.locationDelta.latitudeDelta
-      }
-    });
   }
 
   // render the component's views
@@ -155,6 +185,42 @@ class Home extends React.Component {
 
     return (
       <View style={styles.container}>
+        <Overlay
+          animationType="slide"
+          transparent={true}
+          isVisible={this.state.marker_modal_visible}
+          onBackdropPress={() => this.setState({marker_modal_visible: false})}
+        >
+          <View style={styles.marker_modal_container}>
+            <Image
+              style={styles.marker_modal_picture}
+              source={{uri: this.state.marker_modal_picture}}
+            />
+            <Text style={styles.marker_modal_title}>
+              {this.state.marker_modal_title}
+            </Text>
+            <Text style={styles.marker_modal_text}>
+              Pinged by {this.state.marker_modal_author}
+            </Text>
+            <Text style={styles.marker_modal_text}>
+              Category: {this.state.marker_modal_category}
+            </Text>
+            <Text style={styles.marker_modal_text}>
+              {this.state.marker_modal_expires}
+            </Text>
+            <Text style={styles.marker_modal_description}>
+              {this.state.marker_modal_description}
+            </Text>
+            <TouchableOpacity
+              style={styles.marker_modal_close_btn}>
+                <Button
+                  color="#DE4D3A"
+                  title="Close"
+                  onPress={() => this.setState({marker_modal_visible: false})}
+                />
+            </TouchableOpacity>
+          </View>
+        </Overlay>
         <Icon containerStyle={styles.menu_btn} raised name="menu"
           onPress={() => this.loadMenuPage()} color="#1C7ED7" size={22} />
         <Icon containerStyle={styles.search_btn} raised name="search"
@@ -174,7 +240,10 @@ class Home extends React.Component {
                   longitude: marker.longitude,
                   latitude: marker.latitude
                 }}
-              />
+                onPress={() => this.openMarkerModal(marker)}
+              >
+                {this.renderMarkerIcon(marker.category)}
+              </MapView.Marker>
             ))}
         </MapView>
         <GestureRecognizer
@@ -187,11 +256,68 @@ class Home extends React.Component {
             </Animatable.View>
         </GestureRecognizer>
         <TouchableOpacity activeOpacity={0.8} style={styles.reorientation_btn}>
-          <Icon raised name="target" onPress={() => this.reOrientateMap()}
+          <Icon raised name="target" onPress={() => this.updateLocation()}
             type="material-community" color="#1C7ED7" />
         </TouchableOpacity>
       </View>
     );
+  }
+
+  // render the marker's icon based on its category
+  renderMarkerIcon(category) {
+    if(category == "Food") {
+      return <Icon name="food" type="material-community" color="#FFB300" size={40} />;
+    } else if(category == "Clothes") {
+      return <Icon name="tshirt-crew-outline" type="material-community" color="#E4181B" size={40} />;
+    } else if(category == "School") {
+      return <Icon name="school" type="material-community" color="#FF7A1D" size={40} />;
+    } else if(category == "Discounts") {
+      return <Icon name="percent" type="feather" color="#3E9C35" size={40} />;
+    } else if(category == "Party") {
+      return <Icon name="drink" type="entypo" color="#BD8DE3" size={40} />;
+    } else if(category == "Org Events") {
+      return <Icon name="calendar" type="font-awesome" color="#2F74B5" size={40} />;
+    } else if(category == "Emergencies") {
+      return <Icon name="warning" type="font-awesome" color="#FFCC00" size={40} />;
+    } else if(category == "Conctraceptives") {
+      return <Icon name="heart" type="feather" color="#E793A0" size={40} />;
+    } else if(category == "Other") {
+      return <Icon name="rocket" type="simple-line-icon" color="#1F1F21" size={40} />;
+    } else {
+      return <Icon name="question" type="antdesign" color="#FF0000" size={40} />;
+    }
+  }
+
+  // open the modal for the marker
+  openMarkerModal(marker) {
+    // dates
+    expiresDate = new Date(marker.expires);
+    currentDate = new Date();
+
+    // time constants
+    const msPerSecond = 1000;
+    const sPerHour = 3600;
+    const mPerHour = 60;
+    const hPerDay = 24;
+
+    // get each precise time until expiration
+    let untilExpires = Math.abs(expiresDate - currentDate) / msPerSecond;
+    let hours = Math.floor(untilExpires / sPerHour) % hPerDay;
+    let minutes = Math.floor(untilExpires / mPerHour) % mPerHour;
+    let expires = "Expires in " + hours + " hr and " + minutes + " min";
+    if(hours <= 0 && minutes <= 0) {
+      expires = "This ping has expired.";
+    }
+
+    this.setState({
+      marker_modal_picture: marker.picture,
+      marker_modal_title: marker.title,
+      marker_modal_author: marker.author,
+      marker_modal_category: marker.category,
+      marker_modal_expires: expires,
+      marker_modal_description: marker.description,
+      marker_modal_visible: true
+    });
   }
 
   // load the menu page

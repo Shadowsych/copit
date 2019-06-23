@@ -49,17 +49,17 @@ class Login extends React.Component {
           <Animatable.Image
             style={styles.logo}
             animation="fadeInDown"
-            source={require("../../assets/icon.png")}/>
+            source={require("../../assets/icon.png")} />
         </View>
         <TouchableOpacity style={styles.login_btn}>
           <Button color="#4267B2"
             onPress={() => this.loginFacebook()}
-            title='Connect with Facebook'/>
+            title='Connect with Facebook' />
         </TouchableOpacity>
         <TouchableOpacity style={styles.login_btn}>
           <Button color="#DE4D3A"
             onPress={() => this.loginGoogle()}
-            title='Connect with Google'/>
+            title='Connect with Google' />
         </TouchableOpacity>
         <TouchableOpacity activeOpacity={0.8}
           onPress={() => this.loginGuest()}

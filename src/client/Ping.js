@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     fontSize: 12
   },
   picture: {
-    width: Dimensions.get('window').width * 0.90,
+    width: Dimensions.get("window").width * 0.90,
     height: "100%"
   },
   input_text_form: {
