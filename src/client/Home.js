@@ -12,10 +12,6 @@ import {Icon} from "react-native-elements";
 import * as Animatable from 'react-native-animatable';
 import Spinner from 'react-native-loading-spinner-overlay';
 
-// socket.io packages
-import config from "../../server.json";
-import io from "socket.io-client";
-
 // style sheet
 const styles = StyleSheet.create({
   container: {
@@ -66,7 +62,7 @@ class Home extends React.Component {
     super(props);
     this.state = {
       loading: true,
-      socket: undefined,
+      socket: this.props.navigation.state.params.socket,
       location: {
         longitude: -97.73675,
         latitude: 30.28265
@@ -77,18 +73,6 @@ class Home extends React.Component {
       },
       markers: []
     }
-  }
-
-  // called before the component loads
-  componentWillMount() {
-    this.initiateSocketConnection();
-  }
-
-  // initiate the socket.io connection
-  async initiateSocketConnection() {
-    this.setState({
-      socket: await io.connect(config.serverDomain + ":" + config.serverPort)
-    });
   }
 
   // called whenever the component loads

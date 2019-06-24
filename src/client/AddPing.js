@@ -201,14 +201,14 @@ class AddPing extends React.Component {
     } else if(socket.connected) {
       // add the marker into the server
       this.setState({loading: true});
-      await this.addMarker(socket);
+      await this.sendMarker(socket);
     } else {
       Alert.alert("Internet Error!", "Could not connect to the server, is your internet down?");
     }
   }
 
-  // update the location of the user
-  async addMarker(socket) {
+  // send the marker information
+  async sendMarker(socket) {
     let {status} = await Permissions.askAsync(Permissions.LOCATION);
     if (status === "granted") {
       Location.getCurrentPositionAsync({enableHighAccuracy: true}).then((position) => {
@@ -219,8 +219,8 @@ class AddPing extends React.Component {
             latitude: position.coords.latitude
           }}
         );
-        // send the marker to the server
-        this.sendMarker(socket, position);
+        // add the marker into the server
+        this.addMarker(socket, position);
         return;
       }).catch((error) => {
         this.setState({loading: false});
@@ -229,8 +229,8 @@ class AddPing extends React.Component {
     }
   }
 
-  // send the marker to the socket.io server
-  async sendMarker(socket, position) {
+  // add the marker into the server
+  async addMarker(socket, position) {
     // determine whether the author is anonymous
     let author = this.props.navigation.state.params.name
     if(this.state.anonymous) {

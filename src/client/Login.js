@@ -2,13 +2,17 @@
 import React from "react";
 import Constants from 'expo-constants'
 
+// styling packages
+import {StyleSheet, Image, TouchableOpacity, Button, Text, View} from "react-native";
+import * as Animatable from 'react-native-animatable';
+
 // oauth packages
 import * as Facebook from 'expo-facebook';
 import {Google} from "expo";
 
-// styling packages
-import {StyleSheet, Image, TouchableOpacity, Button, Text, View} from "react-native";
-import * as Animatable from 'react-native-animatable';
+// socket.io packages
+import config from "../../server.json";
+import io from "socket.io-client";
 
 // style sheet
 const styles = StyleSheet.create({
@@ -40,6 +44,26 @@ const styles = StyleSheet.create({
 });
 
 class Login extends React.Component {
+  // construct the state of the component
+  constructor(props) {
+    super(props);
+    this.state = {
+      socket: undefined,
+    }
+  }
+
+  // called before the component loads
+  componentWillMount() {
+    this.initiateSocketConnection();
+  }
+
+  // initiate the socket.io connection
+  async initiateSocketConnection() {
+    this.setState({
+      socket: await io.connect(config.serverDomain + ":" + config.serverPort)
+    });
+  }
+
   // render the component's views
   render() {
     return (
@@ -87,6 +111,7 @@ class Login extends React.Component {
 
       // load the home page
       this.props.navigation.replace("Home", {
+        socket: this.state.socket,
         token: undefined,
         name: undefined,
         email: undefined,
@@ -109,6 +134,7 @@ class Login extends React.Component {
     if(type == "success") {
       // load the home page
       this.props.navigation.replace("Home", {
+        socket: this.state.socket,
         token: undefined,
         name: undefined,
         email: undefined,
@@ -120,6 +146,7 @@ class Login extends React.Component {
   // login as a guest
   loginGuest() {
     this.props.navigation.replace("Home", {
+      socket: this.state.socket,
       token: -1,
       name: "Guest"
     });
