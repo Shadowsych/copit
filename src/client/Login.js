@@ -11,10 +11,6 @@ import * as Animatable from 'react-native-animatable';
 import * as Facebook from 'expo-facebook';
 import {Google} from "expo";
 
-// socket.io packages
-import config from "../../server.json";
-import io from "socket.io-client";
-
 // style sheet
 const styles = StyleSheet.create({
   container: {
@@ -45,26 +41,6 @@ const styles = StyleSheet.create({
 });
 
 class Login extends React.Component {
-  // construct the state of the component
-  constructor(props) {
-    super(props);
-    this.state = {
-      socket: undefined,
-    }
-  }
-
-  // called before the component loads
-  componentWillMount() {
-    this.initiateSocketConnection();
-  }
-
-  // initiate the socket.io connection
-  async initiateSocketConnection() {
-    this.setState({
-      socket: await io.connect(config.serverDomain + ":" + config.serverPort)
-    });
-  }
-
   // render the component's views
   render() {
     return (
@@ -114,7 +90,7 @@ class Login extends React.Component {
         resolved.json().then((data) => {
           // load the home page
           this.props.navigation.replace("Home", {
-            socket: this.state.socket,
+            socket: this.props.navigation.state.params.socket,
             token: data.id,
             name: data.name,
             email: data.email,
@@ -141,7 +117,7 @@ class Login extends React.Component {
     if(type == "success") {
       // load the home page
       this.props.navigation.replace("Home", {
-        socket: this.state.socket,
+        socket: this.props.navigation.state.params.socket,
         token: undefined,
         name: undefined,
         email: undefined,
@@ -153,7 +129,7 @@ class Login extends React.Component {
   // login as a guest
   loginGuest() {
     this.props.navigation.replace("Home", {
-      socket: this.state.socket,
+      socket: this.props.navigation.state.params.socket,
       token: -1,
       name: "Guest"
     });

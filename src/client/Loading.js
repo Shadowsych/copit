@@ -5,6 +5,10 @@ import React from "react";
 import {StyleSheet, Image, View} from "react-native";
 import * as Animatable from 'react-native-animatable';
 
+// socket.io packages
+import config from "../../server.json";
+import io from "socket.io-client";
+
 // style sheet
 const styles = StyleSheet.create({
   container: {
@@ -35,8 +39,14 @@ class Loading extends React.Component {
   // load the login page after waiting a few second(s)
   loadLoginPage() {
     const waitTime = 1000;
-    setTimeout(() => {
-      this.props.navigation.replace("Login");
+    let loadTimer = setTimeout(() => {
+      // initiate the socket connection
+      let socket = io.connect(config.serverDomain + ":" + config.serverPort);
+
+      // load the login page
+      this.props.navigation.replace("Login", {
+        socket: socket
+      });
     }, waitTime);
   }
 }

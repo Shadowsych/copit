@@ -1,5 +1,6 @@
 // react packages
 import React from "react";
+import {NavigationActions, StackActions} from "react-navigation";
 
 // styling packages
 import {StyleSheet, Image, Text, TouchableOpacity, View} from "react-native";
@@ -54,6 +55,7 @@ class Menu extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      socket: this.props.navigation.state.params.socket,
       points: 0
     }
   }
@@ -95,9 +97,18 @@ class Menu extends React.Component {
     this.props.navigation.goBack();
   }
 
-  // logout the page
+  // logout the account
   logOut() {
-    this.props.navigation.replace("Login");
+    // pop the navigation stack, then navigate back to the Login screen
+    this.props.navigation.dispatch(StackActions.reset({
+     index: 0,
+     actions: [
+       NavigationActions.navigate({
+         routeName: "Login",
+         params: {socket: this.state.socket}
+       })
+     ]
+    }));
   }
 }
 export default Menu;
