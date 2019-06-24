@@ -1,7 +1,7 @@
 // file system packages
 var fs = require("fs");
 var uniqid = require('uniqid');
-var config = require("./server.json");
+var config = require("../../server.json");
 
 class MasterRecord {
   // construct the record using the socket and database connections
@@ -13,6 +13,7 @@ class MasterRecord {
     socket.on("receiveMarkers", (data) => {this.receiveMarkers(data)});
     socket.on("searchMarkers", (data) => {this.searchMarkers(data)});
     socket.on("addMarker", (data) => {this.addMarker(data)});
+    socket.on("addLike", (data) => {this.addLike(data)});
   }
 
   // receive markers from the database, then send them to the client
@@ -26,7 +27,7 @@ class MasterRecord {
     const mileRadius = 25;
     const nearestMarkers = 20;
     let query = "SELECT id, author, title, description, longitude, latitude, "
-      + "picture, category, created_date, expires, ("
+      + "picture, category, likes, created_date, expires, ("
       + `${milesConstant} * acos(cos(radians(?)) * cos(radians(latitude)) * `
       + "cos(radians(longitude) -radians(?)) + sin(radians(?)) * sin(radians(latitude)))"
       + `) AS distance FROM MarkerRecord HAVING distance < ${mileRadius} `
@@ -68,7 +69,7 @@ class MasterRecord {
     const mileRadius = 25;
     const nearestMarkers = 20;
     let query = "SELECT id, author, title, description, longitude, latitude, "
-      + "picture, category, created_date, expires, ("
+      + "picture, category, likes, created_date, expires, ("
       + `${milesConstant} * acos(cos(radians(?)) * cos(radians(latitude)) * `
       + "cos(radians(longitude) -radians(?)) + sin(radians(?)) * sin(radians(latitude)))"
       + `) AS distance FROM MarkerRecord WHERE `
@@ -135,6 +136,55 @@ class MasterRecord {
         });
       }
     });
+  }
+
+  // add a like on a marker
+  async addLike(data) {
+    // interpret the variables passed from the client
+    let userId = data.message.user_id;
+    let markerId = data.message.marker_id;
+
+    // create a prepared statement to receive the liked marker
+    let query = "SELECT likes FROM MarkerRecord WHERE id=?";
+
+    // query the database to search to find the liked marker
+    this.dbConn.query(query, [markerId], (error, result) => {
+      if(!error) {
+        // update the likes Array
+        let likes = JSON.parse(JSON.stringify(result))[0].likes;
+        this.updateLikes(userId, markerId, likes);
+      } else {
+        console.log(error);
+      }
+    });
+  }
+
+  // update a like for a marker
+  async updateLikes(userId, markerId, likes) {
+    let alreadyAddedLike = false;
+    if(!likes) {
+      // likes is null, initialize it with this user as the first like
+      likes = [userId];
+    } else if(!likes.includes(userId)) {
+      // add the user's like
+      likes.push(userId);
+    } else {
+      alreadyAddedLike = true;
+    }
+    if(!alreadyAddedLike) {
+      // created a prepared statement to update the liked marker
+      let query = "UPDATE MarkerRecord SET likes=? WHERE id=?";
+
+      // query the database to add the liked marker
+      likes = JSON.stringify(likes);
+      this.dbConn.query(query, [likes, markerId], (error, result) => {
+        if(!error) {
+          console.log("Added a like for markerId: " + markerId);
+        } else {
+          console.log(error);
+        }
+      });
+    }
   }
 
   // upload the base64 picture, then return its directory

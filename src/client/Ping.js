@@ -255,9 +255,13 @@ class Ping extends React.Component {
     // listen for a response from the server
     socket.on("addMarker", (data) => {
       if(data.success) {
+        // navigate back to the home screen
         this.setState({loading: false});
         Alert.alert("Added Ping!", data.message);
+
+        // navigate back to the home screen, then update location
         this.props.navigation.popToTop();
+        this.props.navigation.state.params.updateLocation();
       } else {
         this.setState({loading: false});
         Alert.alert("Database Error!", data.message);

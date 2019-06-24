@@ -87,13 +87,14 @@ class Search extends React.Component {
             containerStyle={styles.search_bar}
             placeholder="Search..."
             platform="android"
-            onChangeText={(text) => this.updateSearch(text, undefined)}
+            onChangeText={(text) => this.setState({search: text})}
+            onEndEditing={(text) => this.updateSearch()}
             value={this.state.search}
           />
           <Picker
             style={styles.picker}
             selectedValue={this.state.category}
-            onValueChange={(option) => this.updateSearch(undefined, option)}>
+            onValueChange={(option) => this.updateSearch(option)}>
              <Picker.Item color="#C0C0C0" label="All Categories" value="All Categories" />
              <Picker.Item color="#909090" label="Food" value="Food" />
              <Picker.Item color="#909090" label="Clothes" value="Clothes" />
@@ -122,6 +123,7 @@ class Search extends React.Component {
                   <Button
                     backgroundColor="#1C7ED7"
                     buttonStyle={styles.card_btn}
+                    onPress={() => this.goToMarker(marker)}
                     title="VIEW PING" />
               </Card>
             ))}
@@ -140,11 +142,9 @@ class Search extends React.Component {
   }
 
   // update the search
-  updateSearch(text, option) {
-    // update the searching state
-    if(text) {
-      this.setState({search: text});
-    } else if(option) {
+  updateSearch(option) {
+    // update the option state
+    if(option) {
       this.setState({category: option});
     }
 
@@ -195,6 +195,12 @@ class Search extends React.Component {
         this.setState({loading: false});
       }
     });
+  }
+
+  // go to a marker
+  goToMarker(marker) {
+    this.props.navigation.goBack();
+    this.props.navigation.state.params.goToMarker(marker);
   }
 
   // go back a page
