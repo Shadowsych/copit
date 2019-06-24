@@ -8,7 +8,7 @@ import * as Permissions from "expo-permissions";
 import {StyleSheet, Image, TouchableOpacity,
   Button, Text, Alert, View} from "react-native";
 import GestureRecognizer from 'react-native-swipe-gestures';
-import {Icon, Overlay} from "react-native-elements";
+import {Icon} from "react-native-elements";
 import * as Animatable from 'react-native-animatable';
 import Spinner from 'react-native-loading-spinner-overlay';
 
@@ -22,45 +22,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center"
-  },
-  marker_modal_container: {
-    flex: 1,
-    alignItems: "center"
-  },
-  marker_modal_picture: {
-    flex: 0.30,
-    width: "100%",
-    height: "100%"
-  },
-  marker_modal_title: {
-    flex: 0.05,
-    color: "#909090",
-    fontWeight: "bold",
-    fontSize: 24
-  },
-  marker_modal_like_container: {
-    flex: 0.10,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  marker_modal_like_text: {
-    color: "#2195EE",
-    fontSize: 16
-  },
-  marker_modal_text: {
-    flex: 0.05,
-    color: "#D3D3D3",
-    fontSize: 16
-  },
-  marker_modal_description: {
-    flex: 0.20,
-    color: "#D3D3D3",
-    fontSize: 16
-  },
-  marker_modal_btn: {
-    flex: 0.075,
-    width: "75%"
   },
   menu_btn: {
     position: "absolute",
@@ -106,17 +67,6 @@ class Home extends React.Component {
     this.state = {
       loading: true,
       socket: undefined,
-      marker_modal_id: -1,
-      marker_modal_picture: "",
-      marker_modal_title: "",
-      marker_modal_author: "",
-      marker_modal_category: "",
-      marker_modal_likes: [],
-      marker_modal_just_liked: false,
-      marker_modal_expires: "",
-      marker_modal_distance: "",
-      marker_modal_description: "",
-      marker_modal_visible: false,
       location: {
         longitude: -97.73675,
         latitude: 30.28265
@@ -196,32 +146,6 @@ class Home extends React.Component {
     });
   }
 
-  // add a like on the marker opened by the modal
-  async addLike() {
-    let authorToken = this.props.navigation.state.params.token;
-    let markerId = this.state.marker_modal_id;
-
-    // add the like if the user has not liked it
-    let markerLikes = this.state.marker_modal_likes;
-    if(!markerLikes.includes(authorToken)) {
-      // update the like state
-      markerLikes.push(authorToken);
-      this.setState({
-        marker_modal_likes: markerLikes,
-        marker_modal_just_liked: true
-      });
-
-      // emit a message to like the marker
-      this.state.socket.emit("addLike", {
-        message: {
-          author_token: authorToken,
-          marker_id: markerId
-        },
-        handle: "addLike"
-      });
-    }
-  }
-
   // render the component's views
   render() {
     // gesture configuration
@@ -233,55 +157,6 @@ class Home extends React.Component {
     return (
       <View style={styles.container}>
         <Spinner visible={this.state.loading} />
-        <Overlay
-          animationType="slide"
-          fullScreen={true}
-          isVisible={this.state.marker_modal_visible} >
-            <View style={styles.marker_modal_container}>
-              <Image
-                style={styles.marker_modal_picture}
-                source={{uri: this.state.marker_modal_picture}}
-              />
-              <Text style={styles.marker_modal_title}>
-                {this.state.marker_modal_title}
-              </Text>
-              <View style={styles.marker_modal_like_container}>
-                <Icon name="like" type="evilicon" color="#6986B0"
-                  onPress={() => this.addLike()} size={36} />
-                <Text style={styles.marker_modal_like_text}>
-                  {this.state.marker_modal_likes.length}
-                </Text>
-              </View>
-              <Text style={styles.marker_modal_text}>
-                Pinged by {this.state.marker_modal_author}
-              </Text>
-              <Text style={styles.marker_modal_text}>
-                Category: {this.state.marker_modal_category}
-              </Text>
-              <Text style={styles.marker_modal_text}>
-                {this.state.marker_modal_expires}
-              </Text>
-              <Text style={styles.marker_modal_text}>
-                Distance: {this.state.marker_modal_distance} ft
-              </Text>
-              <Text style={styles.marker_modal_description}>
-                {this.state.marker_modal_description}
-              </Text>
-              <View style={styles.marker_modal_btn}>
-                  <Button
-                    color="#19A15F"
-                    title="View Directions"
-                  />
-              </View>
-              <View style={styles.marker_modal_btn}>
-                  <Button
-                    color="#DE4D3A"
-                    title="Close"
-                    onPress={() => this.closeMarkerModal()}
-                  />
-              </View>
-            </View>
-        </Overlay>
         <Icon containerStyle={styles.menu_btn} raised name="menu"
           onPress={() => this.loadMenuPage()} color="#1C7ED7" size={22} />
         <Icon containerStyle={styles.search_btn} raised name="search"
@@ -309,7 +184,7 @@ class Home extends React.Component {
                   longitude: marker.longitude,
                   latitude: marker.latitude
                 }}
-                onPress={() => this.openMarkerModal(marker)} >
+                onPress={() => this.loadViewPingPage(marker)} >
                   {this.renderMarkerIcon(marker.category)}
               </MapView.Marker>
             ))}
@@ -356,8 +231,8 @@ class Home extends React.Component {
     }
   }
 
-  // open the modal for a marker
-  openMarkerModal(marker) {
+  // load the view ping page
+  loadViewPingPage(marker) {
     // dates
     let expiresDate = new Date(marker.expires).getTime();
     let currentDate = new Date().getTime();
@@ -389,47 +264,19 @@ class Home extends React.Component {
       markerLikes = JSON.parse(marker.likes);
     }
 
-    // set the modal's state
-    this.setState({
-      marker_modal_id: marker.id,
-      marker_modal_picture: marker.picture,
-      marker_modal_title: marker.title,
-      marker_modal_author: marker.author,
-      marker_modal_category: marker.category,
-      marker_modal_likes: markerLikes,
-      marker_modal_just_liked: false,
-      marker_modal_expires: expires,
-      marker_modal_distance: distanceFeet,
-      marker_modal_description: marker.description,
-      marker_modal_visible: true
+    this.props.navigation.navigate("ViewPing", {
+      socket: this.state.socket,
+      token: this.props.navigation.state.params.token,
+      id: marker.id,
+      picture: marker.picture,
+      title: marker.title,
+      author: marker.author,
+      category: marker.category,
+      likes: markerLikes,
+      expires: expires,
+      distance: distanceFeet,
+      description: marker.description
     });
-  }
-
-  // close the modal for a marker
-  closeMarkerModal() {
-    // update the location if the user just liked the marker
-    if(this.state.marker_modal_just_liked) {
-      this.updateLocation();
-    }
-
-    // close the modal
-    this.setState({
-      marker_modal_visible: false
-    });
-  }
-
-  // go to a marker and load its modal
-  goToMarker(marker) {
-    // set the location to the marker's location
-    this.setState({
-      location: {
-        longitude: marker.longitude,
-        latitude: marker.latitude
-      }
-    });
-
-    // open the modal
-    this.openMarkerModal(marker);
   }
 
   // load the menu page
@@ -445,7 +292,7 @@ class Home extends React.Component {
     this.props.navigation.navigate("Search", {
       socket: this.state.socket,
       markers: this.state.markers.slice(0, loadMarkers),
-      goToMarker: this.goToMarker.bind(this)
+      loadViewPingPage: this.loadViewPingPage.bind(this)
     });
   }
 

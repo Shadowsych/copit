@@ -12,6 +12,7 @@ import Login from "./Login";
 import Home from "./Home";
 import Pings from "./Pings";
 import AddPing from "./AddPing";
+import ViewPing from "./ViewPing";
 import Search from "./Search";
 import Menu from "./Menu";
 
@@ -61,6 +62,9 @@ const Navigation = createStackNavigator({
   },
   AddPing: {
     screen: AddPing
+  },
+  ViewPing: {
+    screen: ViewPing
   },
   Search: {
     screen: Search

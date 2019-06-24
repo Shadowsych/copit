@@ -123,7 +123,7 @@ class Search extends React.Component {
                   <Button
                     backgroundColor="#1C7ED7"
                     buttonStyle={styles.card_btn}
-                    onPress={() => this.goToMarker(marker)}
+                    onPress={() => this.props.navigation.state.params.loadViewPingPage(marker)}
                     title="VIEW PING" />
               </Card>
             ))}
@@ -148,12 +148,12 @@ class Search extends React.Component {
       this.setState({category: option});
     }
 
-    // get the current location of the user
-    let position = this.getLocation();
+    // update the markers on the page
+    this.updateMarkers();
   }
 
-  // update the location of the user
-  async getLocation() {
+  // update the markers state
+  async updateMarkers() {
     let {status} = await Permissions.askAsync(Permissions.LOCATION);
     let currentPosition = undefined;
     if (status === "granted") {
@@ -190,17 +190,9 @@ class Search extends React.Component {
         this.setState({
           markers: JSON.parse(data.message)
         });
-        this.setState({loading: false});
-      } else {
-        this.setState({loading: false});
       }
+      this.setState({loading: false});
     });
-  }
-
-  // go to a marker
-  goToMarker(marker) {
-    this.props.navigation.goBack();
-    this.props.navigation.state.params.goToMarker(marker);
   }
 
   // go back a page
