@@ -151,7 +151,7 @@ class MasterRecord {
     this.dbConn.query(query, [markerId], (error, result) => {
       if(!error) {
         // update the likes Array
-        let likes = JSON.parse(JSON.stringify(result))[0].likes;
+        let likes = JSON.parse(JSON.parse(JSON.stringify(result))[0].likes);
         this.updateLikes(authorToken, markerId, likes);
       } else {
         console.log(error);

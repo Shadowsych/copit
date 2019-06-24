@@ -3,7 +3,8 @@ import React from "react";
 import Constants from 'expo-constants'
 
 // styling packages
-import {StyleSheet, Image, TouchableOpacity, Button, Text, View} from "react-native";
+import {StyleSheet, Image, TouchableOpacity, Alert,
+  Button, Text, View} from "react-native";
 import * as Animatable from 'react-native-animatable';
 
 // oauth packages
@@ -107,15 +108,21 @@ class Login extends React.Component {
     if(type == "success") {
       const graphRequest = "https://graph.facebook.com/me?access_token="
         + token + "&format=json&fields=id,name,email,picture.type(large)";
-      const profile = await fetch(graphRequest);
 
-      // load the home page
-      this.props.navigation.replace("Home", {
-        socket: this.state.socket,
-        token: undefined,
-        name: undefined,
-        email: undefined,
-        profile_photo: undefined
+      // fetch the graph request
+      const profile = await fetch(graphRequest).then((resolved) => {
+        resolved.json().then((data) => {
+          // load the home page
+          this.props.navigation.replace("Home", {
+            socket: this.state.socket,
+            token: data.id,
+            name: data.name,
+            email: data.email,
+            profile_photo: data.picture.data.url
+          });
+        });
+      }).catch((error) => {
+        Alert.alert("Login Error!", "Could not login to the Facebook service...");
       });
     }
   }

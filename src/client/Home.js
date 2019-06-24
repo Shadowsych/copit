@@ -265,7 +265,13 @@ class Home extends React.Component {
 
   // load the menu page
   loadMenuPage() {
-    this.props.navigation.navigate("Menu");
+    this.props.navigation.navigate("Menu", {
+      socket: this.state.socket,
+      token: this.props.navigation.state.params.token,
+      name: this.props.navigation.state.params.name,
+      email: this.props.navigation.state.params.email,
+      profile_photo: this.props.navigation.state.params.profile_photo
+    });
   }
 
   // load the search page
