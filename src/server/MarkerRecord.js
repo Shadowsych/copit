@@ -73,7 +73,7 @@ class MasterRecord {
       + `${milesConstant} * acos(cos(radians(?)) * cos(radians(latitude)) * `
       + "cos(radians(longitude) -radians(?)) + sin(radians(?)) * sin(radians(latitude)))"
       + `) AS distance FROM MarkerRecord WHERE `
-      + `title LIKE '%${search}%' AND category LIKE '%${category}%' `
+      + `description LIKE '%${search}%' AND category LIKE '%${category}%' `
       + `HAVING distance < ${mileRadius} ORDER BY distance LIMIT 0, ${nearestMarkers}`;
 
     // query the database to search to find the markers
@@ -98,7 +98,7 @@ class MasterRecord {
   // add a marker to the database
   async addMarker(data) {
     // interpret the variables passed from the client
-    let authorId = data.message.author_id;
+    let authorId = data.message.author_token;
     let author = data.message.author;
     let title = data.message.title;
     let description = data.message.description;
@@ -113,7 +113,7 @@ class MasterRecord {
     let expires = this.getFutureTimeStamp(0, 0, 0, hoursTillExpires, 0, 0);
 
     // create a prepared statement to insert this marker
-    let query = "INSERT INTO MarkerRecord (author_id, author, title, description,"
+    let query = "INSERT INTO MarkerRecord (author_token, author, title, description,"
       + " longitude, latitude, picture, category, created_date, expires) VALUES"
       + " (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -141,7 +141,7 @@ class MasterRecord {
   // add a like on a marker
   async addLike(data) {
     // interpret the variables passed from the client
-    let userId = data.message.user_id;
+    let authorToken = data.message.author_token;
     let markerId = data.message.marker_id;
 
     // create a prepared statement to receive the liked marker
@@ -152,7 +152,7 @@ class MasterRecord {
       if(!error) {
         // update the likes Array
         let likes = JSON.parse(JSON.stringify(result))[0].likes;
-        this.updateLikes(userId, markerId, likes);
+        this.updateLikes(authorToken, markerId, likes);
       } else {
         console.log(error);
       }
@@ -160,14 +160,14 @@ class MasterRecord {
   }
 
   // update a like for a marker
-  async updateLikes(userId, markerId, likes) {
+  async updateLikes(authorToken, markerId, likes) {
     let alreadyAddedLike = false;
     if(!likes) {
       // likes is null, initialize it with this user as the first like
-      likes = [userId];
-    } else if(!likes.includes(userId)) {
+      likes = [authorToken];
+    } else if(!likes.includes(authorToken)) {
       // add the user's like
-      likes.push(userId);
+      likes.push(authorToken);
     } else {
       alreadyAddedLike = true;
     }

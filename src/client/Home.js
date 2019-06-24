@@ -198,14 +198,14 @@ class Home extends React.Component {
 
   // add a like on the marker opened by the modal
   async addLike() {
-    let userId = this.props.navigation.state.params.id;
+    let authorToken = this.props.navigation.state.params.token;
     let markerId = this.state.marker_modal_id;
 
     // add the like if the user has not liked it
     let markerLikes = this.state.marker_modal_likes;
-    if(!markerLikes.includes(userId)) {
+    if(!markerLikes.includes(authorToken)) {
       // update the like state
-      markerLikes.push(userId);
+      markerLikes.push(authorToken);
       this.setState({
         marker_modal_likes: markerLikes,
         marker_modal_just_liked: true
@@ -214,7 +214,7 @@ class Home extends React.Component {
       // emit a message to like the marker
       this.state.socket.emit("addLike", {
         message: {
-          user_id: this.props.navigation.state.params.id,
+          author_token: authorToken,
           marker_id: markerId
         },
         handle: "addLike"
@@ -236,7 +236,6 @@ class Home extends React.Component {
         <Overlay
           animationType="slide"
           fullScreen={true}
-          onDismiss={() => console.log("yes")}
           isVisible={this.state.marker_modal_visible} >
             <View style={styles.marker_modal_container}>
               <Image
@@ -271,7 +270,7 @@ class Home extends React.Component {
               <View style={styles.marker_modal_btn}>
                   <Button
                     color="#19A15F"
-                    title="View on Maps"
+                    title="View Directions"
                   />
               </View>
               <View style={styles.marker_modal_btn}>
@@ -295,6 +294,14 @@ class Home extends React.Component {
             latitude: this.state.location.latitude,
             latitudeDelta: this.state.locationDelta.latitudeDelta,
           }}>
+            <MapView.Marker
+              title="You Are Here"
+              coordinate={{
+                longitude: this.state.location.longitude,
+                latitude: this.state.location.latitude
+              }} >
+                <Icon name="person-pin-circle" type="material" color="#C1392B" size={40} />
+            </MapView.Marker>
             {this.state.markers.map((marker, key) => (
               <MapView.Marker
                 key={key}
@@ -302,9 +309,8 @@ class Home extends React.Component {
                   longitude: marker.longitude,
                   latitude: marker.latitude
                 }}
-                onPress={() => this.openMarkerModal(marker)}
-              >
-                {this.renderMarkerIcon(marker.category)}
+                onPress={() => this.openMarkerModal(marker)} >
+                  {this.renderMarkerIcon(marker.category)}
               </MapView.Marker>
             ))}
         </MapView>
@@ -447,7 +453,7 @@ class Home extends React.Component {
   loadPingsPage() {
     this.props.navigation.navigate("Pings", {
       socket: this.state.socket,
-      id: this.props.navigation.state.params.id,
+      token: this.props.navigation.state.params.token,
       name: this.props.navigation.state.params.name,
       updateLocation: this.updateLocation.bind(this)
     });

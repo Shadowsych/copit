@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     flex: 0.35
   },
   points_text: {
-    color: "#75B1DE",
+    color: "#D3D3D3",
     fontWeight: "bold",
     fontSize: 16
   },
@@ -73,7 +73,7 @@ class Menu extends React.Component {
           </View>
           <View style={styles.large_spacing}></View>
           <View style={styles.small_spacing}>
-            <Icon name="trophy" type="simple-line-icon" color="#D3D3D3" size={22} />
+            <Icon name="trophy" type="simple-line-icon" color="#75B1DE" size={22} />
             <Text style={styles.points_text}>{this.state.points}</Text>
           </View>
         </View>

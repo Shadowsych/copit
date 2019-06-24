@@ -87,7 +87,7 @@ class Login extends React.Component {
 
       // load the home page
       this.props.navigation.replace("Home", {
-        id: undefined,
+        token: undefined,
         name: undefined,
         email: undefined,
         profile_photo: undefined
@@ -109,7 +109,7 @@ class Login extends React.Component {
     if(type == "success") {
       // load the home page
       this.props.navigation.replace("Home", {
-        id: undefined,
+        token: undefined,
         name: undefined,
         email: undefined,
         profile_photo: undefined
@@ -120,7 +120,7 @@ class Login extends React.Component {
   // login as a guest
   loginGuest() {
     this.props.navigation.replace("Home", {
-      id: -1,
+      token: -1,
       name: "Guest"
     });
   }

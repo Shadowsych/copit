@@ -114,10 +114,10 @@ class Pings extends React.Component {
 
   // go to the ping page
   goPingPage(category) {
-    this.props.navigation.navigate("Ping", {
+    this.props.navigation.navigate("AddPing", {
       category: category,
       socket: this.props.navigation.state.params.socket,
-      id: this.props.navigation.state.params.id,
+      token: this.props.navigation.state.params.token,
       name: this.props.navigation.state.params.name,
       updateLocation: this.props.navigation.state.params.updateLocation
     });

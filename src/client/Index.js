@@ -4,14 +4,14 @@ import {Platform, StatusBar} from 'react-native';
 import {createStackNavigator, createAppContainer} from 'react-navigation';
 
 // style packages
-import {fadeIn, fromBottom, fromTop, fromLeft, zoomIn} from 'react-navigation-transitions'
+import {fadeIn, fromBottom, fromTop, fromLeft, zoomIn} from 'react-navigation-transitions';
 
 // pages
 import Loading from "./Loading";
 import Login from "./Login";
 import Home from "./Home";
 import Pings from "./Pings";
-import Ping from "./Ping";
+import AddPing from "./AddPing";
 import Search from "./Search";
 import Menu from "./Menu";
 
@@ -37,8 +37,8 @@ const handleCustomTransition = ({ scenes }) => {
       return fromLeft();
   } else if(prevScene
     && prevScene.route.routeName == "Pings"
-    && nextScene.route.routeName == "Ping") {
-      // transition fade in from the pings to the ping page
+    && nextScene.route.routeName == "AddPing") {
+      // transition fade in from the pings to the add ping page
       return fadeIn();
   }
   // by default, open the page by zooming in
@@ -59,8 +59,8 @@ const Navigation = createStackNavigator({
   Pings: {
     screen: Pings
   },
-  Ping: {
-    screen: Ping
+  AddPing: {
+    screen: AddPing
   },
   Search: {
     screen: Search
