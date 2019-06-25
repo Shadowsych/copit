@@ -72,7 +72,7 @@ class Menu extends React.Component {
           <View style={styles.large_spacing}></View>
           <View>
             <Avatar rounded size="large" title="?" activeOpacity={0.7}
-              source={{uri: this.props.navigation.state.params.profile_photo}}/>
+              source={{uri: this.props.navigation.state.params.profile_photo}} />
           </View>
           <View style={styles.large_spacing}></View>
           <View style={styles.small_spacing}>
@@ -105,7 +105,7 @@ class Menu extends React.Component {
          routeName: "Login",
          params: {socket: this.state.socket}
        })], 0
-     );
+    );
   }
 }
 export default Menu;

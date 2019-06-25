@@ -10,8 +10,8 @@ class AccountRecord {
     this.dbConn = dbConn;
 
     // handle emissions from the client
-    socket.on("registerAccount", (data) => {this.registerAccount(data)});
     socket.on("loginAccount", (data) => {this.loginAccount(data)});
+    socket.on("registerAccount", (data) => {this.registerAccount(data)});
   }
 
   // login an account
@@ -61,6 +61,7 @@ class AccountRecord {
     let name = data.message.name;
     let email = data.message.email;
     let password = data.message.password;
+    let profilePhoto = await this.uploadBase64(data.message.profile_photo_base64);
 
     // called whenever there exists a failure
     let socket = this.socket;
@@ -73,38 +74,44 @@ class AccountRecord {
       });
     }
 
-    // call the email query promise
-    await AccountRecord.isEmailExists(this.dbConn, email).then((exists) => {
-      if(!exists) {
-        // generate a random token
-        let token = uniqid();
+    if(this.isRegistrationValid(name, email, password)) {
+      // call the email query promise
+      await AccountRecord.isEmailExists(this.dbConn, email).then((exists) => {
+        if(!exists) {
+          // generate a random token
+          let token = uniqid();
 
-        // create a prepared statement to insert the account information
-        let query = "INSERT INTO AccountRecord (token, name, email, password) "
-          + "VALUES (?, ?, ?, ?)";
+          // create a prepared statement to insert the account information
+          let query = "INSERT INTO AccountRecord (token, name, email, password, profile_photo) "
+            + "VALUES (?, ?, ?, ?, ?)";
 
-        // query the database to insert the account information
-        this.dbConn.query(query, [token, name, email, password], (error, result) => {
-          if(!error) {
-            // emit a message of success to the client
-            console.log("Registered 1 account into AccountRecord: " + token);
-            socket.emit("registerAccount", {
-              success: true,
-              message: {
-                id: result.insertId,
-                token: token
-              }
-            });
-          } else {
-            failure(error, "A query error occurred when registering for the account...");
-          }
-        });
-      } else {
-        failure("This email is already registered!", "This email is already registered!");
-      }
-    }).catch((error) => {
-      failure(error, "A query error occurred when verifying the email...");
-    });
+          // query the database to insert the account information
+          this.dbConn.query(query,
+            [token, name, email, password, profilePhoto], (error, result) => {
+              if(!error) {
+                // emit a message of success to the client
+                console.log("Registered 1 account into AccountRecord: " + email);
+                socket.emit("registerAccount", {
+                  success: true,
+                  message: {
+                    id: result.insertId,
+                    token: token,
+                    profile_photo: profilePhoto
+                  }
+                });
+              } else {
+                failure(error, "A query error occurred when registering for the account...");
+              }}
+            );
+        } else {
+          failure("This email is already registered!", "This email is already registered!");
+        }
+      }).catch((error) => {
+        failure(error, "A query error occurred when verifying the email...");
+      });
+    } else {
+      failure("The fields are invalid!", "Invalid fields were used when registering!");
+    }
   }
 
   // return a promise to receive account data using an account token
@@ -176,6 +183,46 @@ class AccountRecord {
         reject(error);
       });
     });
+  }
+
+  // upload the base64 profile picture, then return its directory
+  async uploadBase64(base64) {
+    if(base64) {
+      // create the directories if they do not exist
+      let uniqueId = uniqid();
+      if (!fs.existsSync(__dirname + "/media")) {
+        fs.mkdirSync(__dirname + "/media");
+      }
+      if(!fs.existsSync(__dirname + "/media/profile_photos")) {
+        fs.mkdirSync(__dirname + "/media/profile_photos");
+      }
+      if(!fs.existsSync(__dirname + "/media/profile_photos/" + uniqueId)) {
+        fs.mkdirSync(__dirname + "/media/profile_photos/" + uniqueId);
+      }
+      let directory = __dirname + "/media/profile_photos/" + uniqueId + "/picture.png";
+
+      // upload the base64 picture
+      fs.writeFile(directory, base64, {encoding: "base64"}, (error) => {
+        if(error) {
+          console.log(error);
+        }
+      });
+      // return the URL of the uploaded image
+      return config.serverDomain + ":" + config.serverPort
+        + "/media/profile_photos/" + uniqueId + "/picture.png";
+    }
+    return undefined;
+  }
+
+  // return if the registration fields are valid
+  isRegistrationValid(name, email, password) {
+    return !(name == "" || email == "" || password == "" || !this.isEmailValid(email));
+  }
+
+  // return if an email is valid
+  isEmailValid(email) {
+    let emailRegex = /\S+@\S+\.\S+/;
+    return emailRegex.test(email);
   }
 }
 module.exports = AccountRecord;

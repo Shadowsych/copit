@@ -7,7 +7,6 @@ import * as Permissions from "expo-permissions";
 import {StyleSheet, Picker, ScrollView,
   ActivityIndicator, Text, Alert, View} from "react-native";
 import {SearchBar, Icon, Button, Card} from 'react-native-elements';
-import * as Animatable from 'react-native-animatable';
 
 // style sheet
 const styles = StyleSheet.create({

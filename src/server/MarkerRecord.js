@@ -213,7 +213,7 @@ class MasterRecord {
     }
   }
 
-  // upload the base64 picture, then return its directory
+  // upload the base64 marker picture, then return its directory
   async uploadBase64(base64) {
     if(base64) {
       // create the directories if they do not exist

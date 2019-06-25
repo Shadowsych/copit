@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
   },
   input_text_container: {
     flex: 0.25,
-    width: Dimensions.get('window').width * 0.90
+    width: Dimensions.get("window").width * 0.90
   },
   input_text: {
     color: "#909090"
@@ -126,7 +126,7 @@ class AddPing extends React.Component {
             inputStyle={styles.input_text}
             maxLength={24}
             selectionColor="#909090"
-            placeholder="Input title here..."
+            placeholder="Input title here...*"
             onChangeText={(text) => this.setState({title: text})}
             rightIcon={
               <Icon name="title" type="material" color="#D3D3D3" size={28} />
@@ -137,7 +137,7 @@ class AddPing extends React.Component {
             inputStyle={styles.input_text}
             maxLength={128}
             selectionColor="#909090"
-            placeholder="Input short description here..."
+            placeholder="Input short description here...*"
             onChangeText={(text) => this.setState({description: text})}
             rightIcon={
               <Icon name="form" type="antdesign" color="#D3D3D3" size={28} />
@@ -170,7 +170,7 @@ class AddPing extends React.Component {
     this.props.navigation.goBack();
   }
 
-  // upload a picture
+  // upload a picture for the ping
   async uploadPicture() {
     await Permissions.askAsync(Permissions.CAMERA);
     await Permissions.askAsync(Permissions.CAMERA_ROLL);
@@ -185,9 +185,9 @@ class AddPing extends React.Component {
 
     if(!picture.cancelled) {
       // set the state to the picture
-      let picture_base64 = `${picture.base64}`;
+      let pictureBase64 = `${picture.base64}`;
       this.setState({
-        picture_base64: picture_base64
+        picture_base64: pictureBase64
       });
     }
   }

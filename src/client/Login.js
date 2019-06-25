@@ -1,6 +1,7 @@
 // react packages
 import React from "react";
 import Constants from 'expo-constants'
+import {NavigationActions} from "react-navigation";
 
 // styling packages
 import {StyleSheet, Dimensions, Image, TouchableOpacity,
@@ -32,14 +33,14 @@ const styles = StyleSheet.create({
   },
   input_text_container: {
     flex: 0.50,
-    width: Dimensions.get('window').width * 0.80
+    width: Dimensions.get("window").width * 0.80
   },
   input_text: {
     color: "#909090"
   },
   login_btn_container: {
     flex: 0.05,
-    width: "75%",
+    width: "75%"
   },
   login_btn: {
     backgroundColor: "#75B1DE"
@@ -156,27 +157,33 @@ class Login extends React.Component {
   loginGuest() {
     // guests have an imaginary id and token
     let guestIdToken = -1;
-
     this.loadHomePage(guestIdToken, guestIdToken, "Guest");
   }
 
   // load the register page
   loadRegisterPage() {
     this.props.navigation.navigate("Register", {
-      socket: this.props.navigation.state.params.socket
+      socket: this.props.navigation.state.params.socket,
+      loadHomePage: this.loadHomePage.bind(this)
     });
   }
 
   // load the home page
   loadHomePage(id, token, name, email, profilePhoto) {
-    this.props.navigation.replace("Home", {
-      socket: this.props.navigation.state.params.socket,
-      id: id,
-      token: token,
-      name: name,
-      email: email,
-      profile_photo: profilePhoto
-    });
+    // pop the navigation stack, then navigate to the Home screen
+    this.props.navigation.reset([
+       NavigationActions.navigate({
+         routeName: "Home",
+         params: {
+           socket: this.props.navigation.state.params.socket,
+           id: id,
+           token: token,
+           name: name,
+           email: email,
+           profile_photo: profilePhoto
+         }
+       })], 0
+    );
   }
 }
 export default Login;
