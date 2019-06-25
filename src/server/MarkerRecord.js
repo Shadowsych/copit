@@ -98,16 +98,17 @@ class MasterRecord {
     });
   }
 
-  // add a marker to the database
+  // add a marker
   async addMarker(data) {
     // interpret the variables passed from the client
+    let authorId = data.message.author_id;
     let authorToken = data.message.author_token;
     let author = data.message.author;
     let title = data.message.title;
     let description = data.message.description;
     let longitude = data.message.longitude;
     let latitude = data.message.latitude;
-    let picture = this.uploadBase64(data.message.picture_base64);
+    let picture = await this.uploadBase64(data.message.picture_base64);
     let category = data.message.category;
     let createdDate = this.getFutureTimeStamp(0, 0, 0, 0, 0, 0);
 
@@ -115,62 +116,83 @@ class MasterRecord {
     const hoursTillExpires = 4;
     let expires = this.getFutureTimeStamp(0, 0, 0, hoursTillExpires, 0, 0);
 
-    // create a prepared statement to insert this marker
-    let query = "INSERT INTO MarkerRecord (author_token, author, title, description,"
-      + " longitude, latitude, picture, category, created_date, expires) VALUES"
-      + " (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    // called whenever there exists a failure
+    let socket = this.socket;
+    function failure(error, errorMessage) {
+      // emit a failed attempt to the client
+      console.log(error);
+      socket.emit("addMarker", {
+        success: false,
+        message: errorMessage
+      });
+    }
 
-    // query to insert into the record
-    this.dbConn.query(query, [authorToken, author, title, description, longitude,
-      latitude, picture, category, createdDate, expires], (error, result) => {
-      if(!error) {
-        // emit a message of success to the client
-        console.log("Inserted 1 row into MarkerRecord: " + title);
-        this.socket.emit("addMarker", {
-          success: true,
-          message: "Successfully added the ping!"
+    // verify the author id and token are valid
+    await AccountRecord.isAccountIdValid(this.dbConn, authorId, authorToken).then((valid) => {
+      if(valid) {
+        // create a prepared statement to insert this marker
+        let query = "INSERT INTO MarkerRecord (author_id, author, title, description,"
+          + " longitude, latitude, picture, category, created_date, expires) VALUES"
+          + " (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        // query to insert into the record
+        this.dbConn.query(query, [authorId, author, title, description, longitude,
+          latitude, picture, category, createdDate, expires], (error, result) => {
+          if(!error) {
+            // emit a message of success to the client
+            console.log("Inserted 1 row into MarkerRecord: " + title);
+            this.socket.emit("addMarker", {
+              success: true,
+              message: "Successfully added the ping!"
+            });
+          } else {
+            failure(error, "Error querying into the Database to add ping...");
+          }
         });
       } else {
-        // emit a message of failure to the client
-        console.log(error);
-        this.socket.emit("addMarker", {
-          success: false,
-          message: "Error querying into the Database to add ping..."
-        });
+        failure("Invalid Token: " + token, "The account id and token is invalid...");
       }
+    }).catch((error) => {
+      failure(error, "Error querying into the Database to verify account...");
     });
   }
 
   // add a like for a marker
   async addLike(data) {
     // interpret the variables passed from the client
-    let authorToken = data.message.author_token;
+    let userId = data.message.user_id;
+    let userToken = data.message.user_token;
     let markerId = data.message.marker_id;
 
-    // create a prepared statement to receive the liked marker
-    let query = "SELECT likes FROM MarkerRecord WHERE id=?";
+    // verify the user id and token are valid
+    await AccountRecord.isAccountIdValid(this.dbConn, userId, userToken).then((valid) => {
+      if(valid) {
+        // create a prepared statement to receive the liked marker
+        let query = "SELECT likes FROM MarkerRecord WHERE id=?";
 
-    // query the database to find the liked marker
-    this.dbConn.query(query, [markerId], (error, result) => {
-      if(!error) {
-        // update the likes Array
-        let likes = JSON.parse(JSON.parse(JSON.stringify(result))[0].likes);
-        this.updateLikes(authorToken, markerId, likes);
-      } else {
-        console.log(error);
+        // query the database to find the liked marker
+        this.dbConn.query(query, [markerId], (error, result) => {
+          if(!error) {
+            // update the likes Array
+            let likes = JSON.parse(JSON.parse(JSON.stringify(result))[0].likes);
+            this.updateLikes(userId, markerId, likes);
+          } else {
+            console.log(error);
+          }
+        });
       }
     });
   }
 
   // update a like for a marker
-  async updateLikes(authorToken, markerId, likes) {
+  async updateLikes(userId, markerId, likes) {
     let alreadyAddedLike = false;
     if(!likes) {
       // likes is null, initialize it with this user as the first like
-      likes = [authorToken];
-    } else if(!likes.includes(authorToken)) {
+      likes = [userId];
+    } else if(!likes.includes(userId)) {
       // add the user's like
-      likes.push(authorToken);
+      likes.push(userId);
     } else {
       alreadyAddedLike = true;
     }

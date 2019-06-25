@@ -9,6 +9,7 @@ import {fadeIn, fromBottom, fromTop, fromLeft, zoomIn} from 'react-navigation-tr
 // pages
 import Loading from "./Loading";
 import Login from "./Login";
+import Register from "./Register";
 import Home from "./Home";
 import Pings from "./Pings";
 import AddPing from "./AddPing";
@@ -22,6 +23,11 @@ const handleCustomTransition = ({ scenes }) => {
   const nextScene = scenes[scenes.length - 1];
 
   if(prevScene
+    && prevScene.route.routeName == "Login"
+    && nextScene.route.routeName == "Register") {
+      // transition from the bottom from the login to register page
+      return fromBottom();
+  } else if(prevScene
     && prevScene.route.routeName == "Home"
     && nextScene.route.routeName == "Pings") {
       // transition from the bottom from the home to pings page
@@ -53,6 +59,9 @@ const Navigation = createStackNavigator({
   },
   Login: {
     screen: Login
+  },
+  Register: {
+    screen: Register
   },
   Home: {
     screen: Home

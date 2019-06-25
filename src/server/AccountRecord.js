@@ -14,56 +14,6 @@ class AccountRecord {
     socket.on("loginAccount", (data) => {this.loginAccount(data)});
   }
 
-  // register an account
-  async registerAccount(data) {
-    // interpret the variables passed from the client
-    let email = data.message.email;
-    let password = data.message.password;
-
-    // called whenever there exists a failure
-    let socket = this.socket;
-    function failure(error, errorMessage) {
-      // emit a failed attempt to the client
-      console.log(error);
-      socket.emit("registerAccount", {
-        success: false,
-        message: errorMessage
-      });
-    }
-
-    // call the email query promise
-    await AccountRecord.isEmailExists(this.dbConn, email).then((exists) => {
-      if(!exists) {
-        // generate a random token
-        let token = uniqid();
-
-        // create a prepared statement to insert the account information
-        let query = "INSERT INTO AccountRecord (token, email, password) "
-          + "VALUES (?, ?, ?)";
-
-        // query the database to insert the account information
-        this.dbConn.query(query, [token, email, password], (error, result) => {
-          if(!error) {
-            // emit a message of success to the client
-            console.log("Registered 1 account into AccountRecord: " + token);
-            socket.emit("registerAccount", {
-              success: true,
-              message: {
-                id: result.insertId,
-              }
-            });
-          } else {
-            failure(error, "A query error occurred when registering for the account...");
-          }
-        });
-      } else {
-        failure("This email is already registered!", "This email is already registered!");
-      }
-    }).catch((error) => {
-      failure(error, "A query error occurred when registering the account...");
-    });
-  }
-
   // login an account
   async loginAccount(data) {
     // interpret the variables passed from the client
@@ -104,6 +54,58 @@ class AccountRecord {
     });
   }
 
+  // register an account
+  async registerAccount(data) {
+    // interpret the variables passed from the client
+    let name = data.message.name;
+    let email = data.message.email;
+    let password = data.message.password;
+
+    // called whenever there exists a failure
+    let socket = this.socket;
+    function failure(error, errorMessage) {
+      // emit a failed attempt to the client
+      console.log(error);
+      socket.emit("registerAccount", {
+        success: false,
+        message: errorMessage
+      });
+    }
+
+    // call the email query promise
+    await AccountRecord.isEmailExists(this.dbConn, email).then((exists) => {
+      if(!exists) {
+        // generate a random token
+        let token = uniqid();
+
+        // create a prepared statement to insert the account information
+        let query = "INSERT INTO AccountRecord (token, name, email, password) "
+          + "VALUES (?, ?, ?, ?)";
+
+        // query the database to insert the account information
+        this.dbConn.query(query, [token, name, email, password], (error, result) => {
+          if(!error) {
+            // emit a message of success to the client
+            console.log("Registered 1 account into AccountRecord: " + token);
+            socket.emit("registerAccount", {
+              success: true,
+              message: {
+                id: result.insertId,
+                token: token
+              }
+            });
+          } else {
+            failure(error, "A query error occurred when registering for the account...");
+          }
+        });
+      } else {
+        failure("This email is already registered!", "This email is already registered!");
+      }
+    }).catch((error) => {
+      failure(error, "A query error occurred when verifying the email...");
+    });
+  }
+
   // return a promise to receive account data using an account token
   static async getAccount(dbConn, token) {
     return new Promise((resolve, reject) => {
@@ -120,6 +122,34 @@ class AccountRecord {
           }
           // there was no such account
           resolve(undefined);
+        }
+        reject(error);
+      });
+    });
+  }
+
+  // return a promise to check if an account id is valid using an account token
+  static async isAccountIdValid(dbConn, id, token) {
+    return new Promise((resolve, reject) => {
+      // guests have an imaginary id and token
+      let guestIdToken = -1;
+      if(id == guestIdToken && token == guestIdToken) {
+        resolve(true);
+      }
+
+      // create a prepared statement to select from the account record
+      let query = "SELECT * FROM AccountRecord WHERE id=? AND token=?"
+
+      // query the database to receive the account information
+      dbConn.query(query, [id, token], (error, result) => {
+        if(!error) {
+          let accountData = JSON.parse(JSON.stringify(result));
+          if(accountData.length != 0) {
+            // the account id is valid for the given token
+            resolve(true);
+          }
+          // the account id is invalid for the given token
+          resolve(false);
         }
         reject(error);
       });

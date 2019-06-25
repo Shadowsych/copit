@@ -250,7 +250,8 @@ class Home extends React.Component {
 
     this.props.navigation.navigate("ViewPing", {
       socket: this.state.socket,
-      token: this.props.navigation.state.params.token,
+      user_id: this.props.navigation.state.params.id,
+      user_token: this.props.navigation.state.params.token,
       id: marker.id,
       picture: marker.picture,
       title: marker.title,
@@ -267,6 +268,7 @@ class Home extends React.Component {
   loadMenuPage() {
     this.props.navigation.navigate("Menu", {
       socket: this.state.socket,
+      id: this.props.navigation.state.params.id,
       token: this.props.navigation.state.params.token,
       name: this.props.navigation.state.params.name,
       email: this.props.navigation.state.params.email,
@@ -290,6 +292,7 @@ class Home extends React.Component {
   loadPingsPage() {
     this.props.navigation.navigate("Pings", {
       socket: this.state.socket,
+      id: this.props.navigation.state.params.id,
       token: this.props.navigation.state.params.token,
       name: this.props.navigation.state.params.name,
       updateLocation: this.updateLocation.bind(this)

@@ -240,6 +240,7 @@ class AddPing extends React.Component {
     // emit a message to add the marker
     socket.emit("addMarker", {
       message: {
+        author_id: this.props.navigation.state.params.id,
         author_token: this.props.navigation.state.params.token,
         author: author,
         title: this.state.title,

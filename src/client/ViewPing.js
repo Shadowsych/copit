@@ -123,14 +123,15 @@ class ViewPing extends React.Component {
 
   // add a like on the marker
   async addLike() {
-    let authorToken = this.props.navigation.state.params.token;
+    let userId = this.props.navigation.state.params.user_id;
+    let userToken = this.props.navigation.state.params.user_token;
     let markerId = this.state.id;
 
     // add the like if the user has not liked it
     let markerLikes = this.state.likes;
-    if(!markerLikes.includes(authorToken)) {
+    if(!markerLikes.includes(userId)) {
       // update the like state
-      markerLikes.push(authorToken);
+      markerLikes.push(userId);
       this.setState({
         likes: markerLikes
       });
@@ -138,7 +139,8 @@ class ViewPing extends React.Component {
       // emit a message to like the marker
       this.state.socket.emit("addLike", {
         message: {
-          author_token: authorToken,
+          user_id: userId,
+          user_token: userToken,
           marker_id: markerId
         },
         handle: "addLike"

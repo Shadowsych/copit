@@ -105,6 +105,7 @@ class Login extends React.Component {
             } />
         </KeyboardAvoidingView>
         <Button title="Login" buttonStyle={styles.login_btn}
+          onPress={() => this.loginAccount()}
           containerStyle={styles.login_btn_container} />
         <TouchableOpacity activeOpacity={0.8}
           onPress={() => this.loadRegisterPage()}
@@ -121,8 +122,10 @@ class Login extends React.Component {
   }
 
   // handle the login of the user
-  async loginAccount(email, password) {
+  async loginAccount() {
     let socket = this.props.navigation.state.params.socket;
+    let email = this.state.email;
+    let password = this.state.password;
 
     // emit a message to receive the account information
     socket.emit("loginAccount", {
@@ -149,39 +152,19 @@ class Login extends React.Component {
     });
   }
 
-  // register an account
-  async registerAccount(email, password) {
-    let socket = this.props.navigation.state.params.socket;
-
-    // emit a message to register the account
-    socket.emit("registerAccount", {
-      message: {
-        email: email,
-        password: password
-      },
-      handle: "handleRegisterAccount"
-    });
-
-    // listen for the register account response from the server
-    socket.on("registerAccount", (data) => {
-      if(data.success) {
-        // registered the account, load the home page
-        this.loadHomePage(data.message.id, data.message.token);
-      } else if(!data.success) {
-        // an error occurred when registering the account
-        Alert.alert("Register Error!", data.message);
-      }
-    });
-  }
-
   // login as a guest
   loginGuest() {
-    this.loginAccount("guest@gmail.com", "test");
+    // guests have an imaginary id and token
+    let guestIdToken = -1;
+
+    this.loadHomePage(guestIdToken, guestIdToken, "Guest");
   }
 
   // load the register page
   loadRegisterPage() {
-
+    this.props.navigation.navigate("Register", {
+      socket: this.props.navigation.state.params.socket
+    });
   }
 
   // load the home page
