@@ -201,7 +201,7 @@ class AddPing extends React.Component {
     } else if(socket.connected) {
       // add the marker into the server
       this.setState({loading: true});
-      await this.sendMarker(socket);
+      this.sendMarker(socket);
     } else {
       Alert.alert("Internet Error!", "Could not connect to the server, is your internet down?");
     }

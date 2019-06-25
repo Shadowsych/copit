@@ -8,6 +8,7 @@ var config = require("../../server.json");
 
 // record classes
 let MarkerRecord = require("./MarkerRecord");
+let AccountRecord = require("./AccountRecord");
 
 // initiate an express server
 const app = express();
@@ -43,4 +44,5 @@ io.on("connection", (socket) => {
 
   // initiate record classes
   new MarkerRecord(socket, dbConn);
+  new AccountRecord(socket, dbConn);
 });

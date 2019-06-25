@@ -23,9 +23,6 @@
     "assetBundlePatterns": [
       "**/*"
     ],
-    "facebookScheme": "fb2398944847050429",
-    "facebookAppId": "2398944847050429",
-    "facebookDisplayName": "Frea",
     "ios": {
       "bundleIdentifier": "com.freatech.frea",
       "supportsTablet": true

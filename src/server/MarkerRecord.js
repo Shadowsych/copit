@@ -3,6 +3,9 @@ var fs = require("fs");
 var uniqid = require('uniqid');
 var config = require("../../server.json");
 
+// record classes
+let AccountRecord = require("./AccountRecord");
+
 class MasterRecord {
   // construct the record using the socket and database connections
   constructor(socket, dbConn) {
@@ -33,7 +36,7 @@ class MasterRecord {
       + `) AS distance FROM MarkerRecord HAVING distance < ${mileRadius} `
       + `ORDER BY distance LIMIT 0, ${nearestMarkers}`;
 
-    // query the database to search to find the markers
+    // query the database to receive the markers
     this.dbConn.query(query, [latitude, longitude, latitude], (error, result) => {
       if(!error) {
         // emit a message with the nearest markers to the client
@@ -76,7 +79,7 @@ class MasterRecord {
       + `description LIKE '%${search}%' AND category LIKE '%${category}%' `
       + `HAVING distance < ${mileRadius} ORDER BY distance LIMIT 0, ${nearestMarkers}`;
 
-    // query the database to search to find the markers
+    // query the database to search the markers
     this.dbConn.query(query, [latitude, longitude, latitude], (error, result) => {
       if(!error) {
         // emit a message with the nearest markers to the client
@@ -98,13 +101,13 @@ class MasterRecord {
   // add a marker to the database
   async addMarker(data) {
     // interpret the variables passed from the client
-    let authorId = data.message.author_token;
+    let authorToken = data.message.author_token;
     let author = data.message.author;
     let title = data.message.title;
     let description = data.message.description;
     let longitude = data.message.longitude;
     let latitude = data.message.latitude;
-    let picture = await this.uploadBase64(data.message.picture_base64);
+    let picture = this.uploadBase64(data.message.picture_base64);
     let category = data.message.category;
     let createdDate = this.getFutureTimeStamp(0, 0, 0, 0, 0, 0);
 
@@ -118,7 +121,7 @@ class MasterRecord {
       + " (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     // query to insert into the record
-    this.dbConn.query(query, [authorId, author, title, description, longitude,
+    this.dbConn.query(query, [authorToken, author, title, description, longitude,
       latitude, picture, category, createdDate, expires], (error, result) => {
       if(!error) {
         // emit a message of success to the client
@@ -138,7 +141,7 @@ class MasterRecord {
     });
   }
 
-  // add a like on a marker
+  // add a like for a marker
   async addLike(data) {
     // interpret the variables passed from the client
     let authorToken = data.message.author_token;
@@ -147,7 +150,7 @@ class MasterRecord {
     // create a prepared statement to receive the liked marker
     let query = "SELECT likes FROM MarkerRecord WHERE id=?";
 
-    // query the database to search to find the liked marker
+    // query the database to find the liked marker
     this.dbConn.query(query, [markerId], (error, result) => {
       if(!error) {
         // update the likes Array
