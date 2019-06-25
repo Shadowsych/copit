@@ -40,6 +40,7 @@ class AccountRecord {
         let accountData = JSON.parse(JSON.stringify(result));
         if(accountData.length != 0) {
           // emit the account data back to the client
+          console.log(email + " logged in!");
           socket.emit("loginAccount", {
             success: true,
             message: accountData[0]

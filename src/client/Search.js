@@ -35,10 +35,11 @@ const styles = StyleSheet.create({
     marginBottom: 10
   },
   card_btn: {
+    backgroundColor: "#75B1DE",
     borderRadius: 0,
     marginLeft: 0,
     marginRight: 0,
-    marginBottom: 0
+    marginBottom: 0,
   },
   go_back_container: {
     flex: 0.10,
@@ -121,7 +122,6 @@ class Search extends React.Component {
                   </Text>
                   <Text style={styles.card_text}>{marker.description}</Text>
                   <Button
-                    backgroundColor="#1C7ED7"
                     buttonStyle={styles.card_btn}
                     onPress={() => this.props.navigation.state.params.loadViewPingPage(marker)}
                     title="VIEW PING" />

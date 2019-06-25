@@ -33,8 +33,8 @@ class MasterRecord {
       + "picture, category, likes, created_date, expires, ("
       + `${milesConstant} * acos(cos(radians(?)) * cos(radians(latitude)) * `
       + "cos(radians(longitude) -radians(?)) + sin(radians(?)) * sin(radians(latitude)))"
-      + `) AS distance FROM MarkerRecord HAVING distance < ${mileRadius} `
-      + `ORDER BY distance LIMIT 0, ${nearestMarkers}`;
+      + ") AS distance FROM MarkerRecord WHERE expires > UNIX_TIMESTAMP(NOW(3)) * 1000 "
+      + `HAVING distance < ${mileRadius} ORDER BY distance LIMIT 0, ${nearestMarkers}`;
 
     // query the database to receive the markers
     this.dbConn.query(query, [latitude, longitude, latitude], (error, result) => {
@@ -77,7 +77,8 @@ class MasterRecord {
       + "cos(radians(longitude) -radians(?)) + sin(radians(?)) * sin(radians(latitude)))"
       + `) AS distance FROM MarkerRecord WHERE `
       + `description LIKE '%${search}%' AND category LIKE '%${category}%' `
-      + `HAVING distance < ${mileRadius} ORDER BY distance LIMIT 0, ${nearestMarkers}`;
+      + `AND expires > UNIX_TIMESTAMP(NOW(3)) * 1000 HAVING distance < ${mileRadius} `
+      + `ORDER BY distance LIMIT 0, ${nearestMarkers}`;
 
     // query the database to search the markers
     this.dbConn.query(query, [latitude, longitude, latitude], (error, result) => {
