@@ -188,7 +188,7 @@ class AccountRecord {
     });
   }
 
-  // upload the base64 profile picture, then return its directory
+  // upload a base64 picture, then return its directory
   static async uploadBase64(base64, directory, file) {
     if(base64) {
       // create the directories if they do not exist
