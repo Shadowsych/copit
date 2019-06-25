@@ -1,5 +1,6 @@
 // file system packages
 var fs = require("fs");
+var mkdirp = require('mkdirp');
 var uniqid = require('uniqid');
 var config = require("../../server.json");
 
@@ -61,7 +62,9 @@ class AccountRecord {
     let name = data.message.name;
     let email = data.message.email;
     let password = data.message.password;
-    let profilePhoto = await this.uploadBase64(data.message.profile_photo_base64);
+    let profilePhoto = await AccountRecord.uploadBase64(
+      data.message.profile_photo_base64, "/media/profile_photos", "picture.png"
+    );
 
     // called whenever there exists a failure
     let socket = this.socket;
@@ -186,30 +189,26 @@ class AccountRecord {
   }
 
   // upload the base64 profile picture, then return its directory
-  async uploadBase64(base64) {
+  static async uploadBase64(base64, directory, file) {
     if(base64) {
       // create the directories if they do not exist
       let uniqueId = uniqid();
-      if (!fs.existsSync(__dirname + "/media")) {
-        fs.mkdirSync(__dirname + "/media");
-      }
-      if(!fs.existsSync(__dirname + "/media/profile_photos")) {
-        fs.mkdirSync(__dirname + "/media/profile_photos");
-      }
-      if(!fs.existsSync(__dirname + "/media/profile_photos/" + uniqueId)) {
-        fs.mkdirSync(__dirname + "/media/profile_photos/" + uniqueId);
-      }
-      let directory = __dirname + "/media/profile_photos/" + uniqueId + "/picture.png";
-
-      // upload the base64 picture
-      fs.writeFile(directory, base64, {encoding: "base64"}, (error) => {
-        if(error) {
+      directory += "/" + uniqueId;
+      await mkdirp(__dirname + directory, (error) => {
+        if(!error) {
+          // upload the base64 picture
+          let pictureDir = __dirname + directory + "/" + file;
+          fs.writeFile(pictureDir, base64, {encoding: "base64"}, (error) => {
+            if(error) {
+              console.log(error);
+            }
+          });
+        } else {
           console.log(error);
         }
       });
       // return the URL of the uploaded image
-      return config.serverDomain + ":" + config.serverPort
-        + "/media/profile_photos/" + uniqueId + "/picture.png";
+      return config.serverDomain + ":" + config.serverPort + directory + "/" + file;
     }
     return undefined;
   }

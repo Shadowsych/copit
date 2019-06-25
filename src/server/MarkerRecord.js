@@ -109,7 +109,9 @@ class MasterRecord {
     let description = data.message.description;
     let longitude = data.message.longitude;
     let latitude = data.message.latitude;
-    let picture = await this.uploadBase64(data.message.picture_base64);
+    let picture = await AccountRecord.uploadBase64(
+      data.message.picture_base64, "/media/pings", "picture.png"
+    );
     let category = data.message.category;
     let createdDate = this.getFutureTimeStamp(0, 0, 0, 0, 0, 0);
 
@@ -211,35 +213,6 @@ class MasterRecord {
         }
       });
     }
-  }
-
-  // upload the base64 marker picture, then return its directory
-  async uploadBase64(base64) {
-    if(base64) {
-      // create the directories if they do not exist
-      let uniqueId = uniqid();
-      if (!fs.existsSync(__dirname + "/media")) {
-        fs.mkdirSync(__dirname + "/media");
-      }
-      if(!fs.existsSync(__dirname + "/media/pings")) {
-        fs.mkdirSync(__dirname + "/media/pings");
-      }
-      if(!fs.existsSync(__dirname + "/media/pings/" + uniqueId)) {
-        fs.mkdirSync(__dirname + "/media/pings/" + uniqueId);
-      }
-      let directory = __dirname + "/media/pings/" + uniqueId + "/picture.png";
-
-      // upload the base64 picture
-      fs.writeFile(directory, base64, {encoding: "base64"}, (error) => {
-        if(error) {
-          console.log(error);
-        }
-      });
-      // return the URL of the uploaded image
-      return config.serverDomain + ":" + config.serverPort
-        + "/media/pings/" + uniqueId + "/picture.png";
-    }
-    return undefined;
   }
 
   // return a future time stamp from the current time
