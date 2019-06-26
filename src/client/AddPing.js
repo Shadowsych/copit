@@ -209,22 +209,22 @@ class AddPing extends React.Component {
             {this.props.navigation.state.params.category}
           </Text>
         </Header>
-        <View style={styles.spacing}></View>
+        <View style={styles.spacing} />
         <TouchableOpacity
           activeOpacity={0.8}
           onPress={() => this.uploadPicture()}
           style={styles.upload_picture_btn}>
-            {!this.state.picture_base64 ? (
-              <View>
-                <Icon name="camera" type="antdesign" color="#D3D3D3" size={56} />
-                <Text style={styles.upload_picture_text}>Tap to Open Camera</Text>
-              </View>
-            ) : (
-              <Image
-                style={styles.picture}
-                source={{uri: `data:image/png;base64, ${this.state.picture_base64}`}}
-              />
-            )}
+          {!this.state.picture_base64 ? (
+            <View>
+              <Icon name="camera" type="antdesign" color="#D3D3D3" size={56} />
+              <Text style={styles.upload_picture_text}>Tap to Open Camera</Text>
+            </View>
+          ) : (
+            <Image
+              style={styles.picture}
+              source={{uri: `data:image/png;base64, ${this.state.picture_base64}`}}
+            />
+          )}
         </TouchableOpacity>
         <KeyboardAvoidingView keyboardVerticalOffset={NavHeader.HEIGHT}
           behavior="padding" style={styles.input_text_form}>
@@ -258,15 +258,13 @@ class AddPing extends React.Component {
               onPress={() => this.setState({anonymous: !this.state.anonymous})}
             />
           </View>
-          <Text style={styles.notice_text}>
-            Notice: This will ping your current location.
-          </Text>
+          <Text style={styles.notice_text}>Notice: This will ping your current location.</Text>
         </KeyboardAvoidingView>
         <TouchableOpacity
           onPress={() => this.addPing()}
           activeOpacity={0.8}
           style={styles.add_ping_btn}>
-            <Text style={styles.add_ping_text}>Add Ping</Text>
+          <Text style={styles.add_ping_text}>Add Ping</Text>
         </TouchableOpacity>
       </View>
     );

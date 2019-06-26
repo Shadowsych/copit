@@ -154,34 +154,34 @@ class Home extends React.Component {
             latitude: this.state.location.latitude,
             latitudeDelta: this.state.locationDelta.latitudeDelta,
           }}>
+          <MapView.Marker
+            title="You Are Here"
+            coordinate={{
+              longitude: this.state.location.longitude,
+              latitude: this.state.location.latitude
+            }} >
+              <Icon name="person-pin-circle" type="material" color="#C1392B" size={40} />
+          </MapView.Marker>
+          {this.state.markers.map((marker, key) => (
             <MapView.Marker
-              title="You Are Here"
+              key={key}
               coordinate={{
-                longitude: this.state.location.longitude,
-                latitude: this.state.location.latitude
-              }} >
-                <Icon name="person-pin-circle" type="material" color="#C1392B" size={40} />
+                longitude: marker.longitude,
+                latitude: marker.latitude
+              }}
+              onPress={() => this.loadViewPingPage(marker)} >
+                {this.renderMarkerIcon(marker.category)}
             </MapView.Marker>
-            {this.state.markers.map((marker, key) => (
-              <MapView.Marker
-                key={key}
-                coordinate={{
-                  longitude: marker.longitude,
-                  latitude: marker.latitude
-                }}
-                onPress={() => this.loadViewPingPage(marker)} >
-                  {this.renderMarkerIcon(marker.category)}
-              </MapView.Marker>
-            ))}
+          ))}
         </MapView>
         <GestureRecognizer
           onSwipeUp={() => this.loadPingsPage()}
           config={gestureConfig}
           style={styles.swipe_up_container}>
-            <Animatable.View animation="pulse" iterationCount="infinite">
-              <Text style={styles.swipe_up_text}>Swipe to add ping!</Text>
-              <Icon name="arrow-up" type="feather" color="#1C7ED7" />
-            </Animatable.View>
+          <Animatable.View animation="pulse" iterationCount="infinite">
+            <Text style={styles.swipe_up_text}>Swipe to add ping!</Text>
+            <Icon name="arrow-up" type="feather" color="#1C7ED7" />
+          </Animatable.View>
         </GestureRecognizer>
         <TouchableOpacity activeOpacity={0.8} style={styles.reorientation_btn}>
           <Icon raised name="target" onPress={() => this.updateLocation()}

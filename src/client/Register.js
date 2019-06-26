@@ -137,17 +137,17 @@ class Register extends React.Component {
         </Header>
         <TouchableOpacity onPress={() => this.uploadPicture()}
           style={styles.avatar} activeOpacity={0.8}>
-            {!this.state.profile_photo_base64 ? (
-              <Avatar rounded size="xlarge" icon={{name: "camera", type: "entypo"}} />
-            ) : (
-              <Avatar rounded size="xlarge"
-                source={
-                  source={uri: `data:image/png;base64, ${this.state.profile_photo_base64}`}
-                } />
-            )}
+          {!this.state.profile_photo_base64 ? (
+            <Avatar rounded size="xlarge" icon={{name: "camera", type: "entypo"}} />
+          ) : (
+            <Avatar rounded size="xlarge"
+              source={
+                source={uri: `data:image/png;base64, ${this.state.profile_photo_base64}`}
+              } />
+          )}
         </TouchableOpacity>
-        <View style={styles.spacing}></View>
-        <View style={styles.spacing}></View>
+        <View style={styles.spacing} />
+        <View style={styles.spacing} />
         <KeyboardAvoidingView keyboardVerticalOffset={NavHeader.HEIGHT}
           behavior="padding" style={styles.input_text_form}>
           <Input
@@ -191,7 +191,7 @@ class Register extends React.Component {
         <Button title="Register" buttonStyle={styles.register_btn}
           onPress={() => this.registerAccount()}
           containerStyle={styles.register_btn_container} />
-        <View style={styles.spacing}></View>
+        <View style={styles.spacing} />
         <View style={styles.spacing}>
           <Text style={styles.register_disclaimer_text}>
             By registering I agree to the terms of service.

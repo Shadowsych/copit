@@ -1,7 +1,7 @@
 // react packages
 import React from "react";
 import Constants from 'expo-constants'
-import {NavigationActions} from "react-navigation";
+import {NavigationActions, Header as NavHeader} from "react-navigation";
 
 // styling packages
 import {StyleSheet, Dimensions, Image, TouchableOpacity,
@@ -112,14 +112,15 @@ class Login extends React.Component {
     return (
       <View style={styles.container}>
         <Spinner visible={this.state.loading} />
-        <View style={styles.header_spacing}></View>
+        <View style={styles.header_spacing} />
         <View style={styles.logo_container}>
           <Animatable.Image
             style={styles.logo}
             animation="fadeInDown"
             source={require("../../assets/icon.png")} />
         </View>
-        <KeyboardAvoidingView behavior="padding" style={styles.input_text_form}>
+        <KeyboardAvoidingView keyboardVerticalOffset={NavHeader.HEIGHT}
+          behavior="padding" style={styles.input_text_form}>
           <Input
             containerStyle={styles.input_text_container}
             inputStyle={styles.input_text}
@@ -146,12 +147,12 @@ class Login extends React.Component {
         <TouchableOpacity activeOpacity={0.8}
           onPress={() => this.loadRegisterPage()}
           style={styles.text_btn_container}>
-            <Text style={styles.register_btn_text}>New to our app? Register Here.</Text>
+          <Text style={styles.register_btn_text}>New to our app? Register Here.</Text>
         </TouchableOpacity>
         <TouchableOpacity activeOpacity={0.8}
           onPress={() => this.loginGuest()}
           style={styles.text_btn_container}>
-            <Text style={styles.guest_btn_text}>Login as Guest</Text>
+          <Text style={styles.guest_btn_text}>Login as Guest</Text>
         </TouchableOpacity>
       </View>
     );

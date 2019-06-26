@@ -31,7 +31,7 @@ class Loading extends React.Component {
           style={styles.logo}
           animation="bounceIn"
           onAnimationEnd={() => this.loadLoginPage()}
-          source={require("../../assets/icon.png")}/>
+          source={require("../../assets/icon.png")} />
       </View>
     );
   }

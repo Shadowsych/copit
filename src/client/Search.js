@@ -133,8 +133,7 @@ class Search extends React.Component {
             platform="android"
             onChangeText={(text) => this.setState({search: text})}
             onEndEditing={(text) => this.updateSearch()}
-            value={this.state.search}
-          />
+            value={this.state.search} />
           <Picker
             style={styles.picker}
             selectedValue={this.state.category}

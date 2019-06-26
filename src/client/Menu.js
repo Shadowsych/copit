@@ -73,7 +73,7 @@ class Menu extends React.Component {
             <Avatar rounded size="large" title="?" activeOpacity={0.7}
               source={{uri: this.props.navigation.state.params.profile_photo}} />
           </View>
-          <View style={styles.large_spacing}></View>
+          <View style={styles.large_spacing} />
           <View style={styles.small_spacing}>
             <Icon name="trophy" type="simple-line-icon" color="#75B1DE" size={22} />
             <Text style={styles.points_text}>{this.state.points}</Text>
@@ -85,7 +85,7 @@ class Menu extends React.Component {
           onPress={() => this.logOut()}
           activeOpacity={0.8}
           style={styles.logout_btn}>
-            <Text style={styles.logout_text}>Logout</Text>
+          <Text style={styles.logout_text}>Logout</Text>
         </TouchableOpacity>
       </View>
     );
