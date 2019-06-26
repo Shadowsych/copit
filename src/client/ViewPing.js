@@ -56,7 +56,6 @@ class ViewPing extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      socket: this.props.navigation.state.params.socket,
       id: this.props.navigation.state.params.id,
       picture: this.props.navigation.state.params.picture,
       title: this.props.navigation.state.params.title,
@@ -66,6 +65,34 @@ class ViewPing extends React.Component {
       expires: this.props.navigation.state.params.expires,
       distance: this.props.navigation.state.params.distance,
       description: this.props.navigation.state.params.description,
+    }
+  }
+
+  // add a like on the marker
+  async addLike() {
+    let userId = this.props.navigation.state.params.user_id;
+    let userToken = this.props.navigation.state.params.user_token;
+    let markerId = this.state.id;
+
+    // add the like if the user has not liked it
+    let markerLikes = this.state.likes;
+    if(!markerLikes.includes(userId)) {
+      // update the like state
+      markerLikes.push(userId);
+      this.setState({
+        likes: markerLikes
+      });
+
+      // emit a message to like the marker
+      let socket = this.props.navigation.state.params.socket;
+      socket.emit("addLike", {
+        message: {
+          user_id: userId,
+          user_token: userToken,
+          marker_id: markerId
+        },
+        handle: "addLike"
+      });
     }
   }
 
@@ -119,33 +146,6 @@ class ViewPing extends React.Component {
         </View>
       </View>
     );
-  }
-
-  // add a like on the marker
-  async addLike() {
-    let userId = this.props.navigation.state.params.user_id;
-    let userToken = this.props.navigation.state.params.user_token;
-    let markerId = this.state.id;
-
-    // add the like if the user has not liked it
-    let markerLikes = this.state.likes;
-    if(!markerLikes.includes(userId)) {
-      // update the like state
-      markerLikes.push(userId);
-      this.setState({
-        likes: markerLikes
-      });
-
-      // emit a message to like the marker
-      this.state.socket.emit("addLike", {
-        message: {
-          user_id: userId,
-          user_token: userToken,
-          marker_id: markerId
-        },
-        handle: "addLike"
-      });
-    }
   }
 
   // view the directions to the marker

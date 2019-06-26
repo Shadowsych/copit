@@ -73,6 +73,37 @@ class Login extends React.Component {
     }
   }
 
+  // handle the login of the user
+  async loginAccount() {
+    let socket = this.props.navigation.state.params.socket;
+    let email = this.state.email;
+    let password = this.state.password;
+
+    // emit a message to receive the account information
+    socket.emit("loginAccount", {
+      message: {
+        email: email,
+        password: password
+      },
+      handle: "handleLoginAccount"
+    });
+
+    // listen for the account information from the server
+    socket.on("loginAccount", (data) => {
+      if(data.success) {
+        // the account exists, load the home page with its data
+        this.loadHomePage(data.message.id, data.message.token,
+          data.message.name, email, data.message.profile_photo);
+      } else if(!data.success) {
+        // failed to login the account
+        this.setState({
+          failed_email_text: "Could not verify the email address",
+          failed_password_text: "Could not verify the password"
+        });
+      }
+    });
+  }
+
   // render the component's views
   render() {
     return (
@@ -120,37 +151,6 @@ class Login extends React.Component {
         </TouchableOpacity>
       </View>
     );
-  }
-
-  // handle the login of the user
-  async loginAccount() {
-    let socket = this.props.navigation.state.params.socket;
-    let email = this.state.email;
-    let password = this.state.password;
-
-    // emit a message to receive the account information
-    socket.emit("loginAccount", {
-      message: {
-        email: email,
-        password: password
-      },
-      handle: "handleLoginAccount"
-    });
-
-    // listen for the account information from the server
-    socket.on("loginAccount", (data) => {
-      if(data.success) {
-        // the account exists, load the home page with its data
-        this.loadHomePage(data.message.id, data.message.token,
-          data.message.name, email, data.message.profile_photo);
-      } else if(!data.success) {
-        // failed to login the account
-        this.setState({
-          failed_email_text: "Could not verify the email address",
-          failed_password_text: "Could not verify the password"
-        });
-      }
-    });
   }
 
   // login as a guest

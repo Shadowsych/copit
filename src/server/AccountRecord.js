@@ -1,8 +1,8 @@
-// file system packages
-var fs = require("fs");
-var mkdirp = require('mkdirp');
+// token creation packages
 var uniqid = require('uniqid');
-var config = require("../../server.json");
+
+// utils packages
+var UploadUtils = require("./UploadUtils");
 
 class AccountRecord {
   // construct the record using the socket and database connections
@@ -62,7 +62,7 @@ class AccountRecord {
     let name = data.message.name;
     let email = data.message.email;
     let password = data.message.password;
-    let profilePhoto = await AccountRecord.uploadBase64(
+    let profilePhoto = await UploadUtils.uploadBase64(
       data.message.profile_photo_base64, "/media/profile_photos", "picture.png"
     );
 
@@ -186,31 +186,6 @@ class AccountRecord {
         reject(error);
       });
     });
-  }
-
-  // upload a base64 picture, then return its directory
-  static async uploadBase64(base64, directory, file) {
-    if(base64) {
-      // create the directories if they do not exist
-      let uniqueId = uniqid();
-      directory += "/" + uniqueId;
-      await mkdirp(__dirname + directory, (error) => {
-        if(!error) {
-          // upload the base64 picture
-          let pictureDir = __dirname + directory + "/" + file;
-          fs.writeFile(pictureDir, base64, {encoding: "base64"}, (error) => {
-            if(error) {
-              console.log(error);
-            }
-          });
-        } else {
-          console.log(error);
-        }
-      });
-      // return the URL of the uploaded image
-      return config.serverDomain + ":" + config.serverPort + directory + "/" + file;
-    }
-    return undefined;
   }
 
   // return if the registration fields are valid

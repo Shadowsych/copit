@@ -1,10 +1,11 @@
-// file system packages
-var fs = require("fs");
+// token creation packages
 var uniqid = require('uniqid');
-var config = require("../../server.json");
 
 // record classes
-let AccountRecord = require("./AccountRecord");
+var AccountRecord = require("./AccountRecord");
+
+// utils classes
+var UploadUtils = require("./UploadUtils");
 
 class MasterRecord {
   // construct the record using the socket and database connections
@@ -29,8 +30,7 @@ class MasterRecord {
     const milesConstant = 3959;
     const mileRadius = 25;
     const nearestMarkers = 20;
-    let query = "SELECT id, author, title, description, longitude, latitude, "
-      + "picture, category, likes, created_date, expires, ("
+    let query = "SELECT *, ("
       + `${milesConstant} * acos(cos(radians(?)) * cos(radians(latitude)) * `
       + "cos(radians(longitude) -radians(?)) + sin(radians(?)) * sin(radians(latitude)))"
       + ") AS distance FROM MarkerRecord WHERE expires > UNIX_TIMESTAMP(NOW(3)) * 1000 "
@@ -71,8 +71,7 @@ class MasterRecord {
     const milesConstant = 3959;
     const mileRadius = 25;
     const nearestMarkers = 20;
-    let query = "SELECT id, author, title, description, longitude, latitude, "
-      + "picture, category, likes, created_date, expires, ("
+    let query = "SELECT *, ("
       + `${milesConstant} * acos(cos(radians(?)) * cos(radians(latitude)) * `
       + "cos(radians(longitude) -radians(?)) + sin(radians(?)) * sin(radians(latitude)))"
       + `) AS distance FROM MarkerRecord WHERE `
@@ -109,7 +108,7 @@ class MasterRecord {
     let description = data.message.description;
     let longitude = data.message.longitude;
     let latitude = data.message.latitude;
-    let picture = await AccountRecord.uploadBase64(
+    let picture = await UploadUtils.uploadBase64(
       data.message.picture_base64, "/media/pings", "picture.png"
     );
     let category = data.message.category;
@@ -215,7 +214,7 @@ class MasterRecord {
     }
   }
 
-  // return a future time stamp from the current time
+  // return a future time stamp in UTC based on the current time
   getFutureTimeStamp(years, months, days, hours, minutes, seconds) {
     var today = new Date();
 

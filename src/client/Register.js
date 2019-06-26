@@ -66,6 +66,62 @@ class Loading extends React.Component {
     }
   }
 
+  // register an account
+  async registerAccount() {
+    let socket = this.props.navigation.state.params.socket;
+    let name = this.state.name;
+    let email = this.state.email;
+    let password = this.state.password;
+    let profilePhotoBase64 = this.state.profile_photo_base64;
+
+    if(this.isRegistrationValid(name, email, password)) {
+      // emit a message to register the account
+      socket.emit("registerAccount", {
+        message: {
+          name: name,
+          email: email,
+          password: password,
+          profile_photo_base64: profilePhotoBase64
+        },
+        handle: "handleRegisterAccount"
+      });
+
+      // listen for the register account response from the server
+      socket.on("registerAccount", (data) => {
+        if(data.success) {
+          // registered the account, load the home page
+          this.props.navigation.state.params.loadHomePage(data.message.id,
+            data.message.token, name, email, data.message.profile_photo);
+        } else if(!data.success) {
+          // an error occurred when registering the account
+          Alert.alert("Registration Error!", data.message);
+        }
+      });
+    }
+  }
+
+  // upload a picture for the profile
+  async uploadPicture() {
+    await Permissions.askAsync(Permissions.CAMERA);
+    await Permissions.askAsync(Permissions.CAMERA_ROLL);
+
+    // open the camera, then await for the user to take a picture
+    let picture = await ImagePicker.launchImageLibraryAsync({
+      base64: true,
+      quality: 0.2,
+      allowsEditing: true,
+      aspect: [4, 3]
+    });
+
+    if(!picture.cancelled) {
+      // set the state to the picture
+      let profilePhotoBase64 = `${picture.base64}`;
+      this.setState({
+        profile_photo_base64: profilePhotoBase64
+      });
+    }
+  }
+
   // render the component's views
   render() {
     return (
@@ -137,62 +193,6 @@ class Loading extends React.Component {
         </View>
       </View>
     );
-  }
-
-  // upload a picture for the profile
-  async uploadPicture() {
-    await Permissions.askAsync(Permissions.CAMERA);
-    await Permissions.askAsync(Permissions.CAMERA_ROLL);
-
-    // open the camera, then await for the user to take a picture
-    let picture = await ImagePicker.launchImageLibraryAsync({
-      base64: true,
-      quality: 0.2,
-      allowsEditing: true,
-      aspect: [4, 3]
-    });
-
-    if(!picture.cancelled) {
-      // set the state to the picture
-      let profilePhotoBase64 = `${picture.base64}`;
-      this.setState({
-        profile_photo_base64: profilePhotoBase64
-      });
-    }
-  }
-
-  // register an account
-  async registerAccount() {
-    let socket = this.props.navigation.state.params.socket;
-    let name = this.state.name;
-    let email = this.state.email;
-    let password = this.state.password;
-    let profilePhotoBase64 = this.state.profile_photo_base64;
-
-    if(this.isRegistrationValid(name, email, password)) {
-      // emit a message to register the account
-      socket.emit("registerAccount", {
-        message: {
-          name: name,
-          email: email,
-          password: password,
-          profile_photo_base64: profilePhotoBase64
-        },
-        handle: "handleRegisterAccount"
-      });
-
-      // listen for the register account response from the server
-      socket.on("registerAccount", (data) => {
-        if(data.success) {
-          // registered the account, load the home page
-          this.props.navigation.state.params.loadHomePage(data.message.id,
-            data.message.token, name, email, data.message.profile_photo);
-        } else if(!data.success) {
-          // an error occurred when registering the account
-          Alert.alert("Registration Error!", data.message);
-        }
-      });
-    }
   }
 
   // return if the registration fields are valid

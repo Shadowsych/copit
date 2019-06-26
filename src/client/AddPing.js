@@ -91,6 +91,111 @@ class AddPing extends React.Component {
     }
   }
 
+  // add ping
+  async addPing() {
+    let socket = this.props.navigation.state.params.socket;
+
+    if(!this.state.title || !this.state.description) {
+      Alert.alert("Missing Information!", "Please fill out both the title and description.");
+    } else if(socket.connected) {
+      // add the marker into the server
+      this.setState({loading: true});
+      this.sendMarker();
+    } else {
+      Alert.alert("Internet Error!", "Could not connect to the server, is your internet down?");
+    }
+  }
+
+  // send the marker information
+  async sendMarker() {
+    let socket = this.props.navigation.state.params.socket;
+
+    // receive location permissions
+    let {status} = await Permissions.askAsync(Permissions.LOCATION);
+    if (status === "granted") {
+      Location.getCurrentPositionAsync({enableHighAccuracy: true}).then((position) => {
+        // set the location
+        this.setState({
+          location: {
+            longitude: position.coords.longitude,
+            latitude: position.coords.latitude
+          }}
+        );
+        // add the marker into the server
+        this.addMarker(position);
+        return;
+      }).catch((error) => {
+        this.setState({loading: false});
+        Alert.alert("GPS Error!", "Please make sure your location (GPS) is turned on.");
+      });
+    }
+  }
+
+  // add the marker into the server
+  async addMarker(position) {
+    let socket = this.props.navigation.state.params.socket;
+
+    // determine whether the author is anonymous
+    let author = this.props.navigation.state.params.name
+    if(this.state.anonymous) {
+      author = "Anonymous";
+    }
+
+    // emit a message to add the marker
+    socket.emit("addMarker", {
+      message: {
+        author_id: this.props.navigation.state.params.id,
+        author_token: this.props.navigation.state.params.token,
+        author: author,
+        title: this.state.title,
+        description: this.state.description,
+        longitude: position.coords.longitude,
+        latitude: position.coords.latitude,
+        picture_base64: this.state.picture_base64,
+        category: this.props.navigation.state.params.category
+      },
+      handle: "handleAddMarker"
+    });
+
+    // listen for a response from the server
+    socket.on("addMarker", (data) => {
+      if(data.success) {
+        // navigate back to the home screen
+        this.setState({loading: false});
+        Alert.alert("Added Ping!", data.message);
+
+        // navigate back to the home screen, then update location
+        this.props.navigation.popToTop();
+        this.props.navigation.state.params.updateLocation();
+      } else {
+        this.setState({loading: false});
+        Alert.alert("Database Error!", data.message);
+      }
+    });
+  }
+
+  // upload a picture for the ping
+  async uploadPicture() {
+    await Permissions.askAsync(Permissions.CAMERA);
+    await Permissions.askAsync(Permissions.CAMERA_ROLL);
+
+    // open the camera, then await for the user to take a picture
+    let picture = await ImagePicker.launchCameraAsync({
+      base64: true,
+      quality: 0.2,
+      allowsEditing: true,
+      aspect: [4, 3]
+    });
+
+    if(!picture.cancelled) {
+      // set the state to the picture
+      let pictureBase64 = `${picture.base64}`;
+      this.setState({
+        picture_base64: pictureBase64
+      });
+    }
+  }
+
   // render the component's views
   render() {
     return (
@@ -168,106 +273,6 @@ class AddPing extends React.Component {
   // go back a page
   goBackPage() {
     this.props.navigation.goBack();
-  }
-
-  // upload a picture for the ping
-  async uploadPicture() {
-    await Permissions.askAsync(Permissions.CAMERA);
-    await Permissions.askAsync(Permissions.CAMERA_ROLL);
-
-    // open the camera, then await for the user to take a picture
-    let picture = await ImagePicker.launchCameraAsync({
-      base64: true,
-      quality: 0.2,
-      allowsEditing: true,
-      aspect: [4, 3]
-    });
-
-    if(!picture.cancelled) {
-      // set the state to the picture
-      let pictureBase64 = `${picture.base64}`;
-      this.setState({
-        picture_base64: pictureBase64
-      });
-    }
-  }
-
-  // add ping
-  async addPing() {
-    let socket = this.props.navigation.state.params.socket;
-
-    if(!this.state.title || !this.state.description) {
-      Alert.alert("Missing Information!", "Please fill out both the title and description.");
-    } else if(socket.connected) {
-      // add the marker into the server
-      this.setState({loading: true});
-      this.sendMarker(socket);
-    } else {
-      Alert.alert("Internet Error!", "Could not connect to the server, is your internet down?");
-    }
-  }
-
-  // send the marker information
-  async sendMarker(socket) {
-    let {status} = await Permissions.askAsync(Permissions.LOCATION);
-    if (status === "granted") {
-      Location.getCurrentPositionAsync({enableHighAccuracy: true}).then((position) => {
-        // set the location
-        this.setState({
-          location: {
-            longitude: position.coords.longitude,
-            latitude: position.coords.latitude
-          }}
-        );
-        // add the marker into the server
-        this.addMarker(socket, position);
-        return;
-      }).catch((error) => {
-        this.setState({loading: false});
-        Alert.alert("GPS Error!", "Please make sure your location (GPS) is turned on.");
-      });
-    }
-  }
-
-  // add the marker into the server
-  async addMarker(socket, position) {
-    // determine whether the author is anonymous
-    let author = this.props.navigation.state.params.name
-    if(this.state.anonymous) {
-      author = "Anonymous";
-    }
-
-    // emit a message to add the marker
-    socket.emit("addMarker", {
-      message: {
-        author_id: this.props.navigation.state.params.id,
-        author_token: this.props.navigation.state.params.token,
-        author: author,
-        title: this.state.title,
-        description: this.state.description,
-        longitude: position.coords.longitude,
-        latitude: position.coords.latitude,
-        picture_base64: this.state.picture_base64,
-        category: this.props.navigation.state.params.category
-      },
-      handle: "handleAddMarker"
-    });
-
-    // listen for a response from the server
-    socket.on("addMarker", (data) => {
-      if(data.success) {
-        // navigate back to the home screen
-        this.setState({loading: false});
-        Alert.alert("Added Ping!", data.message);
-
-        // navigate back to the home screen, then update location
-        this.props.navigation.popToTop();
-        this.props.navigation.state.params.updateLocation();
-      } else {
-        this.setState({loading: false});
-        Alert.alert("Database Error!", data.message);
-      }
-    });
   }
 }
 export default AddPing;

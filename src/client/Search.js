@@ -63,11 +63,55 @@ class Search extends React.Component {
     super(props);
     this.state = {
       loading: false,
-      socket: this.props.navigation.state.params.socket,
       markers: this.props.navigation.state.params.markers,
       search: "",
       category: "",
     }
+  }
+
+  // update the markers state
+  async updateMarkers() {
+    let {status} = await Permissions.askAsync(Permissions.LOCATION);
+    let currentPosition = undefined;
+    if (status === "granted") {
+      this.setState({loading: true});
+      Location.getCurrentPositionAsync({enableHighAccuracy: true}).then((position) => {
+        // set the current position
+        currentPosition = position;
+        this.searchMarkers(position);
+        return;
+      }).catch((error) => {
+        this.setState({loading: false});
+        Alert.alert("GPS Error!", "Please make sure your location (GPS) is turned on.");
+      });
+    }
+  }
+
+  // search for markers from the position
+  async searchMarkers(position) {
+    let socket = this.props.navigation.state.params.socket;
+
+    // emit a message to search for specific markers
+    socket.emit("searchMarkers", {
+      message: {
+        longitude: position.coords.longitude,
+        latitude: position.coords.latitude,
+        search: this.state.search,
+        category: this.state.category
+      },
+      handle: "handleSearchMarkers"
+    });
+
+    // listen for the markers from the server
+    socket.on("searchMarkers", (data) => {
+      if(data.success) {
+        // set the markers
+        this.setState({
+          markers: JSON.parse(data.message)
+        });
+      }
+      this.setState({loading: false});
+    });
   }
 
   // render the component's views
@@ -149,49 +193,6 @@ class Search extends React.Component {
 
     // update the markers on the page
     this.updateMarkers();
-  }
-
-  // update the markers state
-  async updateMarkers() {
-    let {status} = await Permissions.askAsync(Permissions.LOCATION);
-    let currentPosition = undefined;
-    if (status === "granted") {
-      this.setState({loading: true});
-      Location.getCurrentPositionAsync({enableHighAccuracy: true}).then((position) => {
-        // set the current position
-        currentPosition = position;
-        this.searchMarkers(position);
-        return;
-      }).catch((error) => {
-        this.setState({loading: false});
-        Alert.alert("GPS Error!", "Please make sure your location (GPS) is turned on.");
-      });
-    }
-  }
-
-  // search for markers from the position
-  async searchMarkers(position) {
-    // emit a message to search for specific markers
-    this.state.socket.emit("searchMarkers", {
-      message: {
-        longitude: position.coords.longitude,
-        latitude: position.coords.latitude,
-        search: this.state.search,
-        category: this.state.category
-      },
-      handle: "handleSearchMarkers"
-    });
-
-    // listen for the markers from the server
-    this.state.socket.on("searchMarkers", (data) => {
-      if(data.success) {
-        // set the markers
-        this.setState({
-          markers: JSON.parse(data.message)
-        });
-      }
-      this.setState({loading: false});
-    });
   }
 
   // go back a page

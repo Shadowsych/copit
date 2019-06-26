@@ -62,7 +62,6 @@ class Home extends React.Component {
     super(props);
     this.state = {
       loading: true,
-      socket: this.props.navigation.state.params.socket,
       location: {
         longitude: -97.73675,
         latitude: 30.28265
@@ -98,8 +97,10 @@ class Home extends React.Component {
 
   // receive the markers to place on the map
   async receiveMarkers(position) {
+    let socket = this.props.navigation.state.params.socket;
+
     // emit a message to receive the markers
-    this.state.socket.emit("receiveMarkers", {
+    socket.emit("receiveMarkers", {
       message: {
         longitude: position.coords.longitude,
         latitude: position.coords.latitude
@@ -108,7 +109,7 @@ class Home extends React.Component {
     });
 
     // listen for the markers from the server
-    this.state.socket.on("receiveMarkers", (data) => {
+    socket.on("receiveMarkers", (data) => {
       if(data.success) {
         // set the markers and update the current location
         this.setState({
@@ -248,8 +249,10 @@ class Home extends React.Component {
       markerLikes = JSON.parse(marker.likes);
     }
 
+    // navigate to the view ping page
+    let socket = this.props.navigation.state.params.socket;
     this.props.navigation.navigate("ViewPing", {
-      socket: this.state.socket,
+      socket: socket,
       user_id: this.props.navigation.state.params.id,
       user_token: this.props.navigation.state.params.token,
       id: marker.id,
@@ -266,8 +269,9 @@ class Home extends React.Component {
 
   // load the menu page
   loadMenuPage() {
+    let socket = this.props.navigation.state.params.socket;
     this.props.navigation.navigate("Menu", {
-      socket: this.state.socket,
+      socket: socket,
       id: this.props.navigation.state.params.id,
       token: this.props.navigation.state.params.token,
       name: this.props.navigation.state.params.name,
@@ -281,8 +285,9 @@ class Home extends React.Component {
     // number of initial markers to load in the search page
     const loadMarkers = 10;
 
+    let socket = this.props.navigation.state.params.socket;
     this.props.navigation.navigate("Search", {
-      socket: this.state.socket,
+      socket: socket,
       markers: this.state.markers.slice(0, loadMarkers),
       loadViewPingPage: this.loadViewPingPage.bind(this)
     });
@@ -290,8 +295,9 @@ class Home extends React.Component {
 
   // load the pings page
   loadPingsPage() {
+    let socket = this.props.navigation.state.params.socket;
     this.props.navigation.navigate("Pings", {
-      socket: this.state.socket,
+      socket: socket,
       id: this.props.navigation.state.params.id,
       token: this.props.navigation.state.params.token,
       name: this.props.navigation.state.params.name,

@@ -55,7 +55,6 @@ class Menu extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      socket: this.props.navigation.state.params.socket,
       points: 0
     }
   }
@@ -99,11 +98,13 @@ class Menu extends React.Component {
 
   // logout the account
   logOut() {
+    let socket = this.props.navigation.state.params.socket;
+
     // pop the navigation stack, then navigate back to the Login screen
     this.props.navigation.reset([
        NavigationActions.navigate({
          routeName: "Login",
-         params: {socket: this.state.socket}
+         params: {socket: socket}
        })], 0
     );
   }
