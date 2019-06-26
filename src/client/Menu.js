@@ -3,7 +3,7 @@ import React from "react";
 import {NavigationActions} from "react-navigation";
 
 // styling packages
-import {StyleSheet, Image, Text, TouchableOpacity, View} from "react-native";
+import {StyleSheet, AsyncStorage, Image, Text, TouchableOpacity, View} from "react-native";
 import {Avatar, Divider, ListItem, Icon} from "react-native-elements";
 
 // style sheet
@@ -99,6 +99,9 @@ class Menu extends React.Component {
   // logout the account
   logOut() {
     let socket = this.props.navigation.state.params.socket;
+
+    // remove the token stored in the storage
+    AsyncStorage.removeItem("token");
 
     // pop the navigation stack, then navigate back to the Login screen
     this.props.navigation.reset([

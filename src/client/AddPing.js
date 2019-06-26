@@ -96,14 +96,12 @@ class AddPing extends React.Component {
   async addPing() {
     let socket = this.props.navigation.state.params.socket;
 
-    if(!this.state.title || !this.state.description) {
+    if(this.state.title == "" || this.state.description == "") {
       Alert.alert("Missing Information!", "Please fill out both the title and description.");
-    } else if(socket.connected) {
+    } else {
       // add the marker into the server
       this.setState({loading: true});
       this.sendMarker();
-    } else {
-      Alert.alert("Internet Error!", "Could not connect to the server, is your internet down?");
     }
   }
 

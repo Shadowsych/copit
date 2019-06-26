@@ -4,7 +4,7 @@ import Constants from 'expo-constants'
 import {NavigationActions, Header as NavHeader} from "react-navigation";
 
 // styling packages
-import {StyleSheet, Dimensions, Image, TouchableOpacity,
+import {StyleSheet, AsyncStorage, Dimensions, Image, TouchableOpacity,
   KeyboardAvoidingView, Alert, Text, View} from "react-native";
 import {Input, Icon, Button} from "react-native-elements";
 import * as Animatable from 'react-native-animatable';
@@ -175,6 +175,9 @@ class Login extends React.Component {
 
   // load the home page
   loadHomePage(account) {
+    // store the account token in the storage
+    AsyncStorage.setItem("token", account.token);
+
     // pop the navigation stack, then navigate to the Home screen
     this.props.navigation.reset([
        NavigationActions.navigate({

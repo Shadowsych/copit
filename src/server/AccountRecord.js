@@ -11,8 +11,41 @@ class AccountRecord {
     this.dbConn = dbConn;
 
     // handle emissions from the client
+    socket.on("loadAccount", (data) => {this.loadAccount(data)});
     socket.on("loginAccount", (data) => {this.loginAccount(data)});
     socket.on("registerAccount", (data) => {this.registerAccount(data)});
+  }
+
+  // load an account
+  async loadAccount(data) {
+    let token = data.message.token;
+
+    // called whenever there exists a failure
+    let socket = this.socket;
+    function failure(error, errorMessage) {
+      // emit a failed attempt to the client
+      console.log(error);
+      socket.emit("loadAccount", {
+        success: false,
+        message: errorMessage
+      });
+    }
+
+    // get the account using the provided token
+    AccountRecord.getAccount(this.dbConn, token).then((account) => {
+      if(account) {
+        // emit success to the client
+        console.log("Token " + token + " logged in!");
+        socket.emit("loadAccount", {
+          success: true,
+          message: account
+        });
+      } else {
+        failure("Account Token Invalid! " + token, "The account token is invalid!");
+      }
+    }).catch((error) => {
+      failure(error, "An error occurred receiving the account information!")
+    });
   }
 
   // login an account
@@ -47,7 +80,6 @@ class AccountRecord {
             message: accountData[0]
           });
         } else {
-          // there was no such account
           failure("Login Failed for " + email + "!", "Invalid login credentials.");
         }
       } else {
