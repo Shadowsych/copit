@@ -99,6 +99,9 @@ class AccountRecord {
                   message: {
                     id: result.insertId,
                     token: token,
+                    name: name,
+                    email: email,
+                    points: 0,
                     profile_photo: profilePhoto
                   }
                 });

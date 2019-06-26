@@ -7,6 +7,7 @@ import * as ImagePicker from 'expo-image-picker';
 import {StyleSheet, Alert, Image, Text, TouchableOpacity,
   Dimensions, KeyboardAvoidingView, View} from "react-native";
 import {Input, Icon, Header, Button, Avatar} from "react-native-elements";
+import Spinner from 'react-native-loading-spinner-overlay';
 
 // style sheet
 const styles = StyleSheet.create({
@@ -56,6 +57,7 @@ class Loading extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      loading: false,
       name: "",
       email: "",
       password: "",
@@ -76,6 +78,7 @@ class Loading extends React.Component {
 
     if(this.isRegistrationValid(name, email, password)) {
       // emit a message to register the account
+      this.setState({loading: true});
       socket.emit("registerAccount", {
         message: {
           name: name,
@@ -88,10 +91,10 @@ class Loading extends React.Component {
 
       // listen for the register account response from the server
       socket.on("registerAccount", (data) => {
+        this.setState({loading: false});
         if(data.success) {
           // registered the account, load the home page
-          this.props.navigation.state.params.loadHomePage(data.message.id,
-            data.message.token, name, email, data.message.profile_photo);
+          this.props.navigation.state.params.loadHomePage(data.message);
         } else if(!data.success) {
           // an error occurred when registering the account
           Alert.alert("Registration Error!", data.message);
@@ -126,10 +129,11 @@ class Loading extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-      <Header containerStyle={styles.navbar}>
-        <Icon name="chevron-left" onPress={() => this.goBackPage()}
-          type="entypo" color="#D3D3D3" size={22} />
-      </Header>
+        <Spinner visible={this.state.loading} />
+        <Header containerStyle={styles.navbar}>
+          <Icon name="chevron-left" onPress={() => this.goBackPage()}
+            type="entypo" color="#D3D3D3" size={22} />
+        </Header>
         <TouchableOpacity onPress={() => this.uploadPicture()}
           style={styles.avatar} activeOpacity={0.8}>
             {!this.state.profile_photo_base64 ? (

@@ -8,6 +8,7 @@ import {StyleSheet, Dimensions, Image, TouchableOpacity,
   KeyboardAvoidingView, Alert, Text, View} from "react-native";
 import {Input, Icon, Button} from "react-native-elements";
 import * as Animatable from 'react-native-animatable';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 // style sheet
 const styles = StyleSheet.create({
@@ -66,6 +67,7 @@ class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      loading: false,
       email: "",
       password: "",
       failed_email_text: "",
@@ -80,6 +82,7 @@ class Login extends React.Component {
     let password = this.state.password;
 
     // emit a message to receive the account information
+    this.setState({loading: true});
     socket.emit("loginAccount", {
       message: {
         email: email,
@@ -90,10 +93,10 @@ class Login extends React.Component {
 
     // listen for the account information from the server
     socket.on("loginAccount", (data) => {
+      this.setState({loading: false});
       if(data.success) {
         // the account exists, load the home page with its data
-        this.loadHomePage(data.message.id, data.message.token,
-          data.message.name, email, data.message.profile_photo);
+        this.loadHomePage(data.message);
       } else if(!data.success) {
         // failed to login the account
         this.setState({
@@ -108,6 +111,7 @@ class Login extends React.Component {
   render() {
     return (
       <View style={styles.container}>
+        <Spinner visible={this.state.loading} />
         <View style={styles.header_spacing}></View>
         <View style={styles.logo_container}>
           <Animatable.Image
@@ -169,18 +173,19 @@ class Login extends React.Component {
   }
 
   // load the home page
-  loadHomePage(id, token, name, email, profilePhoto) {
+  loadHomePage(account) {
     // pop the navigation stack, then navigate to the Home screen
     this.props.navigation.reset([
        NavigationActions.navigate({
          routeName: "Home",
          params: {
            socket: this.props.navigation.state.params.socket,
-           id: id,
-           token: token,
-           name: name,
-           email: email,
-           profile_photo: profilePhoto
+           id: account.id,
+           token: account.token,
+           name: account.name,
+           email: account.email,
+           points: account.points,
+           profile_photo: account.profile_photo
          }
        })], 0
     );
