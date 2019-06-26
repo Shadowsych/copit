@@ -226,7 +226,7 @@ class AddPing extends React.Component {
             />
           )}
         </TouchableOpacity>
-        <KeyboardAvoidingView keyboardVerticalOffset={NavHeader.HEIGHT}
+        <KeyboardAvoidingView keyboardVerticalOffset={NavHeader.HEIGHT - 84}
           behavior="padding" style={styles.input_text_form}>
           <Input
             containerStyle={styles.input_text_container}
