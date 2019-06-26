@@ -1,5 +1,6 @@
 // react packages
 import React from "react";
+import {Header as NavHeader} from 'react-navigation';
 import * as Permissions from "expo-permissions";
 import * as Location from "expo-location";
 import * as ImagePicker from 'expo-image-picker';
@@ -225,7 +226,8 @@ class AddPing extends React.Component {
               />
             )}
         </TouchableOpacity>
-        <KeyboardAvoidingView behavior="padding" style={styles.input_text_form}>
+        <KeyboardAvoidingView keyboardVerticalOffset={NavHeader.HEIGHT}
+          behavior="padding" style={styles.input_text_form}>
           <Input
             containerStyle={styles.input_text_container}
             inputStyle={styles.input_text}

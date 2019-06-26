@@ -55,7 +55,7 @@ class Menu extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      points: 0
+      points: this.props.navigation.state.params.points
     }
   }
 

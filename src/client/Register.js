@@ -1,5 +1,6 @@
 // react packages
 import React from "react";
+import {Header as NavHeader} from 'react-navigation';
 import * as Permissions from "expo-permissions";
 import * as ImagePicker from 'expo-image-picker';
 
@@ -52,7 +53,7 @@ const styles = StyleSheet.create({
   }
 });
 
-class Loading extends React.Component {
+class Register extends React.Component {
   // construct the state of the component
   constructor(props) {
     super(props);
@@ -147,7 +148,8 @@ class Loading extends React.Component {
         </TouchableOpacity>
         <View style={styles.spacing}></View>
         <View style={styles.spacing}></View>
-        <KeyboardAvoidingView behavior="padding" style={styles.input_text_form}>
+        <KeyboardAvoidingView keyboardVerticalOffset={NavHeader.HEIGHT}
+          behavior="padding" style={styles.input_text_form}>
           <Input
             containerStyle={styles.input_text_container}
             inputStyle={styles.input_text}
@@ -234,4 +236,4 @@ class Loading extends React.Component {
     this.props.navigation.goBack();
   }
 }
-export default Loading;
+export default Register;

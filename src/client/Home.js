@@ -276,6 +276,7 @@ class Home extends React.Component {
       token: this.props.navigation.state.params.token,
       name: this.props.navigation.state.params.name,
       email: this.props.navigation.state.params.email,
+      points: this.props.navigation.state.params.points,
       profile_photo: this.props.navigation.state.params.profile_photo
     });
   }
