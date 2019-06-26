@@ -1,7 +1,7 @@
 // file system packages
 var fs = require("fs");
-var mkdirp = require('mkdirp');
-var uniqid = require('uniqid');
+var mkdirp = require("mkdirp");
+var uuidv4 = require("uuid/v4");
 var config = require("../../server.json");
 
 class UploadUtils {
@@ -9,7 +9,7 @@ class UploadUtils {
   static async uploadBase64(base64, directory, file) {
     if(base64) {
       // create the directories if they do not exist
-      let uniqueId = uniqid();
+      let uniqueId = uuidv4();
       directory += "/" + uniqueId;
       await mkdirp(__dirname + directory, (error) => {
         if(!error) {

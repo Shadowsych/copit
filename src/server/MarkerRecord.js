@@ -1,6 +1,3 @@
-// token creation packages
-var uniqid = require('uniqid');
-
 // record classes
 var AccountRecord = require("./AccountRecord");
 

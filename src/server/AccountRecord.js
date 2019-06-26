@@ -1,5 +1,5 @@
 // token creation packages
-var uniqid = require('uniqid');
+var uuidv4 = require("uuid/v4");
 
 // utils packages
 var UploadUtils = require("./UploadUtils");
@@ -82,7 +82,7 @@ class AccountRecord {
       await AccountRecord.isEmailExists(this.dbConn, email).then((exists) => {
         if(!exists) {
           // generate a random token
-          let token = uniqid();
+          let token = uuidv4();
 
           // create a prepared statement to insert the account information
           let query = "INSERT INTO AccountRecord (token, name, email, password, profile_photo) "
