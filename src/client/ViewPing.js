@@ -1,6 +1,9 @@
 // react packages
 import React from "react";
 
+// maps packages
+import {showLocation} from "react-native-map-link";
+
 // styling packages
 import {StyleSheet, Image, Dimensions, Text, Button, View} from "react-native";
 import {Icon} from "react-native-elements";
@@ -59,6 +62,8 @@ class ViewPing extends React.Component {
       id: this.props.navigation.state.params.id,
       picture: this.props.navigation.state.params.picture,
       title: this.props.navigation.state.params.title,
+      longitude: this.props.navigation.state.params.longitude,
+      latitude: this.props.navigation.state.params.latitude,
       author: this.props.navigation.state.params.author,
       category: this.props.navigation.state.params.category,
       likes: this.props.navigation.state.params.likes,
@@ -150,7 +155,11 @@ class ViewPing extends React.Component {
 
   // view the directions to the marker
   viewDirections() {
-
+    showLocation({
+      longitude: this.state.longitude,
+      latitude: this.state.latitude,
+      appsWhiteList: ["google-maps", "apple-maps"]
+    });
   }
 
   // go back a page

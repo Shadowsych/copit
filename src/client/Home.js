@@ -256,6 +256,8 @@ class Home extends React.Component {
       user_id: this.props.navigation.state.params.id,
       user_token: this.props.navigation.state.params.token,
       id: marker.id,
+      longitude: marker.longitude,
+      latitude: marker.latitude,
       picture: marker.picture,
       title: marker.title,
       author: marker.author,
