@@ -2,6 +2,7 @@
 import React from "react";
 
 // styling packages
+import * as Font from "expo-font";
 import {StyleSheet, Alert, AsyncStorage, Image, View} from "react-native";
 import * as Animatable from 'react-native-animatable';
 
@@ -23,6 +24,14 @@ const styles = StyleSheet.create({
 });
 
 class Loading extends React.Component {
+
+  // called whenever the component is loaded
+  componentDidMount() {
+    // load custom fonts
+    Font.loadAsync({
+      "ubuntu-regular": require("../../assets/fonts/Ubuntu-R.ttf")
+    });
+  }
 
   // load the application
   async loadApp() {

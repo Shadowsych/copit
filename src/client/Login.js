@@ -37,7 +37,8 @@ const styles = StyleSheet.create({
     width: Dimensions.get("window").width * 0.80
   },
   input_text: {
-    color: "#909090"
+    color: "#909090",
+    fontFamily: "ubuntu-regular"
   },
   login_btn_container: {
     flex: 0.05,
@@ -53,12 +54,13 @@ const styles = StyleSheet.create({
   },
   register_btn_text: {
     color: "#C0C0C0",
-    fontSize: 16
+    fontSize: 16,
+    fontFamily: "ubuntu-regular"
   },
   guest_btn_text: {
     color: "#C0C0C0",
-    fontWeight: "bold",
-    fontSize: 16
+    fontSize: 16,
+    fontFamily: "ubuntu-regular"
   }
 });
 

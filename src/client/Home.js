@@ -51,8 +51,8 @@ const styles = StyleSheet.create({
   },
   swipe_up_text: {
     color: "#75B1DE",
-    fontWeight: "bold",
-    fontSize: 12
+    fontSize: 12,
+    fontFamily: "ubuntu-regular"
   }
 });
 

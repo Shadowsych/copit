@@ -39,7 +39,8 @@ const styles = StyleSheet.create({
     width: Dimensions.get("window").width * 0.85
   },
   input_text: {
-    color: "#909090"
+    color: "#909090",
+    fontFamily: "ubuntu-regular"
   },
   register_btn_container: {
     flex: 0.05,
@@ -49,7 +50,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#75B1DE"
   },
   register_disclaimer_text: {
-    color: "#C0C0C0"
+    color: "#C0C0C0",
+    fontFamily: "ubuntu-regular"
   }
 });
 

@@ -23,8 +23,8 @@ const styles = StyleSheet.create({
   },
   title_text: {
     color: "#D3D3D3",
-    fontWeight: "bold",
-    fontSize: 24
+    fontSize: 24,
+    fontFamily: "ubuntu-regular"
   },
   spacing: {
     flex: 0.05
@@ -36,8 +36,8 @@ const styles = StyleSheet.create({
   },
   upload_picture_text: {
     color: "#D3D3D3",
-    fontWeight: "bold",
-    fontSize: 12
+    fontSize: 12,
+    fontFamily: "ubuntu-regular"
   },
   picture: {
     width: Dimensions.get("window").width * 0.90,
@@ -53,7 +53,8 @@ const styles = StyleSheet.create({
     width: Dimensions.get("window").width * 0.90
   },
   input_text: {
-    color: "#909090"
+    color: "#909090",
+    fontFamily: "ubuntu-regular"
   },
   anonymous_checkbox_container: {
     flex: 0.25
@@ -63,7 +64,8 @@ const styles = StyleSheet.create({
   },
   notice_text: {
     color: "#909090",
-    fontSize: 12
+    fontSize: 12,
+    fontFamily: "ubuntu-regular"
   },
   add_ping_btn: {
     flex: 0.075,
@@ -74,8 +76,8 @@ const styles = StyleSheet.create({
   },
   add_ping_text: {
     color: "white",
-    fontWeight: "bold",
-    fontSize: 16
+    fontSize: 16,
+    fontFamily: "ubuntu-regular"
   }
 });
 
@@ -252,6 +254,7 @@ class AddPing extends React.Component {
             <CheckBox
               textStyle={styles.anonymous_checkbox_text}
               title="Post This Ping Anonymously"
+              fontFamily="ubuntu-regular"
               checked={this.state.anonymous}
               onPress={() => this.setState({anonymous: !this.state.anonymous})}
             />

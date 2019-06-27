@@ -30,8 +30,8 @@ const styles = StyleSheet.create({
   },
   points_text: {
     color: "#D3D3D3",
-    fontWeight: "bold",
-    fontSize: 16
+    fontSize: 16,
+    fontFamily: "ubuntu-regular"
   },
   list_view: {
     flex: 0.875
@@ -45,8 +45,8 @@ const styles = StyleSheet.create({
   },
   logout_text: {
     color: "white",
-    fontWeight: "bold",
-    fontSize: 16
+    fontSize: 16,
+    fontFamily: "ubuntu-regular"
   }
 });
 

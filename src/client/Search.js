@@ -22,6 +22,9 @@ const styles = StyleSheet.create({
     flex: 0.10,
     width: "75%"
   },
+  item: {
+    fontFamily: "ubuntu-regular"
+  },
   scroll_view: {
     flex: 0.70,
     width: "100%"
@@ -31,7 +34,8 @@ const styles = StyleSheet.create({
   },
   card_text: {
     color: "#C0C0C0",
-    marginBottom: 10
+    marginBottom: 10,
+    fontFamily: "ubuntu-regular"
   },
   card_btn: {
     backgroundColor: "#75B1DE",
@@ -138,17 +142,17 @@ class Search extends React.Component {
             style={styles.picker}
             selectedValue={this.state.category}
             onValueChange={(option) => this.updateSearch(option)}>
-             <Picker.Item color="#C0C0C0" label="All Categories" value="All Categories" />
-             <Picker.Item color="#909090" label="Food" value="Food" />
-             <Picker.Item color="#909090" label="Clothes" value="Clothes" />
-             <Picker.Item color="#909090" label="Clothes" value="Clothes" />
-             <Picker.Item color="#909090" label="School" value="School" />
-             <Picker.Item color="#909090" label="Discounts" value="Discounts" />
-             <Picker.Item color="#909090" label="Party" value="Party" />
-             <Picker.Item color="#909090" label="Org Events" value="Org Events" />
-             <Picker.Item color="#909090" label="Emergencies" value="Emergencies" />
-             <Picker.Item color="#909090" label="Conctraceptives" value="Conctraceptives" />
-             <Picker.Item color="#909090" label="Other" value="Other" />
+             <Picker.Item itemStyle={styles.item} color="#C0C0C0" label="All Categories" value="All Categories" />
+             <Picker.Item itemStyle={styles.item} color="#909090" label="Food" value="Food" />
+             <Picker.Item itemStyle={styles.item} color="#909090" label="Clothes" value="Clothes" />
+             <Picker.Item itemStyle={styles.item} color="#909090" label="Clothes" value="Clothes" />
+             <Picker.Item itemStyle={styles.item} color="#909090" label="School" value="School" />
+             <Picker.Item itemStyle={styles.item} color="#909090" label="Discounts" value="Discounts" />
+             <Picker.Item itemStyle={styles.item} color="#909090" label="Party" value="Party" />
+             <Picker.Item itemStyle={styles.item} color="#909090" label="Org Events" value="Org Events" />
+             <Picker.Item itemStyle={styles.item} color="#909090" label="Emergencies" value="Emergencies" />
+             <Picker.Item itemStyle={styles.item} color="#909090" label="Conctraceptives" value="Conctraceptives" />
+             <Picker.Item itemStyle={styles.item} color="#909090" label="Other" value="Other" />
           </Picker>
           <ScrollView style={styles.scroll_view}>
             {this.state.markers.map((marker, key) => (

@@ -17,8 +17,8 @@ const styles = StyleSheet.create({
   },
   title_text: {
     color: "#D3D3D3",
-    fontWeight: "bold",
-    fontSize: 24
+    fontSize: 24,
+    fontFamily: "ubuntu-regular"
   },
   grid_container: {
     flex: 0.95
@@ -35,8 +35,8 @@ const styles = StyleSheet.create({
   },
   icon_text: {
     color: "#D3D3D3",
-    fontWeight: "bold",
-    fontSize: 16
+    fontSize: 16,
+    fontFamily: "ubuntu-regular"
   }
 });
 

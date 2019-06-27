@@ -25,8 +25,8 @@ const styles = StyleSheet.create({
   title: {
     flex: 0.05,
     color: "#909090",
-    fontWeight: "bold",
-    fontSize: 24
+    fontSize: 24,
+    fontFamily: "ubuntu-regular"
   },
   like_container: {
     flex: 0.10,
@@ -36,17 +36,20 @@ const styles = StyleSheet.create({
   },
   like_text: {
     color: "#2195EE",
-    fontSize: 16
+    fontSize: 16,
+    fontFamily: "ubuntu-regular"
   },
   text: {
     flex: 0.05,
     color: "#D3D3D3",
-    fontSize: 16
+    fontSize: 16,
+    fontFamily: "ubuntu-regular"
   },
   description: {
     flex: 0.20,
     color: "#D3D3D3",
-    fontSize: 16
+    fontSize: 16,
+    fontFamily: "ubuntu-regular"
   },
   btn: {
     flex: 0.075,
