@@ -180,8 +180,12 @@ class Login extends React.Component {
 
   // load the home page
   loadHomePage(account) {
+    let guestIdToken = -1;
+
     // store the account token in the storage
-    AsyncStorage.setItem("token", account.token);
+    if(account.id != guestIdToken) {
+      AsyncStorage.setItem("token", account.token);
+    }
 
     // pop the navigation stack, then navigate to the Home screen
     this.props.navigation.reset([

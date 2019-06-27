@@ -149,7 +149,7 @@ class MasterRecord {
           }
         });
       } else {
-        failure("Invalid Token: " + token, "The account id and token is invalid...");
+        failure("Invalid Token: " + token, "The account id and token are invalid...");
       }
     }).catch((error) => {
       failure(error, "Error querying into the Database to verify account...");
@@ -203,7 +203,12 @@ class MasterRecord {
       likes = JSON.stringify(likes);
       this.dbConn.query(query, [likes, markerId], (error, result) => {
         if(!error) {
+          // emit a message of success to the client
           console.log("Added a like for markerId: " + markerId);
+          this.socket.emit("updateLikes", {
+            success: true,
+            message: "Successfully added the like!"
+          });
         } else {
           console.log(error);
         }

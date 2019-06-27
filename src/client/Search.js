@@ -165,7 +165,10 @@ class Search extends React.Component {
                   <Text style={styles.card_text}>{marker.description}</Text>
                   <Button
                     buttonStyle={styles.card_btn}
-                    onPress={() => this.props.navigation.state.params.loadViewPingPage(marker)}
+                    onPress={
+                      () => this.props.navigation.state.params.loadViewPingPage(
+                        marker, this.updateMarkers.bind(this))
+                    }
                     title="VIEW PING" />
               </Card>
             ))}

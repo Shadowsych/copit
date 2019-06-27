@@ -217,7 +217,7 @@ class Home extends React.Component {
   }
 
   // load the view ping page
-  loadViewPingPage(marker) {
+  loadViewPingPage(marker, updateMarkers) {
     // dates
     let expiresDate = new Date(marker.expires).getTime();
     let currentDate = new Date().getTime();
@@ -249,6 +249,10 @@ class Home extends React.Component {
       markerLikes = JSON.parse(marker.likes);
     }
 
+    // create an Array of updating every necessary markers state
+    let updateAllMarkers = updateMarkers ? [this.updateLocation.bind(this),
+      updateMarkers] : [this.updateLocation.bind(this)];
+
     // navigate to the view ping page
     let socket = this.props.navigation.state.params.socket;
     this.props.navigation.navigate("ViewPing", {
@@ -265,7 +269,8 @@ class Home extends React.Component {
       likes: markerLikes,
       expires: expires,
       distance: distanceFeet,
-      description: marker.description
+      description: marker.description,
+      updateAllMarkers: updateAllMarkers
     });
   }
 

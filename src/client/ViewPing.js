@@ -98,6 +98,19 @@ class ViewPing extends React.Component {
         },
         handle: "addLike"
       });
+
+      // receive an updated likes response from the server
+      socket.on("updateLikes", (data) => {
+        if(data.success) {
+          let updateAllMarkers = this.props.navigation.state.params.updateAllMarkers;
+
+          // call each Array of functions to update the markers state
+          for(let updateIndex = 0; updateIndex < updateAllMarkers.length; updateIndex++) {
+            let updateMarkers = updateAllMarkers[updateIndex];
+            updateMarkers();
+          }
+        }
+      });
     }
   }
 
