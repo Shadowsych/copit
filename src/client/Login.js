@@ -162,7 +162,12 @@ class Login extends React.Component {
   loginGuest() {
     // guests have an imaginary id and token
     let guestIdToken = -1;
-    this.loadHomePage(guestIdToken, guestIdToken, "Guest");
+    this.loadHomePage({
+      id: guestIdToken,
+      token: guestIdToken,
+      name: "Guest",
+      points: 0
+    });
   }
 
   // load the register page

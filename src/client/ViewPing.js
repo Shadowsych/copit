@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
   },
   btn: {
     flex: 0.075,
-    width: "75%"
+    width: "90%"
   }
 });
 
@@ -137,14 +137,14 @@ class ViewPing extends React.Component {
         </Text>
         <View style={styles.btn}>
             <Button
-              color="#19A15F"
+              color="#75B1DE"
               title="View Directions"
               onPress={() => this.viewDirections()}
             />
         </View>
         <View style={styles.btn}>
             <Button
-              color="#DE4D3A"
+              color="#75B1DE"
               title="Close"
               onPress={() => this.goBackPage()}
             />
