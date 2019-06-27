@@ -8,9 +8,12 @@ import * as Permissions from "expo-permissions";
 import {StyleSheet, Image, TouchableOpacity,
   Button, Text, Alert, View} from "react-native";
 import GestureRecognizer from 'react-native-swipe-gestures';
-import {Icon} from "react-native-elements";
+import {Icon, Overlay} from "react-native-elements";
 import * as Animatable from 'react-native-animatable';
 import Spinner from 'react-native-loading-spinner-overlay';
+
+// component classes
+import ViewPing from "./ViewPing";
 
 // style sheet
 const styles = StyleSheet.create({
@@ -70,7 +73,9 @@ class Home extends React.Component {
         longitudeDelta: 0.005,
         latitudeDelta: 0.005
       },
-      markers: []
+      markers: [],
+      marker_visible: false,
+      marker_params: {}
     }
   }
 
@@ -142,6 +147,13 @@ class Home extends React.Component {
     return (
       <View style={styles.container}>
         <Spinner visible={this.state.loading} />
+        <Overlay
+          animationType="slide"
+          transparent={true}
+          isVisible={this.state.marker_visible}
+          onBackdropPress={() => this.setState({marker_visible: false})}>
+          <ViewPing marker_params={this.state.marker_params} />
+        </Overlay>
         <Icon containerStyle={styles.menu_btn} raised name="menu"
           onPress={() => this.loadMenuPage()} color="#1C7ED7" size={22} />
         <Icon containerStyle={styles.search_btn} raised name="search"
@@ -253,24 +265,27 @@ class Home extends React.Component {
     let updateAllMarkers = updateMarkers ? [this.updateLocation.bind(this),
       updateMarkers] : [this.updateLocation.bind(this)];
 
-    // navigate to the view ping page
+    // set the properties to the view ping component
     let socket = this.props.navigation.state.params.socket;
-    this.props.navigation.navigate("ViewPing", {
-      socket: socket,
-      user_id: this.props.navigation.state.params.id,
-      user_token: this.props.navigation.state.params.token,
-      id: marker.id,
-      longitude: marker.longitude,
-      latitude: marker.latitude,
-      picture: marker.picture,
-      title: marker.title,
-      author: marker.author,
-      category: marker.category,
-      likes: markerLikes,
-      expires: expires,
-      distance: distanceFeet,
-      description: marker.description,
-      updateAllMarkers: updateAllMarkers
+    this.setState({
+      marker_visible: true,
+      marker_params: {
+        socket: socket,
+        user_id: this.props.navigation.state.params.id,
+        user_token: this.props.navigation.state.params.token,
+        id: marker.id,
+        longitude: marker.longitude,
+        latitude: marker.latitude,
+        picture: marker.picture,
+        title: marker.title,
+        author: marker.author,
+        category: marker.category,
+        likes: markerLikes,
+        expires: expires,
+        distance: distanceFeet,
+        description: marker.description,
+        updateAllMarkers: updateAllMarkers
+      }
     });
   }
 

@@ -5,7 +5,7 @@ import React from "react";
 import {showLocation} from "react-native-map-link";
 
 // styling packages
-import {StyleSheet, Image, Dimensions, Text, Button, View} from "react-native";
+import {StyleSheet, Image, Text, Button, View} from "react-native";
 import {Icon} from "react-native-elements";
 
 // style sheet
@@ -19,34 +19,47 @@ const styles = StyleSheet.create({
   },
   picture: {
     flex: 0.275,
-    width: Dimensions.get("window").width * 0.90,
+    width: "100%",
     height: "100%"
   },
+  header: {
+    flex: 0.075,
+    flexDirection: "row",
+    alignItems: "center",
+    width: "100%"
+  },
   title: {
-    flex: 0.05,
+    flex: 0.85,
     color: "#909090",
     fontSize: 24,
-    fontFamily: "ubuntu-regular"
+    fontFamily: "ubuntu-regular",
   },
   like_container: {
-    flex: 0.10,
+    flex: 0.15,
     flexDirection: "row",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   like_text: {
-    color: "#2195EE",
+    color: "#909090",
     fontSize: 16,
     fontFamily: "ubuntu-regular"
+  },
+  text_container: {
+    flex: 0.50,
+    width: "100%"
   },
   text: {
-    flex: 0.05,
+    flex: 0.15,
+    alignSelf: "flex-start",
     color: "#D3D3D3",
     fontSize: 16,
-    fontFamily: "ubuntu-regular"
+    fontFamily: "ubuntu-regular",
   },
   description: {
-    flex: 0.20,
+    flex: 0.55,
+    alignSelf: "flex-start",
+    width: "85%",
     color: "#D3D3D3",
     fontSize: 16,
     fontFamily: "ubuntu-regular"
@@ -62,24 +75,24 @@ class ViewPing extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      id: this.props.navigation.state.params.id,
-      picture: this.props.navigation.state.params.picture,
-      title: this.props.navigation.state.params.title,
-      longitude: this.props.navigation.state.params.longitude,
-      latitude: this.props.navigation.state.params.latitude,
-      author: this.props.navigation.state.params.author,
-      category: this.props.navigation.state.params.category,
-      likes: this.props.navigation.state.params.likes,
-      expires: this.props.navigation.state.params.expires,
-      distance: this.props.navigation.state.params.distance,
-      description: this.props.navigation.state.params.description,
+      id: this.props.marker_params.id,
+      picture: this.props.marker_params.picture,
+      title: this.props.marker_params.title,
+      longitude: this.props.marker_params.longitude,
+      latitude: this.props.marker_params.latitude,
+      author: this.props.marker_params.author,
+      category: this.props.marker_params.category,
+      likes: this.props.marker_params.likes,
+      expires: this.props.marker_params.expires,
+      distance: this.props.marker_params.distance,
+      description: this.props.marker_params.description,
     }
   }
 
   // add a like on the marker
   async addLike() {
-    let userId = this.props.navigation.state.params.user_id;
-    let userToken = this.props.navigation.state.params.user_token;
+    let userId = this.props.marker_params.user_id;
+    let userToken = this.props.marker_params.user_token;
     let markerId = this.state.id;
 
     // add the like if the user has not liked it
@@ -92,7 +105,7 @@ class ViewPing extends React.Component {
       });
 
       // emit a message to like the marker
-      let socket = this.props.navigation.state.params.socket;
+      let socket = this.props.marker_params.socket;
       socket.emit("addLike", {
         message: {
           user_id: userId,
@@ -105,7 +118,7 @@ class ViewPing extends React.Component {
       // receive an updated likes response from the server
       socket.on("updateLikes", (data) => {
         if(data.success) {
-          let updateAllMarkers = this.props.navigation.state.params.updateAllMarkers;
+          let updateAllMarkers = this.props.marker_params.updateAllMarkers;
 
           // call each Array of functions to update the markers state
           for(let updateIndex = 0; updateIndex < updateAllMarkers.length; updateIndex++) {
@@ -126,43 +139,40 @@ class ViewPing extends React.Component {
           style={styles.picture}
           source={{uri: this.state.picture}}
         />
-        <Text style={styles.title}>
-          {this.state.title}
-        </Text>
-        <View style={styles.like_container}>
-          <Icon name="like" type="evilicon" color="#6986B0"
-            onPress={() => this.addLike()} size={36} />
-          <Text style={styles.like_text}>
-            {this.state.likes.length}
+        <View style={styles.spacing} />
+        <View style={styles.header}>
+          <Text style={styles.title}>
+            {this.state.title}
+          </Text>
+          <View style={styles.like_container}>
+            <Icon name="heart" type="evilicon" color="#E84856"
+              onPress={() => this.addLike()} size={24} />
+            <Text style={styles.like_text}>
+              {this.state.likes.length}
+            </Text>
+          </View>
+        </View>
+        <View style={styles.spacing} />
+        <View style={styles.spacing} />
+        <View style={styles.text_container}>
+          <Text style={styles.text}>
+            Pinged by {this.state.author}
+          </Text>
+          <Text style={styles.text}>
+            Category: {this.state.category}
+          </Text>
+          <Text style={styles.text}>
+            {this.state.expires}
+          </Text>
+          <Text style={styles.description}>
+            {this.state.description}
           </Text>
         </View>
-        <Text style={styles.text}>
-          Pinged by {this.state.author}
-        </Text>
-        <Text style={styles.text}>
-          Category: {this.state.category}
-        </Text>
-        <Text style={styles.text}>
-          {this.state.expires}
-        </Text>
-        <Text style={styles.text}>
-          Distance: {this.state.distance} ft
-        </Text>
-        <Text style={styles.description}>
-          {this.state.description}
-        </Text>
         <View style={styles.btn}>
             <Button
               color="#75B1DE"
-              title="View Directions"
+              title={"Directions (" + this.state.distance + " ft)"}
               onPress={() => this.viewDirections()}
-            />
-        </View>
-        <View style={styles.btn}>
-            <Button
-              color="#75B1DE"
-              title="Close"
-              onPress={() => this.goBackPage()}
             />
         </View>
       </View>
@@ -176,11 +186,6 @@ class ViewPing extends React.Component {
       latitude: this.state.latitude,
       appsWhiteList: ["google-maps", "apple-maps"]
     });
-  }
-
-  // go back a page
-  goBackPage() {
-    this.props.navigation.goBack();
   }
 }
 export default ViewPing;
