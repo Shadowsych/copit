@@ -26,8 +26,8 @@ const styles = StyleSheet.create({
   },
   search_btn: {
     position: "absolute",
-    top: 10,
-    left: 85
+    top: 70,
+    left: 10
   },
   map: {
     flex: 1,
