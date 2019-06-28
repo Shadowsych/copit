@@ -6,7 +6,7 @@ import {showLocation} from "react-native-map-link";
 
 // styling packages
 import {StyleSheet, SafeAreaView, Image, Text, Button, View} from "react-native";
-import {Icon} from "react-native-elements";
+import {Divider, Icon} from "react-native-elements";
 
 // style sheet
 const styles = StyleSheet.create({
@@ -45,21 +45,28 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: "ubuntu-regular"
   },
+  text_info_container: {
+    flex: 0.50
+  },
   text_container: {
-    flex: 0.50,
-    width: "100%"
+    flex: 0.15,
+    flexDirection: "row"
   },
   text: {
-    flex: 0.15,
     alignSelf: "flex-start",
+    marginLeft: 10,
     color: "#D3D3D3",
     fontSize: 16,
-    fontFamily: "ubuntu-regular",
+    fontFamily: "ubuntu-regular"
+  },
+  divider: {
+    flex: 0.05
+  },
+  description_container: {
+    flex: 0.50
   },
   description: {
-    flex: 0.55,
     alignSelf: "flex-start",
-    width: "85%",
     color: "#D3D3D3",
     fontSize: 16,
     fontFamily: "ubuntu-regular"
@@ -154,19 +161,31 @@ class ViewPing extends React.Component {
         </View>
         <View style={styles.spacing} />
         <View style={styles.spacing} />
-        <View style={styles.text_container}>
-          <Text style={styles.text}>
-            Pinged by {this.state.author}
-          </Text>
-          <Text style={styles.text}>
-            Category: {this.state.category}
-          </Text>
-          <Text style={styles.text}>
-            {this.state.expires}
-          </Text>
-          <Text style={styles.description}>
-            {this.state.description}
-          </Text>
+        <View style={styles.text_info_container}>
+          <View style={styles.text_container}>
+            <Icon name="user" type="antdesign" color="#75B1DE" size={20} />
+            <Text style={styles.text}>
+              Pinged by {this.state.author}
+            </Text>
+          </View>
+          <View style={styles.text_container}>
+            <Icon name="globe" type="entypo" color="#75B1DE" size={20} />
+            <Text style={styles.text}>
+              Category: {this.state.category}
+            </Text>
+          </View>
+          <View style={styles.text_container}>
+            <Icon name="hourglass" type="antdesign" color="#75B1DE" size={20} />
+            <Text style={styles.text}>
+              {this.state.expires}
+              </Text>
+          </View>
+          <View style={styles.divider}><Divider /></View>
+          <View style={styles.description_container}>
+            <Text style={styles.description}>
+              {this.state.description}
+              </Text>
+          </View>
         </View>
         <View style={styles.btn}>
           <Button
