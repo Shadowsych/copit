@@ -1,20 +1,6 @@
 # Frea
 An IOS and Android app that notifies people of freebies, events, parties, and many other things that are nearby their area.
 
-### Client-side
-Frea uses React Native for the client-side, specifically with [Expo](https://expo.io/).
-
-Install the client-side dependencies by running:
-```console
-npm install
-```
-
-To start the Expo client-side app, run:
-```console
-expo start
-```
-then follow the instructions on the console to load the app on your phone or emulator.
-
 ### Server-side
 Frea uses [Express](https://expressjs.com/), [Socket.IO](https://socket.io/), and [MySQL](https://www.mysql.com/) for the server-side.
 - Express is used to run the web-server
@@ -37,11 +23,25 @@ cd src/server
 npm install
 ```
 
-To start the server, run:
+Once the server-side dependencies are installed, start the server by running:
 ```console
 cd src/server
 node Index.js
 ```
+
+### Client-side
+Frea uses React Native for the client-side, specifically with [Expo](https://expo.io/).
+
+Install the client-side dependencies by running:
+```console
+npm install
+```
+
+Once the client-side dependencies are installed, start the Expo app by running:
+```console
+expo start
+```
+then follow the instructions on the console to load the app on your phone or emulator.
 
 ### Expo MapView
 Frea uses Expo's [MapView](https://docs.expo.io/versions/latest/sdk/map-view/), which is a Map component that uses Apple or Google Maps on IOS and Android phones.
