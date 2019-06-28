@@ -80,7 +80,7 @@ const Navigation = createStackNavigator({
 }, {
   // create a padding to avoid overlapping the navbar of the device
   cardStyle: {
-    paddingTop: Platform.OS === 'ios' ? 0 : StatusBar.currentHeight
+    paddingTop: Platform.OS === "ios" ? 0 : StatusBar.currentHeight
   },
   // default navigation options
   defaultNavigationOptions: {

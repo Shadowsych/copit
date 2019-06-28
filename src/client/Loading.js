@@ -3,7 +3,7 @@ import React from "react";
 
 // styling packages
 import * as Font from "expo-font";
-import {StyleSheet, Alert, AsyncStorage, Image, View} from "react-native";
+import {StyleSheet, Alert, AsyncStorage, Image, View, SafeAreaView} from "react-native";
 import * as Animatable from 'react-native-animatable';
 
 // socket.io packages
@@ -88,13 +88,13 @@ class Loading extends React.Component {
   // render the component's views
   render() {
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <Animatable.Image
           style={styles.logo}
           animation="bounceIn"
           onAnimationEnd={() => this.loadApp()}
           source={require("../../assets/icon.png")} />
-      </View>
+      </SafeAreaView>
     );
   }
 

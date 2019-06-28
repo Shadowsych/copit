@@ -5,7 +5,7 @@ import {NavigationActions, Header as NavHeader} from "react-navigation";
 
 // styling packages
 import {StyleSheet, AsyncStorage, Dimensions, Image, TouchableOpacity,
-  KeyboardAvoidingView, Alert, Text, View} from "react-native";
+  SafeAreaView, KeyboardAvoidingView, Alert, Text, View} from "react-native";
 import {Input, Icon, Button} from "react-native-elements";
 import * as Animatable from 'react-native-animatable';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -112,7 +112,7 @@ class Login extends React.Component {
   // render the component's views
   render() {
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <Spinner visible={this.state.loading} />
         <View style={styles.header_spacing} />
         <View style={styles.logo_container}>
@@ -156,7 +156,7 @@ class Login extends React.Component {
           style={styles.text_btn_container}>
           <Text style={styles.guest_btn_text}>Login as Guest</Text>
         </TouchableOpacity>
-      </View>
+      </SafeAreaView>
     );
   }
 

@@ -6,7 +6,7 @@ import * as Location from "expo-location";
 import * as ImagePicker from 'expo-image-picker';
 
 // styling packages
-import {StyleSheet, Dimensions, Image, KeyboardAvoidingView,
+import {StyleSheet, Dimensions, Image, KeyboardAvoidingView, SafeAreaView,
   Text, Alert, TouchableOpacity, View} from "react-native";
 import {Header, Input, CheckBox, Icon} from "react-native-elements";
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -200,7 +200,7 @@ class AddPing extends React.Component {
   // render the component's views
   render() {
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <Spinner visible={this.state.loading} />
         <Header containerStyle={styles.navbar}>
           <Icon name="chevron-left" onPress={() => this.goBackPage()}
@@ -267,7 +267,7 @@ class AddPing extends React.Component {
           style={styles.add_ping_btn}>
           <Text style={styles.add_ping_text}>Add Ping</Text>
         </TouchableOpacity>
-      </View>
+      </SafeAreaView>
     );
   }
 

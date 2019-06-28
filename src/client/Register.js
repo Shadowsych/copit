@@ -6,7 +6,7 @@ import * as ImagePicker from 'expo-image-picker';
 
 // styling packages
 import {StyleSheet, Alert, Image, Text, TouchableOpacity,
-  Dimensions, KeyboardAvoidingView, View} from "react-native";
+  SafeAreaView, Dimensions, KeyboardAvoidingView, View} from "react-native";
 import {Input, Icon, Header, Button, Avatar} from "react-native-elements";
 import Spinner from 'react-native-loading-spinner-overlay';
 
@@ -131,7 +131,7 @@ class Register extends React.Component {
   // render the component's views
   render() {
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <Spinner visible={this.state.loading} />
         <Header containerStyle={styles.navbar}>
           <Icon name="chevron-left" onPress={() => this.goBackPage()}
@@ -199,7 +199,7 @@ class Register extends React.Component {
             By registering I agree to the terms of service.
           </Text>
         </View>
-      </View>
+      </SafeAreaView>
     );
   }
 

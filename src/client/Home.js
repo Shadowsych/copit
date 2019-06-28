@@ -5,7 +5,7 @@ import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
 
 // styling packages
-import {StyleSheet, Image, TouchableOpacity,
+import {StyleSheet, Image, TouchableOpacity, Platform,
   Button, Text, Alert, View} from "react-native";
 import GestureRecognizer from 'react-native-swipe-gestures';
 import {Icon, Overlay} from "react-native-elements";
@@ -24,12 +24,12 @@ const styles = StyleSheet.create({
   },
   menu_btn: {
     position: "absolute",
-    top: 10,
+    top: Platform.OS === "ios" ? 60 : 10,
     left: 10
   },
   search_btn: {
     position: "absolute",
-    top: 70,
+    top: Platform.OS === "ios" ? 120 : 70,
     left: 10
   },
   map: {
@@ -44,10 +44,10 @@ const styles = StyleSheet.create({
     left: 15
   },
   swipe_up_container: {
-    position: 'absolute',
+    position: "absolute",
     backgroundColor: "rgba(0, 0, 0, 0)",
     width: "100%",
-    height: 75,
+    height: Platform.OS === "ios" ? 150 : 75,
     bottom: 0,
     justifyContent: "center",
     alignItems: "center"

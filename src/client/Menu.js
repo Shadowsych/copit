@@ -3,7 +3,8 @@ import React from "react";
 import {NavigationActions} from "react-navigation";
 
 // styling packages
-import {StyleSheet, AsyncStorage, Image, Text, TouchableOpacity, View} from "react-native";
+import {StyleSheet, AsyncStorage, Image, SafeAreaView,
+  Text, TouchableOpacity, View} from "react-native";
 import {Avatar, Divider, ListItem, Icon} from "react-native-elements";
 
 // style sheet
@@ -62,7 +63,7 @@ class Menu extends React.Component {
   // render the component's views
   render() {
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <View style={styles.navbar}>
           <View style={styles.small_spacing}>
             <Icon name="chevron-left" onPress={() => this.goBackPage()}
@@ -87,7 +88,7 @@ class Menu extends React.Component {
           style={styles.logout_btn}>
           <Text style={styles.logout_text}>Logout</Text>
         </TouchableOpacity>
-      </View>
+      </SafeAreaView>
     );
   }
 

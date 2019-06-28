@@ -5,7 +5,7 @@ import React from "react";
 import {showLocation} from "react-native-map-link";
 
 // styling packages
-import {StyleSheet, Image, Text, Button, View} from "react-native";
+import {StyleSheet, SafeAreaView, Image, Text, Button, View} from "react-native";
 import {Icon} from "react-native-elements";
 
 // style sheet
@@ -133,7 +133,7 @@ class ViewPing extends React.Component {
   // render the component's views
   render() {
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <View style={styles.spacing}></View>
         <Image
           style={styles.picture}
@@ -169,13 +169,13 @@ class ViewPing extends React.Component {
           </Text>
         </View>
         <View style={styles.btn}>
-            <Button
-              color="#75B1DE"
-              title={"Directions (" + this.state.distance + " ft)"}
-              onPress={() => this.viewDirections()}
-            />
+          <Button
+            color="#75B1DE"
+            title={"Directions (" + this.state.distance + " ft)"}
+            onPress={() => this.viewDirections()}
+          />
         </View>
-      </View>
+      </SafeAreaView>
     );
   }
 

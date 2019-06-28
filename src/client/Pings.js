@@ -2,7 +2,7 @@
 import React from "react";
 
 // styling packages
-import {StyleSheet, Image, Text, View} from "react-native";
+import {StyleSheet, Image, Text, SafeAreaView, View} from "react-native";
 import {Header, Icon} from "react-native-elements";
 
 // style sheet
@@ -44,7 +44,7 @@ class Pings extends React.Component {
   // render the component's views
   render() {
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <Header containerStyle={styles.navbar}>
           <Icon name="chevron-left" onPress={() => this.goBackPage()}
             type="entypo" color="#D3D3D3" size={22} />
@@ -103,7 +103,7 @@ class Pings extends React.Component {
             </View>
           </View>
         </View>
-      </View>
+      </SafeAreaView>
     );
   }
 

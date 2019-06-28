@@ -4,7 +4,7 @@ import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
 
 // styling packages
-import {StyleSheet, Picker, ScrollView,
+import {StyleSheet, ScrollView, SafeAreaView,
   ActivityIndicator, Text, Alert, View} from "react-native";
 import {SearchBar, Icon, Button, Card} from 'react-native-elements';
 
@@ -15,17 +15,18 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   search_bar: {
-    flex: 0.10,
+    flex: 0.075,
     width: "100%"
   },
-  picker: {
-    flex: 0.10,
-    width: "75%"
+  picker_container: {
+    flex: 0.125,
+    width: "100%"
   },
-  item: {
-    fontFamily: "ubuntu-regular"
+  horizontal_scroll_view: {
+    justifyContent: "center",
+    alignItems: "center"
   },
-  scroll_view: {
+  vertical_scroll_view: {
     flex: 0.70,
     width: "100%"
   },
@@ -69,7 +70,7 @@ class Search extends React.Component {
       loading: false,
       markers: this.props.navigation.state.params.markers,
       search: "",
-      category: "",
+      category: "All Categories",
     }
   }
 
@@ -130,63 +131,71 @@ class Search extends React.Component {
     const toFeet = 5280;
 
     return (
-        <View style={styles.container}>
-          <SearchBar
-            containerStyle={styles.search_bar}
-            placeholder="Search..."
-            platform="android"
-            onChangeText={(text) => this.setState({search: text})}
-            onEndEditing={(text) => this.updateSearch()}
-            value={this.state.search} />
-          <Picker
-            style={styles.picker}
-            selectedValue={this.state.category}
-            onValueChange={(option) => this.updateSearch(option)}>
-             <Picker.Item itemStyle={styles.item} color="#C0C0C0" label="All Categories" value="All Categories" />
-             <Picker.Item itemStyle={styles.item} color="#909090" label="Food" value="Food" />
-             <Picker.Item itemStyle={styles.item} color="#909090" label="Clothes" value="Clothes" />
-             <Picker.Item itemStyle={styles.item} color="#909090" label="Clothes" value="Clothes" />
-             <Picker.Item itemStyle={styles.item} color="#909090" label="School" value="School" />
-             <Picker.Item itemStyle={styles.item} color="#909090" label="Discounts" value="Discounts" />
-             <Picker.Item itemStyle={styles.item} color="#909090" label="Party" value="Party" />
-             <Picker.Item itemStyle={styles.item} color="#909090" label="Org Events" value="Org Events" />
-             <Picker.Item itemStyle={styles.item} color="#909090" label="Emergencies" value="Emergencies" />
-             <Picker.Item itemStyle={styles.item} color="#909090" label="Conctraceptives" value="Conctraceptives" />
-             <Picker.Item itemStyle={styles.item} color="#909090" label="Other" value="Other" />
-          </Picker>
-          <ScrollView style={styles.scroll_view}>
-            {this.state.markers.map((marker, key) => (
-              <Card
-                key={key}
-                title={marker.title}
-                titleStyle={styles.card_title}
-                image={{uri: marker.picture}}>
-                  <Text style={styles.card_text}>Pinged by {marker.author}</Text>
-                  <Text style={styles.card_text}>Category: {marker.category}</Text>
-                  <Text style={styles.card_text}>
-                    Distance: {Math.round(marker.distance * toFeet)} ft
-                  </Text>
-                  <Text style={styles.card_text}>{marker.description}</Text>
-                  <Button
-                    buttonStyle={styles.card_btn}
-                    onPress={
-                      () => this.props.navigation.state.params.loadViewPingPage(
-                        marker, this.updateMarkers.bind(this))
-                    }
-                    title="VIEW PING" />
-              </Card>
-            ))}
+      <SafeAreaView style={styles.container}>
+        <SearchBar
+          containerStyle={styles.search_bar}
+          placeholder="Search..."
+          platform="android"
+          onChangeText={(text) => this.setState({search: text})}
+          onEndEditing={(text) => this.updateSearch()}
+          value={this.state.search} />
+        <View style={styles.picker_container}>
+          <ScrollView contentContainerStyle={styles.horizontal_scroll_view} horizontal={true}>
+            <Icon reverse name="globe" onPress={() => this.updateSearch("All Categories")}
+              type="entypo" color="#333333" size={22} />
+            <Icon reverse name="food" onPress={() => this.updateSearch("Food")}
+              type="material-community" color="#FFB300" size={22} />
+            <Icon reverse name="tshirt-crew-outline" onPress={() => this.updateSearch("Clothes")}
+              type="material-community" color="#E4181B" size={22} />
+            <Icon reverse name="school" onPress={() => this.updateSearch("School")}
+              type="material-community" color="#FF7A1D" size={22} />
+            <Icon reverse name="percent" onPress={() => this.updateSearch("Discounts")}
+              type="feather" color="#3E9C35" size={22} />
+            <Icon reverse name="drink" onPress={() => this.updateSearch("Party")}
+              type="entypo" color="#BD8DE3" size={22} />
+            <Icon reverse name="calendar" onPress={() => this.updateSearch("Org Events")}
+              type="font-awesome" color="#2F74B5" size={22} />
+            <Icon reverse name="warning" onPress={() => this.updateSearch("Emergencies")}
+              type="font-awesome" color="#FFCC00" size={22} />
+            <Icon reverse name="heart" onPress={() => this.updateSearch("Conctraceptives")}
+              type="feather" color="#E793A0" size={22} />
+            <Icon reverse name="rocket" onPress={() => this.updateSearch("Other")}
+              type="simple-line-icon" color="#D9D9D9" size={22} />
           </ScrollView>
-          <View style={styles.go_back_container}>
-            <Icon name="chevron-left" onPress={() => this.goBackPage()}
-              type="entypo" color="#D3D3D3" size={22} />
-          </View>
-          {this.state.loading &&
-            <View style={styles.loading}>
-              <ActivityIndicator size="large" color="#CFD0D4" />
-            </View>
-          }
         </View>
+        <ScrollView style={styles.vertical_scroll_view}>
+          {this.state.markers.map((marker, key) => (
+            <Card
+              key={key}
+              title={marker.title}
+              titleStyle={styles.card_title}
+              image={{uri: marker.picture}}>
+                <Text style={styles.card_text}>Pinged by {marker.author}</Text>
+                <Text style={styles.card_text}>Category: {marker.category}</Text>
+                <Text style={styles.card_text}>
+                  Distance: {Math.round(marker.distance * toFeet)} ft
+                </Text>
+                <Text style={styles.card_text}>{marker.description}</Text>
+                <Button
+                  buttonStyle={styles.card_btn}
+                  onPress={
+                    () => this.props.navigation.state.params.loadViewPingPage(
+                      marker, this.updateMarkers.bind(this))
+                  }
+                  title="VIEW PING" />
+            </Card>
+          ))}
+        </ScrollView>
+        <View style={styles.go_back_container}>
+          <Icon name="chevron-left" onPress={() => this.goBackPage()}
+            type="entypo" color="#D3D3D3" size={22} />
+        </View>
+        {this.state.loading &&
+          <View style={styles.loading}>
+            <ActivityIndicator size="large" color="#CFD0D4" />
+          </View>
+        }
+      </SafeAreaView>
     );
   }
 
