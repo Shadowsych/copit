@@ -71,8 +71,8 @@ class MasterRecord {
     let query = "SELECT *, ("
       + `${milesConstant} * acos(cos(radians(?)) * cos(radians(latitude)) * `
       + "cos(radians(longitude) -radians(?)) + sin(radians(?)) * sin(radians(latitude)))"
-      + `) AS distance FROM MarkerRecord WHERE `
-      + `description LIKE '%${search}%' AND category LIKE '%${category}%' `
+      + `) AS distance FROM MarkerRecord WHERE (title LIKE '%${search}%' OR `
+      + `description LIKE '%${search}%') AND category LIKE '%${category}%' `
       + `AND expires > UNIX_TIMESTAMP(NOW(3)) * 1000 HAVING distance < ${mileRadius} `
       + `ORDER BY distance LIMIT 0, ${nearestMarkers}`;
 

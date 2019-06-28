@@ -191,7 +191,7 @@ class ViewPing extends React.Component {
         <View style={styles.btn}>
           <Button
             color="#75B1DE"
-            title={"Directions (" + this.state.distance + " ft)"}
+            title={"DIRECTIONS (" + this.state.distance + " FT)"}
             onPress={() => this.viewDirections()}
           />
         </View>
