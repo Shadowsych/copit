@@ -116,6 +116,7 @@ class Search extends React.Component {
         });
       }
       this.setState({loading: false});
+      socket.off("searchMarkers");
     });
   }
 
@@ -165,24 +166,21 @@ class Search extends React.Component {
         </View>
         <ScrollView style={styles.vertical_scroll_view}>
           {this.state.markers.map((marker, key) => (
-            <Card
-              key={key}
-              title={marker.title}
-              titleStyle={styles.card_title}
+            <Card key={key} title={marker.title} titleStyle={styles.card_title}
               image={{uri: marker.picture}}>
-                <Text style={styles.card_text}>Pinged by {marker.author}</Text>
-                <Text style={styles.card_text}>Category: {marker.category}</Text>
-                <Text style={styles.card_text}>
-                  Distance: {Math.round(marker.distance * toFeet)} ft
-                </Text>
-                <Text style={styles.card_text}>{marker.description}</Text>
-                <Button
-                  buttonStyle={styles.card_btn}
-                  onPress={
-                    () => this.props.navigation.state.params.loadViewPingPage(
-                      marker, this.updateMarkers.bind(this))
-                  }
-                  title="VIEW PING" />
+              <Text style={styles.card_text}>Pinged by {marker.author}</Text>
+              <Text style={styles.card_text}>Category: {marker.category}</Text>
+              <Text style={styles.card_text}>
+                Distance: {Math.round(marker.distance * toFeet)} ft
+              </Text>
+              <Text style={styles.card_text}>{marker.description}</Text>
+              <Button
+                buttonStyle={styles.card_btn}
+                onPress={
+                  () => this.props.navigation.state.params.loadViewPingPage(
+                    marker, this.updateMarkers.bind(this))
+                }
+                title="VIEW PING" />
             </Card>
           ))}
         </ScrollView>

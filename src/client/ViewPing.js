@@ -133,6 +133,7 @@ class ViewPing extends React.Component {
             updateMarkers();
           }
         }
+        socket.off("updateLikes");
       });
     }
   }

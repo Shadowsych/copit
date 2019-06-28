@@ -172,6 +172,7 @@ class AddPing extends React.Component {
         this.setState({loading: false});
         Alert.alert("Database Error!", data.message);
       }
+      socket.off("addMarker");
     });
   }
 

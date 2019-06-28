@@ -133,6 +133,7 @@ class Home extends React.Component {
         this.setState({loading: false});
         Alert.alert("Database Error!", data.message);
       }
+      socket.off("receiveMarkers");
     });
   }
 

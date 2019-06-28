@@ -106,6 +106,7 @@ class Login extends React.Component {
           failed_password_text: "Could not verify the password"
         });
       }
+      socket.off("loginAccount");
     });
   }
 

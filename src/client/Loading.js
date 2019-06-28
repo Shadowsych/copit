@@ -47,6 +47,7 @@ class Loading extends React.Component {
         console.log(error);
         this.loadLoginPage(socket);
       }
+      socket.off("connect");
     });
 
     // the socket connection caused an error
@@ -54,6 +55,7 @@ class Loading extends React.Component {
       console.log(error);
       Alert.alert("Connection Error!", "The connection to the server could " +
         "not be established! Please reload the app.");
+      socket.off("connect_error");
     });
   }
 
@@ -78,6 +80,7 @@ class Loading extends React.Component {
           console.log(data.message);
           this.loadLoginPage(socket);
         }
+        socket.off("loadAccount");
       });
     } else {
       // a token is not stored, load the login page

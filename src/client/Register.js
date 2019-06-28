@@ -102,6 +102,7 @@ class Register extends React.Component {
           // an error occurred when registering the account
           Alert.alert("Registration Error!", data.message);
         }
+        socket.off("registerAccount");
       });
     }
   }
