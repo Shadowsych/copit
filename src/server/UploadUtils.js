@@ -28,7 +28,7 @@ class UploadUtils {
       return config.serverDomain + ":" + config.serverPort + directory + "/" + file;
     }
     // return the default icon URL
-    return config.serverDomain + ":" + config.serverPort + "/defaults/icons/no_icon.png";
+    return config.serverDomain + ":" + config.serverPort + "/media/defaults/icons/no_icon.png";
   }
 }
 module.exports = UploadUtils;

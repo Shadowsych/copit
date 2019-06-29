@@ -15,7 +15,7 @@ import Pings from "./Pings";
 import AddPing from "./AddPing";
 import Search from "./Search";
 import Menu from "./Menu";
-import Account from "./Account";
+import EditAccount from "./EditAccount";
 
 // custom animation transitions
 const handleCustomTransition = ({ scenes }) => {
@@ -81,8 +81,8 @@ const Navigation = createStackNavigator({
   Menu: {
     screen: Menu
   },
-  Account: {
-    screen: Account
+  EditAccount: {
+    screen: EditAccount
   }
 }, {
   // create a padding to avoid overlapping the navbar of the device

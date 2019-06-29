@@ -183,6 +183,7 @@ class Login extends React.Component {
 
   // load the home page
   loadHomePage(account) {
+    // guests have an imaginary id and token
     let guestIdToken = -1;
 
     // store the account token in the storage
@@ -192,18 +193,18 @@ class Login extends React.Component {
 
     // pop the navigation stack, then navigate to the Home screen
     this.props.navigation.reset([
-       NavigationActions.navigate({
-         routeName: "Home",
-         params: {
-           socket: this.props.navigation.state.params.socket,
-           id: account.id,
-           token: account.token,
-           name: account.name,
-           email: account.email,
-           points: account.points,
-           profile_photo: account.profile_photo
-         }
-       })], 0
+      NavigationActions.navigate({
+        routeName: "Home",
+        params: {
+          socket: this.props.navigation.state.params.socket,
+          id: account.id,
+          token: account.token,
+          name: account.name,
+          email: account.email,
+          points: account.points,
+          profile_photo: account.profile_photo
+        }
+      })], 0
     );
   }
 }

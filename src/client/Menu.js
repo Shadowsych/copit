@@ -70,6 +70,9 @@ class Menu extends React.Component {
 
   // render the component's views
   render() {
+    // guests have an imaginary id and token
+    let guestIdToken = -1;
+
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.navbar}>
@@ -96,7 +99,8 @@ class Menu extends React.Component {
           subtitleStyle={styles.list_item_subtitle}
           leftIcon={{name: "user", type: "antdesign", color: "#75B1DE"}}
           rightIcon={{name: "chevron-right", type: "fontawesome", color: "#C7D0D7"}}
-          onPress={() => this.loadAccountPage()}
+          disabled={this.props.navigation.state.params.id == guestIdToken}
+          onPress={() => this.loadEditAccountPage()}
           />
           <ListItem
           title="Pings"
@@ -105,6 +109,7 @@ class Menu extends React.Component {
           subtitleStyle={styles.list_item_subtitle}
           leftIcon={{name: "globe", type: "entypo", color: "#75B1DE"}}
           rightIcon={{name: "chevron-right", type: "fontawesome", color: "#C7D0D7"}}
+          disabled={this.props.navigation.state.params.id == guestIdToken}
           onPress={() => this.loadMyPingsPage()}
           />
           <ListItem
@@ -114,6 +119,7 @@ class Menu extends React.Component {
           subtitleStyle={styles.list_item_subtitle}
           leftIcon={{name: "shoppingcart", type: "antdesign", color: "#75B1DE"}}
           rightIcon={{name: "chevron-right", type: "fontawesome", color: "#C7D0D7"}}
+          disabled={this.props.navigation.state.params.id == guestIdToken}
           onPress={() => this.loadPointsShopPage()}
           />
           <ListItem
@@ -123,6 +129,7 @@ class Menu extends React.Component {
           subtitleStyle={styles.list_item_subtitle}
           leftIcon={{name: "medal", type: "entypo", color: "#75B1DE"}}
           rightIcon={{name: "chevron-right", type: "fontawesome", color: "#C7D0D7"}}
+          disabled={this.props.navigation.state.params.id == guestIdToken}
           onPress={() => this.loadLeaderboardsPage()}
           />
         </View>
@@ -141,13 +148,18 @@ class Menu extends React.Component {
     this.props.navigation.goBack();
   }
 
-  // load the account page
-  loadAccountPage() {
+  // load the edit account page
+  loadEditAccountPage() {
     let socket = this.props.navigation.state.params.socket;
 
     // navigate to the account page
-    this.props.navigation.navigate("Account", {
-      socket: socket
+    this.props.navigation.navigate("EditAccount", {
+      socket: socket,
+      id: this.props.navigation.state.params.id,
+      token: this.props.navigation.state.params.token,
+      name: this.props.navigation.state.params.name,
+      email: this.props.navigation.state.params.email,
+      profile_photo: this.props.navigation.state.params.profile_photo
     });
   }
 

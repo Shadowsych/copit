@@ -14,6 +14,7 @@ class AccountRecord {
     socket.on("loadAccount", (data) => {this.loadAccount(data)});
     socket.on("loginAccount", (data) => {this.loginAccount(data)});
     socket.on("registerAccount", (data) => {this.registerAccount(data)});
+    socket.on("editAccount", (data) => {this.editAccount(data)});
   }
 
   // load an account
@@ -109,7 +110,7 @@ class AccountRecord {
       });
     }
 
-    if(this.isRegistrationValid(name, email, password)) {
+    if(this.isFieldsValid(name, email, password)) {
       // call the email query promise
       await AccountRecord.isEmailExists(this.dbConn, email).then((exists) => {
         if(!exists) {
@@ -140,7 +141,7 @@ class AccountRecord {
               } else {
                 failure(error, "A query error occurred when registering for the account...");
               }}
-            );
+          );
         } else {
           failure("This email is already registered!", "This email is already registered!");
         }
@@ -150,6 +151,76 @@ class AccountRecord {
     } else {
       failure("The fields are invalid!", "Invalid fields were used when registering!");
     }
+  }
+
+  // edit an account
+  async editAccount(data) {
+    // interpret the variables passed from the client
+    let token = data.message.token;
+    let name = data.message.name;
+    let email = data.message.email;
+    let password = data.message.password;
+    let profilePhoto = data.message.profile_photo_base64;
+    if(profilePhoto) {
+      profilePhoto = await UploadUtils.uploadBase64(
+        data.message.profile_photo_base64, "/media/profile_photos", "picture.png"
+      );
+    }
+
+    // called whenever there exists a failure
+    let socket = this.socket;
+    function failure(error, errorMessage) {
+      // emit a failed attempt to the client
+      console.log(error);
+      socket.emit("editAccount", {
+        success: false,
+        message: errorMessage
+      });
+    }
+
+    // call the get account and email query promises
+    let getAccount = AccountRecord.getAccount(this.dbConn, token);
+    let isEmailExists = AccountRecord.isEmailExists(this.dbConn, email);
+    await Promise.all([getAccount, isEmailExists]).then((resolved) => {
+      // specify the resolved Array into variables
+      let accountData = resolved[0];
+      let emailExists = resolved[1];
+
+      // check if the new email is valid
+      if(!emailExists || email == accountData.email) {
+        // set the new variables if they exist
+        let newPassword = password ? password : accountData.password;
+        let newProfilePhoto = profilePhoto ? profilePhoto : accountData.profile_photo;
+
+        // check if the new fields are valid
+        if(this.isFieldsValid(name, email, newPassword)) {
+          // create a prepared statement to insert the account information
+          let query = "UPDATE AccountRecord SET name=?, email=?, "
+            + "password=?, profile_photo=? WHERE id=?";
+
+          // query the database to update the account information
+          this.dbConn.query(query,
+            [name, email, newPassword, newProfilePhoto, accountData.id], (error, result) => {
+              if(!error) {
+                // emit a message of success to the client
+                console.log("Edited 1 account from AccountRecord: " + email);
+                socket.emit("editAccount", {
+                  success: true,
+                  message: "Successfully updated the account!"
+                });
+              } else {
+                failure(error, "A query error occurred when editing the account...");
+              }}
+          );
+        } else {
+          failure("The fields are invalid!", "Invalid fields were used when editing!");
+        }
+      } else {
+        failure("This email is already used!", "This email is already used!");
+      }
+    }).catch((error) => {
+      failure(error, "A query error occurred when editing the account...");
+    });
   }
 
   // return a promise to receive account data using an account token
@@ -223,8 +294,8 @@ class AccountRecord {
     });
   }
 
-  // return if the registration fields are valid
-  isRegistrationValid(name, email, password) {
+  // return if the account fields are valid
+  isFieldsValid(name, email, password) {
     return !(name == "" || email == "" || password == "" || !this.isEmailValid(email));
   }
 

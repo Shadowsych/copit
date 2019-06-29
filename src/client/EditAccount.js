@@ -1,6 +1,6 @@
 // react packages
 import React from "react";
-import {Header as NavHeader} from 'react-navigation';
+import {Header as NavHeader, NavigationActions} from 'react-navigation';
 import * as Permissions from "expo-permissions";
 import * as ImagePicker from 'expo-image-picker';
 
@@ -42,27 +42,27 @@ const styles = StyleSheet.create({
     color: "#909090",
     fontFamily: "ubuntu-regular"
   },
-  register_btn_container: {
+  update_btn_container: {
     flex: 0.05,
     width: "80%"
   },
-  register_btn: {
+  update_btn: {
     backgroundColor: "#75B1DE"
   },
-  register_disclaimer_text: {
+  update_disclaimer_text: {
     color: "#C0C0C0",
     fontFamily: "ubuntu-regular"
   }
 });
 
-class Account extends React.Component {
+class EditAccount extends React.Component {
   // construct the state of the component
   constructor(props) {
     super(props);
     this.state = {
       loading: false,
-      name: "",
-      email: "",
+      name: this.props.navigation.state.params.name,
+      email: this.props.navigation.state.params.email,
       password: "",
       confirm_password: "",
       profile_photo_base64: undefined,
@@ -71,38 +71,40 @@ class Account extends React.Component {
     }
   }
 
-  // register an account
-  async registerAccount() {
+  // update the account
+  async editAccount() {
     let socket = this.props.navigation.state.params.socket;
     let name = this.state.name;
     let email = this.state.email;
     let password = this.state.password;
     let profilePhotoBase64 = this.state.profile_photo_base64;
 
-    if(this.isRegistrationValid(name, email, password)) {
-      // emit a message to register the account
+    if(this.isEditValid(name, email, password)) {
+      // emit a message to edit the account
       this.setState({loading: true});
-      socket.emit("registerAccount", {
+      socket.emit("editAccount", {
         message: {
+          token: this.props.navigation.state.params.token,
           name: name,
           email: email,
           password: password,
           profile_photo_base64: profilePhotoBase64
         },
-        handle: "handleRegisterAccount"
+        handle: "handleEditAccount"
       });
 
-      // listen for the register account response from the server
-      socket.on("registerAccount", (data) => {
+      // listen for the edit account response from the server
+      socket.on("editAccount", (data) => {
         this.setState({loading: false});
         if(data.success) {
-          // registered the account, load the home page
-          this.props.navigation.state.params.loadHomePage(data.message);
+          // edited the account, then reload the home page
+          Alert.alert("Edited Account!", data.message);
+          this.reloadHomePage();
         } else if(!data.success) {
-          // an error occurred when registering the account
-          Alert.alert("Registration Error!", data.message);
+          // an error occurred when editing the account
+          Alert.alert("Editing Error!", data.message);
         }
-        socket.off("registerAccount");
+        socket.off("editAccount");
       });
     }
   }
@@ -141,7 +143,8 @@ class Account extends React.Component {
         <TouchableOpacity onPress={() => this.uploadPicture()}
           style={styles.avatar} activeOpacity={0.8}>
           {!this.state.profile_photo_base64 ? (
-            <Avatar rounded size="xlarge" icon={{name: "camera", type: "entypo"}} />
+            <Avatar rounded icon={{name: "camera-off", type: "feather"}} activeOpacity={0.7}
+              size="xlarge" source={{uri: this.props.navigation.state.params.profile_photo}} />
           ) : (
             <Avatar rounded size="xlarge"
               source={
@@ -156,7 +159,8 @@ class Account extends React.Component {
           <Input
             containerStyle={styles.input_text_container}
             inputStyle={styles.input_text}
-            placeholder="Profile Name*"
+            placeholder="New Profile Name*"
+            value={this.state.name}
             onChangeText={(text) => this.setState({name: text})}
             rightIcon={
               <Icon name="person" type="material" size={24} color="#ADD8E6"/>
@@ -164,7 +168,8 @@ class Account extends React.Component {
           <Input
             containerStyle={styles.input_text_container}
             inputStyle={styles.input_text}
-            placeholder="Email*"
+            placeholder="New Email*"
+            value={this.state.email}
             onChangeText={(text) => this.setState({email: text})}
             errorMessage={this.state.failed_email_text}
             rightIcon={
@@ -173,7 +178,7 @@ class Account extends React.Component {
           <Input
             containerStyle={styles.input_text_container}
             inputStyle={styles.input_text}
-            placeholder="Password*"
+            placeholder="New Password"
             secureTextEntry={true}
             onChangeText={(text) => this.setState({password: text})}
             errorMessage={this.state.failed_password_text}
@@ -183,7 +188,7 @@ class Account extends React.Component {
           <Input
             containerStyle={styles.input_text_container}
             inputStyle={styles.input_text}
-            placeholder="Confirm Password*"
+            placeholder="Confirm New Password"
             secureTextEntry={true}
             onChangeText={(text) => this.setState({confirm_password: text})}
             errorMessage={this.state.failed_password_text}
@@ -191,24 +196,24 @@ class Account extends React.Component {
               <Icon name="lock" type="entypo" size={24} color="#ADD8E6"/>
             } />
         </KeyboardAvoidingView>
-        <Button title="Register" buttonStyle={styles.register_btn}
-          onPress={() => this.registerAccount()}
-          containerStyle={styles.register_btn_container} />
+        <Button title="Update Account" buttonStyle={styles.update_btn}
+          onPress={() => this.editAccount()}
+          containerStyle={styles.update_btn_container} />
         <View style={styles.spacing} />
         <View style={styles.spacing}>
-          <Text style={styles.register_disclaimer_text}>
-            By registering I agree to the terms of service.
+          <Text style={styles.update_disclaimer_text}>
+            By updating I agree to the terms of service.
           </Text>
         </View>
       </SafeAreaView>
     );
   }
 
-  // return if the registration fields are valid
-  isRegistrationValid(name, email, password) {
+  // return if the edit fields are valid
+  isEditValid(name, email, password) {
     // determine if any required fields are blank
     let confirmPassword = this.state.confirm_password;
-    if(name == "" || email == "" || password == "" || confirmPassword == "") {
+    if(name == "" || email == "") {
       Alert.alert("Missing Information!", "Please fill in all required fields.");
       return false;
     }
@@ -220,8 +225,8 @@ class Account extends React.Component {
       isValid = false;
     }
 
-    // determine if the passwords equal each other
-    if(password != confirmPassword) {
+    // if updating password, determine if the passwords equal each other
+    if(password != "" && (password != confirmPassword)) {
       this.setState({failed_password_text: "Passwords do not match"});
       isValid = false;
     }
@@ -234,9 +239,46 @@ class Account extends React.Component {
     return emailRegex.test(email);
   }
 
+  // reload the home page
+  reloadHomePage() {
+    let socket = this.props.navigation.state.params.socket
+
+    // load the account
+    this.setState({loading: true});
+    socket.emit("loadAccount", {
+      message: {
+        token: this.props.navigation.state.params.token
+      },
+      handle: "handleLoadAccount"
+    });
+
+    // listen for a response from the server
+    socket.on("loadAccount", (data) => {
+      this.setState({loading: false});
+      if(data.success) {
+        // loaded the account successfully, navigate to the home page
+        this.props.navigation.reset([
+          NavigationActions.navigate({
+            routeName: "Home",
+            params: {
+              socket: socket,
+              id: this.props.navigation.state.params.id,
+              token: this.props.navigation.state.params.token,
+              name: data.message.name,
+              email: data.message.email,
+              points: data.message.points,
+              profile_photo: data.message.profile_photo
+            }
+          })], 0
+        );
+      }
+      socket.off("loadAccount");
+    });
+  }
+
   // go back a page
   goBackPage() {
     this.props.navigation.goBack();
   }
 }
-export default Account;
+export default EditAccount;
