@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
   }
 });
 
-class Register extends React.Component {
+class Account extends React.Component {
   // construct the state of the component
   constructor(props) {
     super(props);
@@ -239,4 +239,4 @@ class Register extends React.Component {
     this.props.navigation.goBack();
   }
 }
-export default Register;
+export default Account;

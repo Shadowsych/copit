@@ -15,6 +15,7 @@ import Pings from "./Pings";
 import AddPing from "./AddPing";
 import Search from "./Search";
 import Menu from "./Menu";
+import Account from "./Account";
 
 // custom animation transitions
 const handleCustomTransition = ({ scenes }) => {
@@ -46,6 +47,9 @@ const handleCustomTransition = ({ scenes }) => {
     && nextScene.route.routeName == "AddPing") {
       // transition fade in from the pings to the add ping page
       return fadeIn();
+  } else if(prevScene && prevScene.route.routeName == "Menu") {
+      // transition from the the bottom from the menu to any other page
+      return fromBottom();
   }
   // by default, open the page by zooming in
   return zoomIn();
@@ -76,6 +80,9 @@ const Navigation = createStackNavigator({
   },
   Menu: {
     screen: Menu
+  },
+  Account: {
+    screen: Account
   }
 }, {
   // create a padding to avoid overlapping the navbar of the device

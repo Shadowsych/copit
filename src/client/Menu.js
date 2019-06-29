@@ -30,12 +30,20 @@ const styles = StyleSheet.create({
     flex: 0.35
   },
   points_text: {
-    color: "#D3D3D3",
+    color: "#929497",
     fontSize: 16,
     fontFamily: "ubuntu-regular"
   },
   list_view: {
-    flex: 0.875
+    flex: 0.875,
+    width: "100%"
+  },
+  list_item_title: {
+    color: "#6A6F73",
+    fontFamily: "ubuntu-regular"
+  },
+  list_item_subtitle: {
+    fontFamily: "ubuntu-regular"
   },
   logout_btn: {
     flex: 0.075,
@@ -71,8 +79,8 @@ class Menu extends React.Component {
           </View>
           <View style={styles.large_spacing}></View>
           <View>
-            <Avatar rounded size="large" title="?" activeOpacity={0.7}
-              source={{uri: this.props.navigation.state.params.profile_photo}} />
+            <Avatar rounded icon={{name: "camera-off", type: "feather"}} activeOpacity={0.7}
+              size="large" source={{uri: this.props.navigation.state.params.profile_photo}} />
           </View>
           <View style={styles.large_spacing} />
           <View style={styles.small_spacing}>
@@ -81,6 +89,42 @@ class Menu extends React.Component {
           </View>
         </View>
         <View style={styles.list_view}>
+          <ListItem
+          title="Account"
+          titleStyle={styles.list_item_title}
+          subtitle="Edit name, picture, password, etc."
+          subtitleStyle={styles.list_item_subtitle}
+          leftIcon={{name: "user", type: "antdesign", color: "#75B1DE"}}
+          rightIcon={{name: "chevron-right", type: "fontawesome", color: "#C7D0D7"}}
+          onPress={() => this.loadAccountPage()}
+          />
+          <ListItem
+          title="Pings"
+          titleStyle={styles.list_item_title}
+          subtitle={"Edit name, description, picture, etc."}
+          subtitleStyle={styles.list_item_subtitle}
+          leftIcon={{name: "globe", type: "entypo", color: "#75B1DE"}}
+          rightIcon={{name: "chevron-right", type: "fontawesome", color: "#C7D0D7"}}
+          onPress={() => this.loadMyPingsPage()}
+          />
+          <ListItem
+          title="Points Shop"
+          titleStyle={styles.list_item_title}
+          subtitle="Redeem in-app rewards."
+          subtitleStyle={styles.list_item_subtitle}
+          leftIcon={{name: "shoppingcart", type: "antdesign", color: "#75B1DE"}}
+          rightIcon={{name: "chevron-right", type: "fontawesome", color: "#C7D0D7"}}
+          onPress={() => this.loadPointsShopPage()}
+          />
+          <ListItem
+          title="Leaderboards"
+          titleStyle={styles.list_item_title}
+          subtitle="View users with the highest points."
+          subtitleStyle={styles.list_item_subtitle}
+          leftIcon={{name: "medal", type: "entypo", color: "#75B1DE"}}
+          rightIcon={{name: "chevron-right", type: "fontawesome", color: "#C7D0D7"}}
+          onPress={() => this.loadLeaderboardsPage()}
+          />
         </View>
         <TouchableOpacity
           onPress={() => this.logOut()}
@@ -95,6 +139,31 @@ class Menu extends React.Component {
   // go back a page
   goBackPage() {
     this.props.navigation.goBack();
+  }
+
+  // load the account page
+  loadAccountPage() {
+    let socket = this.props.navigation.state.params.socket;
+
+    // navigate to the account page
+    this.props.navigation.navigate("Account", {
+      socket: socket
+    });
+  }
+
+  // load the my pings page
+  loadMyPingsPage() {
+    let socket = this.props.navigation.state.params.socket;
+  }
+
+  // load the points shop page
+  loadPointsShopPage() {
+    let socket = this.props.navigation.state.params.socket;
+  }
+
+  // load the leaderboards page
+  loadLeaderboardsPage() {
+    let socket = this.props.navigation.state.params.socket;
   }
 
   // logout the account

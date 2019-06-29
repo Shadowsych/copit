@@ -254,7 +254,7 @@ class Home extends React.Component {
     const toFeet = 5280;
     let distanceFeet = Math.round(marker.distance * toFeet);
 
-    // convert the modal likes into an Array
+    // convert the likes into an Array
     let markerLikes = marker.likes;
     if(!markerLikes) {
       markerLikes = [];

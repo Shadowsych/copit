@@ -33,6 +33,14 @@ const styles = StyleSheet.create({
   card_title: {
     color: "#C0C0C0"
   },
+  card_like_container: {
+    flexDirection: "row"
+  },
+  card_like_text: {
+    color: "#909090",
+    fontSize: 13,
+    fontFamily: "ubuntu-regular"
+  },
   card_text: {
     color: "#C0C0C0",
     marginBottom: 10,
@@ -168,6 +176,12 @@ class Search extends React.Component {
           {this.state.markers.map((marker, key) => (
             <Card key={key} title={marker.title} titleStyle={styles.card_title}
               image={{uri: marker.picture}}>
+              <View style={styles.card_like_container}>
+                <Icon name="heart" type="evilicon" color="#E84856" size={20} />
+                <Text style={styles.card_like_text}>
+                  {this.getFormattedLikes(marker.likes)}
+                </Text>
+              </View>
               <Text style={styles.card_text}>Pinged by {marker.author}</Text>
               <Text style={styles.card_text}>Category: {marker.category}</Text>
               <Text style={styles.card_text}>
@@ -206,6 +220,18 @@ class Search extends React.Component {
 
     // update the markers on the page
     this.updateMarkers();
+  }
+
+  // return the number likes
+  getFormattedLikes(likes) {
+    // convert the likes into an Array
+    let markerLikes = likes;
+    if(!markerLikes) {
+      markerLikes = [];
+    } else {
+      markerLikes = JSON.parse(likes);
+    }
+    return markerLikes.length;
   }
 
   // go back a page
