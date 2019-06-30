@@ -242,7 +242,7 @@ class AccountRecord {
   static async getAccount(dbConn, token) {
     return new Promise((resolve, reject) => {
       // create a prepared statement to select from the account record
-      let query = "SELECT * FROM AccountRecord WHERE token=?"
+      let query = "SELECT * FROM AccountRecord WHERE token=?";
 
       // query the database to receive the account information
       dbConn.query(query, [token], (error, result) => {
@@ -270,7 +270,7 @@ class AccountRecord {
       }
 
       // create a prepared statement to select from the account record
-      let query = "SELECT * FROM AccountRecord WHERE id=? AND token=?"
+      let query = "SELECT * FROM AccountRecord WHERE id=? AND token=?";
 
       // query the database to receive the account information
       dbConn.query(query, [id, token], (error, result) => {
@@ -292,7 +292,7 @@ class AccountRecord {
   static async isEmailExists(dbConn, email) {
     return new Promise((resolve, reject) => {
       // create a prepared statement to select from the account record
-      let query = "SELECT email FROM AccountRecord WHERE email=?"
+      let query = "SELECT email FROM AccountRecord WHERE email=?";
 
       // query the database to insert the account information
       dbConn.query(query, [email], (error, result) => {
@@ -303,6 +303,23 @@ class AccountRecord {
           }
           // the email does not exist
           resolve(false);
+        }
+        reject(error);
+      });
+    });
+  }
+
+  // return a promise to add points to an account id
+  static async addPoints(dbConn, id, points) {
+    return new Promise((resolve, reject) => {
+      // create a prepared statement to select from the account record
+      let query = "UPDATE AccountRecord SET points = points + ? WHERE id = ?";
+
+      // query the database to increase the points of an account
+      dbConn.query(query, [points, id], (error, result) => {
+        if(!error) {
+          // increased the points
+          resolve(true);
         }
         reject(error);
       });

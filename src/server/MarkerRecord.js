@@ -167,14 +167,15 @@ class MasterRecord {
     await AccountRecord.isAccountIdValid(this.dbConn, userId, userToken).then((valid) => {
       if(valid) {
         // create a prepared statement to receive the liked marker
-        let query = "SELECT likes FROM MarkerRecord WHERE id=?";
+        let query = "SELECT author_id, likes FROM MarkerRecord WHERE id=?";
 
         // query the database to find the liked marker
         this.dbConn.query(query, [markerId], (error, result) => {
           if(!error) {
             // update the likes Array
+            let authorId = JSON.parse(JSON.stringify(result))[0].author_id;
             let likes = JSON.parse(JSON.parse(JSON.stringify(result))[0].likes);
-            this.updateLikes(userId, markerId, likes);
+            this.updateLikes(userId, authorId, markerId, likes);
           } else {
             console.log(error);
           }
@@ -184,7 +185,7 @@ class MasterRecord {
   }
 
   // update a like for a marker
-  async updateLikes(userId, markerId, likes) {
+  async updateLikes(userId, authorId, markerId, likes) {
     let alreadyAddedLike = false;
     if(!likes) {
       // likes is null, initialize it with this user as the first like
@@ -208,6 +209,14 @@ class MasterRecord {
           this.socket.emit("updateLikes", {
             success: true,
             message: "Successfully added the like!"
+          });
+
+          // increase the author's points
+          const points = 1;
+          AccountRecord.addPoints(this.dbConn, authorId, points).then((added) => {
+            console.log("Added " + points + " points to account id " + authorId);
+          }).catch((error) => {
+            console.log(error);
           });
         } else {
           console.log(error);

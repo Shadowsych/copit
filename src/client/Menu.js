@@ -87,7 +87,7 @@ class Menu extends React.Component {
           </View>
           <View style={styles.large_spacing} />
           <View style={styles.small_spacing}>
-            <Icon name="trophy" type="simple-line-icon" color="#75B1DE" size={22} />
+            <Icon name="medal" type="entypo" color="#75B1DE" size={22} />
             <Text style={styles.points_text}>{this.state.points}</Text>
           </View>
         </View>
@@ -127,7 +127,7 @@ class Menu extends React.Component {
           titleStyle={styles.list_item_title}
           subtitle="View users with the highest points."
           subtitleStyle={styles.list_item_subtitle}
-          leftIcon={{name: "medal", type: "entypo", color: "#75B1DE"}}
+          leftIcon={{name: "trophy", type: "simple-line-icon", color: "#75B1DE"}}
           rightIcon={{name: "chevron-right", type: "fontawesome", color: "#C7D0D7"}}
           disabled={this.props.navigation.state.params.id == guestIdToken}
           onPress={() => this.loadLeaderboardsPage()}
