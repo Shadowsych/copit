@@ -119,7 +119,6 @@ class Menu extends React.Component {
           subtitleStyle={styles.list_item_subtitle}
           leftIcon={{name: "shoppingcart", type: "antdesign", color: "#75B1DE"}}
           rightIcon={{name: "chevron-right", type: "fontawesome", color: "#C7D0D7"}}
-          disabled={this.props.navigation.state.params.id == guestIdToken}
           onPress={() => this.loadPointsShopPage()}
           />
           <ListItem
@@ -129,7 +128,6 @@ class Menu extends React.Component {
           subtitleStyle={styles.list_item_subtitle}
           leftIcon={{name: "trophy", type: "simple-line-icon", color: "#75B1DE"}}
           rightIcon={{name: "chevron-right", type: "fontawesome", color: "#C7D0D7"}}
-          disabled={this.props.navigation.state.params.id == guestIdToken}
           onPress={() => this.loadLeaderboardsPage()}
           />
         </View>
@@ -176,6 +174,11 @@ class Menu extends React.Component {
   // load the leaderboards page
   loadLeaderboardsPage() {
     let socket = this.props.navigation.state.params.socket;
+
+    // navigate to the leaderboards page
+    this.props.navigation.navigate("Leaderboards", {
+      socket: socket
+    });
   }
 
   // logout the account

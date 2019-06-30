@@ -3,7 +3,7 @@ var fs = require("fs");
 var mkdirp = require("mkdirp");
 var rimraf = require("rimraf");
 var uuidv4 = require("uuid/v4");
-var config = require("../../server.json");
+var config = require("../../../server.json");
 
 class UploadUtils {
   // upload a base64 picture, then return its directory
@@ -29,7 +29,7 @@ class UploadUtils {
       return config.serverDomain + ":" + config.serverPort + directory + "/" + file;
     }
     // return the default icon URL
-    return config.serverDomain + ":" + config.serverPort + "/media/defaults/icons/no_icon.png";
+    return config.serverDomain + ":" + config.serverPort + "/assets/icons/no_icon.png";
   }
 
   // delete a directory

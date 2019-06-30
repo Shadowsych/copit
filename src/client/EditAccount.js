@@ -239,6 +239,11 @@ class EditAccount extends React.Component {
     return emailRegex.test(email);
   }
 
+  // go back a page
+  goBackPage() {
+    this.props.navigation.goBack();
+  }
+
   // reload the home page
   reloadHomePage() {
     let socket = this.props.navigation.state.params.socket
@@ -274,11 +279,6 @@ class EditAccount extends React.Component {
       }
       socket.off("loadAccount");
     });
-  }
-
-  // go back a page
-  goBackPage() {
-    this.props.navigation.goBack();
   }
 }
 export default EditAccount;

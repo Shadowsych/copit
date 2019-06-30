@@ -16,6 +16,7 @@ import AddPing from "./AddPing";
 import Search from "./Search";
 import Menu from "./Menu";
 import EditAccount from "./EditAccount";
+import Leaderboards from "./Leaderboards";
 
 // custom animation transitions
 const handleCustomTransition = ({ scenes }) => {
@@ -83,6 +84,9 @@ const Navigation = createStackNavigator({
   },
   EditAccount: {
     screen: EditAccount
+  },
+  Leaderboards: {
+    screen: Leaderboards
   }
 }, {
   // create a padding to avoid overlapping the navbar of the device

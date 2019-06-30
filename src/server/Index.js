@@ -6,9 +6,10 @@ var mysql = require('mysql');
 // file system packages
 var config = require("../../server.json");
 
-// record classes
-let MarkerRecord = require("./MarkerRecord");
-let AccountRecord = require("./AccountRecord");
+// listener classes
+var AccountListener = require("./listeners/AccountListener");
+var MarkerListener = require("./listeners/MarkerListener");
+var LeaderboardListener = require("./listeners/LeaderboardListener");
 
 // initiate an express server
 const app = express();
@@ -42,7 +43,8 @@ const io = socket(server);
 io.on("connection", (socket) => {
   console.log("Client " + socket.id + " just connected!");
 
-  // initiate record classes
-  new MarkerRecord(socket, dbConn);
-  new AccountRecord(socket, dbConn);
+  // initiate listener classes
+  new AccountListener(socket, dbConn);
+  new MarkerListener(socket, dbConn);
+  new LeaderboardListener(socket, dbConn);
 });

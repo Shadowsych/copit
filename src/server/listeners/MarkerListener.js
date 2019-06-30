@@ -1,10 +1,10 @@
-// record classes
-var AccountRecord = require("./AccountRecord");
+// record packages
+var AccountRecord = require("../records/AccountRecord");
 
-// utils classes
-var UploadUtils = require("./UploadUtils");
+// utils packages
+var UploadUtils = require("../utils/UploadUtils");
 
-class MasterRecord {
+class MarkerListener {
   // construct the record using the socket and database connections
   constructor(socket, dbConn) {
     this.socket = socket;
@@ -239,4 +239,4 @@ class MasterRecord {
     return today.getTime();
   }
 }
-module.exports = MasterRecord;
+module.exports = MarkerListener;
