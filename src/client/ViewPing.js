@@ -5,8 +5,8 @@ import React from "react";
 import {showLocation} from "react-native-map-link";
 
 // styling packages
-import {StyleSheet, SafeAreaView, Image, Text, Button, View} from "react-native";
-import {Divider, Icon} from "react-native-elements";
+import {StyleSheet, SafeAreaView, Image, Text, View} from "react-native";
+import {Divider, Button, Icon} from "react-native-elements";
 
 // style sheet
 const styles = StyleSheet.create({
@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     height: "100%"
   },
   header: {
-    flex: 0.075,
+    flex: 0.050,
     flexDirection: "row",
     alignItems: "center",
     width: "100%"
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     fontFamily: "ubuntu-regular"
   },
   text_info_container: {
-    flex: 0.50
+    flex: 0.475
   },
   text_container: {
     flex: 0.15,
@@ -71,9 +71,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: "ubuntu-regular"
   },
-  btn: {
+  directions_btn_container: {
     flex: 0.075,
     width: "90%"
+  },
+  directions_btn: {
+    backgroundColor: "#75B1DE",
+    borderRadius: 10
   }
 });
 
@@ -142,7 +146,7 @@ class ViewPing extends React.Component {
   render() {
     return (
       <SafeAreaView style={styles.container}>
-        <View style={styles.spacing}></View>
+        <View style={styles.spacing} />
         <Image
           style={styles.picture}
           source={{uri: this.state.picture}}
@@ -188,13 +192,13 @@ class ViewPing extends React.Component {
               </Text>
           </View>
         </View>
-        <View style={styles.btn}>
+        <View style={styles.directions_btn_container}>
           <Button
-            color="#75B1DE"
-            title={"DIRECTIONS (" + this.state.distance + " FT)"}
+            buttonStyle={styles.directions_btn}
             onPress={() => this.viewDirections()}
-          />
+            title={"DIRECTIONS (" + this.state.distance + " FT)"} />
         </View>
+        <View style={styles.spacing} />
       </SafeAreaView>
     );
   }

@@ -150,6 +150,7 @@ class Home extends React.Component {
         <Spinner visible={this.state.loading} />
         <Overlay
           animationType="slide"
+          borderRadius={20}
           transparent={true}
           isVisible={this.state.marker_visible}
           onBackdropPress={() => this.setState({marker_visible: false})}>

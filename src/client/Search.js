@@ -30,6 +30,9 @@ const styles = StyleSheet.create({
     flex: 0.70,
     width: "100%"
   },
+  card: {
+    borderRadius: 25
+  },
   card_title: {
     color: "#C0C0C0"
   },
@@ -48,7 +51,7 @@ const styles = StyleSheet.create({
   },
   card_btn: {
     backgroundColor: "#75B1DE",
-    borderRadius: 0,
+    borderRadius: 15,
     marginLeft: 0,
     marginRight: 0,
     marginBottom: 0,
@@ -175,7 +178,7 @@ class Search extends React.Component {
         <ScrollView style={styles.vertical_scroll_view}>
           {this.state.markers.map((marker, key) => (
             <Card key={key} title={marker.title} titleStyle={styles.card_title}
-              image={{uri: marker.picture}}>
+              containerStyle={styles.card} image={{uri: marker.picture}}>
               <View style={styles.card_like_container}>
                 <Icon name="heart" type="evilicon" color="#E84856" size={20} />
                 <Text style={styles.card_like_text}>
