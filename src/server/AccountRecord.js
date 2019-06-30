@@ -183,7 +183,7 @@ class AccountRecord {
     let getAccount = AccountRecord.getAccount(this.dbConn, token);
     let isEmailExists = AccountRecord.isEmailExists(this.dbConn, email);
     await Promise.all([getAccount, isEmailExists]).then((resolved) => {
-      // specify the resolved Array into variables
+      // reference the resolved Array into variables
       let accountData = resolved[0];
       let emailExists = resolved[1];
 
