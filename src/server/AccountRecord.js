@@ -189,24 +189,26 @@ class AccountRecord {
 
       // check if the new email is valid
       if(!emailExists || email == accountData.email) {
-        // set the new variables if they exist
+        // set the password variable if it exists
         let newPassword = password ? password : accountData.password;
-        let newProfilePhoto = profilePhoto;
-        if(newProfilePhoto) {
-          // receive the folder of the old profile photo
-          let oldFolderName = accountData.profile_photo.substring(
-            accountData.profile_photo.indexOf("/profile_photos/") + 1,
-            accountData.profile_photo.indexOf("/picture.png")
-          ).replace("profile_photos/", "");
-
-          // delete the old profile photo's directory
-          UploadUtils.deleteDirectory("media/profile_photos/" + oldFolderName);
-        } else {
-          newProfilePhoto = accountData.profile_photo;
-        }
 
         // check if the new fields are valid
         if(this.isFieldsValid(name, email, newPassword)) {
+          // set the new profile photo if it exists
+          let newProfilePhoto = profilePhoto;
+          if(newProfilePhoto) {
+            // receive the folder of the old profile photo
+            let oldFolderName = accountData.profile_photo.substring(
+              accountData.profile_photo.indexOf("/profile_photos/") + 1,
+              accountData.profile_photo.indexOf("/picture.png")
+            ).replace("profile_photos/", "");
+
+            // delete the old profile photo's directory
+            UploadUtils.deleteDirectory("media/profile_photos/" + oldFolderName);
+          } else {
+            newProfilePhoto = accountData.profile_photo;
+          }
+
           // create a prepared statement to insert the account information
           let query = "UPDATE AccountRecord SET name=?, email=?, "
             + "password=?, profile_photo=? WHERE id=?";
