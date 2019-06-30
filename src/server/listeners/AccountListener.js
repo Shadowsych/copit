@@ -99,8 +99,7 @@ class AccountListener {
     let email = data.message.email;
     let password = data.message.password;
     let profilePhoto = await UploadUtils.uploadBase64(
-      data.message.profile_photo_base64, "/media/profile_photos", "picture.png"
-    );
+      data.message.profile_photo_base64, "/media/profile_photos/");
 
     // called whenever there exists a failure
     let socket = this.socket;
@@ -167,8 +166,7 @@ class AccountListener {
     if(profilePhoto) {
       // upload the new profile photo
       profilePhoto = await UploadUtils.uploadBase64(
-        data.message.profile_photo_base64, "/media/profile_photos", "picture.png"
-      );
+        data.message.profile_photo_base64, "/media/profile_photos/");
     }
 
     // called whenever there exists a failure
@@ -207,7 +205,7 @@ class AccountListener {
             ).replace("profile_photos/", "");
 
             // delete the old profile photo's directory
-            UploadUtils.deleteDirectory("media/profile_photos/" + oldFolderName);
+            UploadUtils.deleteDirectory("../media/profile_photos/" + oldFolderName);
           } else {
             newProfilePhoto = accountData.profile_photo;
           }

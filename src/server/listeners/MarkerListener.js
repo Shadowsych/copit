@@ -106,8 +106,7 @@ class MarkerListener {
     let longitude = data.message.longitude;
     let latitude = data.message.latitude;
     let picture = await UploadUtils.uploadBase64(
-      data.message.picture_base64, "/media/pings", "picture.png"
-    );
+      data.message.picture_base64, "/media/ping_photos/");
     let category = data.message.category;
     let createdDate = this.getFutureTimeStamp(0, 0, 0, 0, 0, 0);
 

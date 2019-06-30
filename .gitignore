@@ -9,4 +9,11 @@ npm-debug.*
 *.orig.*
 web-build/
 web-report/
-src/server/media
+
+# media ignore
+src/server/media/ping_photos/*
+src/server/media/profile_photos/*
+
+# media ignore exceptions
+!src/server/media/ping_photos/README.md
+!src/server/media/profile_photos/README.md
