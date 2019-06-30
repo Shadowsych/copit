@@ -162,6 +162,7 @@ class AccountRecord {
     let password = data.message.password;
     let profilePhoto = data.message.profile_photo_base64;
     if(profilePhoto) {
+      // upload the new profile photo
       profilePhoto = await UploadUtils.uploadBase64(
         data.message.profile_photo_base64, "/media/profile_photos", "picture.png"
       );
@@ -190,7 +191,19 @@ class AccountRecord {
       if(!emailExists || email == accountData.email) {
         // set the new variables if they exist
         let newPassword = password ? password : accountData.password;
-        let newProfilePhoto = profilePhoto ? profilePhoto : accountData.profile_photo;
+        let newProfilePhoto = profilePhoto;
+        if(newProfilePhoto) {
+          // receive the folder of the old profile photo
+          let oldFolderName = accountData.profile_photo.substring(
+            accountData.profile_photo.indexOf("/profile_photos/") + 1,
+            accountData.profile_photo.indexOf("/picture.png")
+          ).replace("profile_photos/", "");
+
+          // delete the old profile photo's directory
+          UploadUtils.deleteDirectory("media/profile_photos/" + oldFolderName);
+        } else {
+          newProfilePhoto = accountData.profile_photo;
+        }
 
         // check if the new fields are valid
         if(this.isFieldsValid(name, email, newPassword)) {

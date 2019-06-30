@@ -1,6 +1,7 @@
 // file system packages
 var fs = require("fs");
 var mkdirp = require("mkdirp");
+var rimraf = require("rimraf");
 var uuidv4 = require("uuid/v4");
 var config = require("../../server.json");
 
@@ -29,6 +30,13 @@ class UploadUtils {
     }
     // return the default icon URL
     return config.serverDomain + ":" + config.serverPort + "/media/defaults/icons/no_icon.png";
+  }
+
+  // delete a directory
+  static async deleteDirectory(directory) {
+    await rimraf(directory, () => {
+      console.log("Deleted directory: " + directory);
+    });
   }
 }
 module.exports = UploadUtils;
