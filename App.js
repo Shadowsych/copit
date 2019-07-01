@@ -1,4 +1,4 @@
-import Index from "./src/client/Index.js";
+import Index from "./app/client/Index.js";
 export default Index;
 
 // disable yellow Expo warning boxes

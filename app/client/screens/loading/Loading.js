@@ -7,7 +7,7 @@ import {StyleSheet, Alert, AsyncStorage, Image, View, SafeAreaView} from "react-
 import * as Animatable from 'react-native-animatable';
 
 // socket.io packages
-import config from "../../server.json";
+import config from "../../../config/server.json";
 import io from "socket.io-client";
 
 // style sheet
@@ -29,7 +29,7 @@ class Loading extends React.Component {
   componentDidMount() {
     // load custom fonts
     Font.loadAsync({
-      "ubuntu-regular": require("../../assets/fonts/Ubuntu-R.ttf")
+      "ubuntu-regular": require("../../../../assets/fonts/Ubuntu-R.ttf")
     });
   }
 
@@ -96,7 +96,7 @@ class Loading extends React.Component {
           style={styles.logo}
           animation="bounceIn"
           onAnimationEnd={() => this.loadApp()}
-          source={require("../../assets/icon.png")} />
+          source={require("../../../../assets/icon.png")} />
       </SafeAreaView>
     );
   }

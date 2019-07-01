@@ -1,7 +1,7 @@
 // file system packages
 var fs = require("fs");
 var uuidv4 = require("uuid/v4");
-var config = require("../../../server.json");
+var config = require("../../config/server.json");
 
 class UploadUtils {
   // upload a base64 picture, then return its directory

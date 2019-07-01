@@ -120,7 +120,7 @@ class Login extends React.Component {
           <Animatable.Image
             style={styles.logo}
             animation="fadeInDown"
-            source={require("../../assets/icon.png")} />
+            source={require("../../../../assets/icon.png")} />
         </View>
         <KeyboardAvoidingView keyboardVerticalOffset={NavHeader.HEIGHT}
           behavior="padding" style={styles.input_text_form}>

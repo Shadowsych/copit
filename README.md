@@ -7,7 +7,7 @@ Frea uses [Express](https://expressjs.com/), [Socket.IO](https://socket.io/), an
 - Socket.IO is used to run the socket server, which wraps around the Express server
 - MySQL is the database management server
 
-Configure the server properties in the ```server.json``` file located in the root directory of the project.
+Configure the server properties in the ```server.json``` file located in the ```app/config``` directory of the project.
 - ```serverDomain``` is the public domain of your web-server
 - ```serverPort``` is the port of your web-server
 - ```dbHost``` is the host of your MySQL database
@@ -15,20 +15,20 @@ Configure the server properties in the ```server.json``` file located in the roo
 - ```dbPassword``` is the password of the user
 - ```dbName``` is the name of your MySQL database
 
-Then setup the database by importing the ```frea.sql``` file in MySQL. The file is located in the ```src/sql``` directory of the project.
+Then setup the database by importing the ```frea.sql``` file in MySQL. The file is located in the ```app/sql``` directory of the project.
 
 Once ```server.json``` is configured and the database is setup, install the server-side dependencies by running:
 ```console
-cd src/server
+cd app/server
 npm install
 ```
 
 Once the server-side dependencies are installed, start the server by running:
 ```console
-cd src/server
+cd app/server
 node Index.js
 ```
-- The server <b>must</b> be started in the ```src/server``` directory or uploading errors will occur
+- The server <b>must</b> be started in the ```app/server``` directory or uploading errors will occur
 
 ### Client-side
 Frea uses React Native for the client-side, specifically with [Expo](https://expo.io/).

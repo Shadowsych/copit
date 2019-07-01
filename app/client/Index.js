@@ -6,18 +6,26 @@ import {createStackNavigator, createAppContainer} from 'react-navigation';
 // style packages
 import {fadeIn, fromBottom, fromTop, fromLeft, zoomIn} from 'react-navigation-transitions';
 
-// pages
-import Loading from "./Loading";
-import Login from "./Login";
-import Register from "./Register";
-import Home from "./Home";
-import Pings from "./Pings";
-import AddPing from "./AddPing";
-import Search from "./Search";
-import Menu from "./Menu";
-import EditAccount from "./EditAccount";
-import MyPings from "./MyPings";
-import Leaderboards from "./Leaderboards";
+// account screens
+import Login from "./screens/account/Login";
+import Register from "./screens/account/Register";
+import Menu from "./screens/account/Menu";
+import EditAccount from "./screens/account/EditAccount";
+
+// leaderboard screens
+import Leaderboards from "./screens/leaderboard/Leaderboards";
+
+// loading screens
+import Loading from "./screens/loading/Loading";
+
+// map screens
+import Home from "./screens/map/Home";
+
+// ping screens
+import Pings from "./screens/ping/Pings";
+import AddPing from "./screens/ping/AddPing";
+import Search from "./screens/ping/Search";
+import MyPings from "./screens/ping/MyPings";
 
 // custom animation transitions
 const handleCustomTransition = ({ scenes }) => {

@@ -4,7 +4,7 @@ var socket = require("socket.io");
 var mysql = require('mysql');
 
 // file system packages
-var config = require("../../server.json");
+var config = require("../config/server.json");
 
 // listener classes
 var AccountListener = require("./listeners/AccountListener");

@@ -13,7 +13,7 @@ import * as Animatable from 'react-native-animatable';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 // component classes
-import ViewPing from "./ViewPing";
+import ViewPing from "../../components/ping/ViewPing";
 
 // style sheet
 const styles = StyleSheet.create({
