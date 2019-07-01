@@ -47,8 +47,31 @@ class Leaderboards extends React.Component {
 
   // called whenever the component loads
   componentDidMount() {
+    this.receiveGlobalLeaderboards();
+  }
+
+  // receive the global leaderboards
+  async receiveGlobalLeaderboards() {
     let socket = this.props.navigation.state.params.socket;
     
+    // emit a message to receive global leaderboards
+    socket.emit("receiveGlobalLeaderboards", {
+      message: "Receive the global leaderboards",
+      handle: "handleLoadAccount"
+    });
+
+    // listen for a response from the server
+    socket.on("receiveGlobalLeaderboards", (data) => {
+      if(data.success) {
+        // set the leaderboards
+        this.setState({
+          leaderboards: JSON.parse(data.message)
+        });
+      } else {
+        console.log(data.message);
+      }
+      socket.off("receiveGlobalLeaderboards");
+    });
   }
 
   // render the component's views
@@ -69,7 +92,9 @@ class Leaderboards extends React.Component {
             titleStyle={styles.leaderboard_title}
             subtitle={account.points + " Points"}
             subtitleStyle={styles.leaderboard_subtitle}
-            leftIcon={{name: "staro", type: "antdesign", color: "#75B1DE"}}
+            leftAvatar={{
+              source: {uri: account.profile_photo}
+            }}
             />
           ))}
         </ScrollView>
