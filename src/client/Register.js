@@ -112,7 +112,7 @@ class Register extends React.Component {
     await Permissions.askAsync(Permissions.CAMERA);
     await Permissions.askAsync(Permissions.CAMERA_ROLL);
 
-    // open the camera, then await for the user to take a picture
+    // await for the user to pick a picture from the library
     let picture = await ImagePicker.launchImageLibraryAsync({
       base64: true,
       quality: 0.2,

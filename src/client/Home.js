@@ -118,7 +118,6 @@ class Home extends React.Component {
       if(data.success) {
         // set the markers and update the current location
         this.setState({
-          loading: false,
           location: {
             longitude: position.coords.longitude,
             latitude: position.coords.latitude
@@ -130,9 +129,9 @@ class Home extends React.Component {
           markers: JSON.parse(data.message)
         });
       } else {
-        this.setState({loading: false});
         Alert.alert("Database Error!", data.message);
       }
+      this.setState({loading: false});
       socket.off("receiveMarkers");
     });
   }
@@ -230,8 +229,8 @@ class Home extends React.Component {
     }
   }
 
-  // load the view ping page
-  loadViewPingPage(marker, updateMarkers) {
+  // return the expiration time of a marker
+  getExpirationTime(marker) {
     // dates
     let expiresDate = new Date(marker.expires).getTime();
     let currentDate = new Date().getTime();
@@ -250,6 +249,12 @@ class Home extends React.Component {
     if(hours <= 0 && minutes <= 0) {
       expires = "This ping has expired.";
     }
+    return expires;
+  }
+
+  // load the view ping page
+  loadViewPingPage(marker, updateMarkers) {
+    let expires = getExpirationTime(marker);
 
     // get the distance in feet
     const toFeet = 5280;

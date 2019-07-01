@@ -164,6 +164,13 @@ class Menu extends React.Component {
   // load the my pings page
   loadMyPingsPage() {
     let socket = this.props.navigation.state.params.socket;
+
+    // navigate to the my pings page
+    this.props.navigation.navigate("MyPings", {
+      socket: socket,
+      id: this.props.navigation.state.params.id,
+      token: this.props.navigation.state.params.token
+    });
   }
 
   // load the points shop page

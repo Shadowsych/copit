@@ -12,6 +12,7 @@ class MarkerListener {
 
     // handle emissions from the client
     socket.on("receiveMarkers", (data) => {this.receiveMarkers(data)});
+    socket.on("receiveMyMarkers", (data) => {this.receiveMyMarkers(data)});
     socket.on("searchMarkers", (data) => {this.searchMarkers(data)});
     socket.on("addMarker", (data) => {this.addMarker(data)});
     socket.on("addLike", (data) => {this.addLike(data)});
@@ -49,6 +50,42 @@ class MarkerListener {
           message: "Error querying into the Database to receive markers..."
         });
       }
+    });
+  }
+
+  // receive markers of the account, then send them back to the client
+  async receiveMyMarkers(data) {
+    // interpret the variables passed from the client
+    let id = data.message.id;
+    let token = data.message.token;
+
+    // verify the author id and token are valid
+    await AccountRecord.isAccountIdValid(this.dbConn, id, token).then((valid) => {
+      if(valid) {
+        // create a prepared statement to receive the account's markers
+        let query = "SELECT * FROM MarkerRecord WHERE "
+          + " expires > UNIX_TIMESTAMP(NOW(3)) * 1000 AND author_id=?";
+
+        // query the database to receive the markers
+        this.dbConn.query(query, [id], (error, result) => {
+          if(!error) {
+            // emit a message with the nearest markers to the client
+            this.socket.emit("receiveMyMarkers", {
+              success: true,
+              message: JSON.stringify(result)
+            });
+          } else {
+            // emit a message of failure to the client
+            console.log(error);
+            this.socket.emit("receiveMyMarkers", {
+              success: false,
+              message: "Error querying into the Database to receive markers..."
+            });
+          }
+        });
+      }
+    }).catch((error) => {
+      console.log(error);
     });
   }
 

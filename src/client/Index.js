@@ -16,6 +16,7 @@ import AddPing from "./AddPing";
 import Search from "./Search";
 import Menu from "./Menu";
 import EditAccount from "./EditAccount";
+import MyPings from "./MyPings";
 import Leaderboards from "./Leaderboards";
 
 // custom animation transitions
@@ -84,6 +85,9 @@ const Navigation = createStackNavigator({
   },
   EditAccount: {
     screen: EditAccount
+  },
+  MyPings: {
+    screen: MyPings
   },
   Leaderboards: {
     screen: Leaderboards

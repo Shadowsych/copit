@@ -125,6 +125,8 @@ class Search extends React.Component {
         this.setState({
           markers: JSON.parse(data.message)
         });
+      } else {
+        Alert.alert("Search Error!", data.message);
       }
       this.setState({loading: false});
       socket.off("searchMarkers");
@@ -133,12 +135,6 @@ class Search extends React.Component {
 
   // render the component's views
   render() {
-    // gesture configuration
-    const gestureConfig = {
-      velocityThreshold: 0.10,
-      directionalOffsetThreshold: 80
-    };
-
     // miles to feet conversion rate
     const toFeet = 5280;
 
