@@ -11,9 +11,9 @@ web-build/
 web-report/
 
 # media ignore
-src/server/media/ping_photos/*
-src/server/media/profile_photos/*
+app/server/media/ping_photos/*
+app/server/media/profile_photos/*
 
 # media ignore exceptions
-!src/server/media/ping_photos/README.md
-!src/server/media/profile_photos/README.md
+!app/server/media/ping_photos/README.md
+!app/server/media/profile_photos/README.md
