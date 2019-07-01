@@ -28,6 +28,7 @@ Once the server-side dependencies are installed, start the server by running:
 cd src/server
 node Index.js
 ```
+- The server <b>must</b> be started in the ```src/server``` directory or uploading errors will occur
 
 ### Client-side
 Frea uses React Native for the client-side, specifically with [Expo](https://expo.io/).

@@ -198,14 +198,13 @@ class AccountListener {
           // set the new profile photo if it exists
           let newProfilePhoto = profilePhoto;
           if(newProfilePhoto) {
-            // receive the folder of the old profile photo
-            let oldFolderName = accountData.profile_photo.substring(
-              accountData.profile_photo.indexOf("/profile_photos/") + 1,
-              accountData.profile_photo.indexOf("/picture.png")
-            ).replace("profile_photos/", "");
+            // receive the file of the old profile photo
+            const profilePhoto = accountData.profile_photo;
+            let fileIndex = profilePhoto.lastIndexOf("/") + 1;
+            let oldFile = profilePhoto.substring(fileIndex, profilePhoto.length);
 
-            // delete the old profile photo's directory
-            UploadUtils.deleteDirectory("../media/profile_photos/" + oldFolderName);
+            // delete the old profile photo's file
+            UploadUtils.deleteFile("/media/profile_photos/", oldFile);
           } else {
             newProfilePhoto = accountData.profile_photo;
           }
