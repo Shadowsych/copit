@@ -130,7 +130,7 @@ class MyPings extends React.Component {
               <Text style={styles.card_text}>{marker.description}</Text>
               <Button
                 buttonStyle={styles.card_btn}
-                onPress={() => this.loadEditPingPage()}
+                onPress={() => this.loadEditPingPage(marker)}
                 title="EDIT PING" />
             </Card>
           ))}
@@ -175,7 +175,7 @@ class MyPings extends React.Component {
   }
 
   // load the edit ping page
-  loadEditPingPage() {
+  loadEditPingPage(marker) {
 
   }
 

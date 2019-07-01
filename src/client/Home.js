@@ -254,7 +254,7 @@ class Home extends React.Component {
 
   // load the view ping page
   loadViewPingPage(marker, updateMarkers) {
-    let expires = getExpirationTime(marker);
+    let expires = this.getExpirationTime(marker);
 
     // get the distance in feet
     const toFeet = 5280;
