@@ -2,7 +2,8 @@
 import React from "react";
 
 // styling packages
-import {StyleSheet, ScrollView, Image, View, Text, SafeAreaView} from "react-native";
+import {StyleSheet, ScrollView, RefreshControl,
+  Image, View, Text, SafeAreaView} from "react-native";
 import {Header, ListItem, Icon} from "react-native-elements";
 
 // style sheet
@@ -41,6 +42,7 @@ class Leaderboards extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      loading: false,
       leaderboards: []
     }
   }
@@ -53,8 +55,9 @@ class Leaderboards extends React.Component {
   // receive the global leaderboards
   async receiveGlobalLeaderboards() {
     let socket = this.props.navigation.state.params.socket;
-    
+
     // emit a message to receive global leaderboards
+    this.setState({loading: true});
     socket.emit("receiveGlobalLeaderboards", {
       message: "Receive the global leaderboards",
       handle: "handleLoadAccount"
@@ -62,6 +65,7 @@ class Leaderboards extends React.Component {
 
     // listen for a response from the server
     socket.on("receiveGlobalLeaderboards", (data) => {
+      this.setState({loading: false});
       if(data.success) {
         // set the leaderboards
         this.setState({
@@ -84,19 +88,27 @@ class Leaderboards extends React.Component {
           <Text style={styles.title_text}>Global</Text>
         </Header>
         <View style={styles.spacing} />
-        <ScrollView style={styles.leaderboards}>
-          {this.state.leaderboards.map((account, key) => (
-            <ListItem
-            key={key}
-            title={(key + 1) + ". " + account.name}
-            titleStyle={styles.leaderboard_title}
-            subtitle={account.points + " Points"}
-            subtitleStyle={styles.leaderboard_subtitle}
-            leftAvatar={{
-              source: {uri: account.profile_photo}
-            }}
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.loading}
+              colors={["#75B1DE"]}
+              onRefresh={() => this.receiveGlobalLeaderboards()}
             />
-          ))}
+          }
+          style={styles.leaderboards}>
+            {this.state.leaderboards.map((account, key) => (
+              <ListItem
+              key={key}
+              title={(key + 1) + ". " + account.name}
+              titleStyle={styles.leaderboard_title}
+              subtitle={account.points + " Points"}
+              subtitleStyle={styles.leaderboard_subtitle}
+              leftAvatar={{
+                source: {uri: account.profile_photo}
+              }}
+              />
+            ))}
         </ScrollView>
       </SafeAreaView>
     );
