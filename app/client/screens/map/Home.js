@@ -252,6 +252,18 @@ class Home extends React.Component {
     return expires;
   }
 
+  // return the formatted likes as an Array
+  getFormattedLikes(likes) {
+    // convert the likes into an Array
+    let markerLikes = likes;
+    if(!markerLikes) {
+      markerLikes = [];
+    } else {
+      markerLikes = JSON.parse(likes);
+    }
+    return markerLikes;
+  }
+
   // load the view ping page
   loadViewPingPage(marker, updateMarkers) {
     let expires = this.getExpirationTime(marker);
@@ -260,13 +272,8 @@ class Home extends React.Component {
     const toFeet = 5280;
     let distanceFeet = Math.round(marker.distance * toFeet);
 
-    // convert the likes into an Array
-    let markerLikes = marker.likes;
-    if(!markerLikes) {
-      markerLikes = [];
-    } else {
-      markerLikes = JSON.parse(marker.likes);
-    }
+    // convert the likes into a formatted Array
+    let markerLikes = this.getFormattedLikes(marker.likes);
 
     // create an Array of updating every necessary markers state
     let updateAllMarkers = updateMarkers ? [this.updateLocation.bind(this),

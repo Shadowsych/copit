@@ -271,7 +271,6 @@ class EditAccount extends React.Component {
               token: this.props.navigation.state.params.token,
               name: data.message.name,
               email: data.message.email,
-              points: data.message.points,
               profile_photo: data.message.profile_photo
             }
           })], 0

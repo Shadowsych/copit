@@ -26,6 +26,7 @@ import Pings from "./screens/ping/Pings";
 import AddPing from "./screens/ping/AddPing";
 import Search from "./screens/ping/Search";
 import MyPings from "./screens/ping/MyPings";
+import EditPing from "./screens/ping/EditPing";
 
 // custom animation transitions
 const handleCustomTransition = ({ scenes }) => {
@@ -59,6 +60,11 @@ const handleCustomTransition = ({ scenes }) => {
       return fadeIn();
   } else if(prevScene && prevScene.route.routeName == "Menu") {
       // transition from the the bottom from the menu to any other page
+      return fromBottom();
+  } else if(prevScene
+    && prevScene.route.routeName == "MyPings"
+    && nextScene.route.routeName == "EditPing") {
+      // transition from the bottom from the my pings to edit ping page
       return fromBottom();
   }
   // by default, open the page by zooming in
@@ -96,6 +102,9 @@ const Navigation = createStackNavigator({
   },
   MyPings: {
     screen: MyPings
+  },
+  EditPing: {
+    screen: EditPing
   },
   Leaderboards: {
     screen: Leaderboards

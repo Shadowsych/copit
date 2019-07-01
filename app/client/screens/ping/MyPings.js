@@ -121,7 +121,7 @@ class MyPings extends React.Component {
               <View style={styles.card_like_container}>
                 <Icon name="heart" type="evilicon" color="#E84856" size={20} />
                 <Text style={styles.card_like_text}>
-                  {this.getFormattedLikes(marker.likes)}
+                  {this.getFormattedLikes(marker.likes).length}
                 </Text>
               </View>
               <Text style={styles.card_text}>Pinged by {marker.author}</Text>
@@ -139,7 +139,7 @@ class MyPings extends React.Component {
     );
   }
 
-  // return the number likes
+  // return the formatted likes as an Array
   getFormattedLikes(likes) {
     // convert the likes into an Array
     let markerLikes = likes;
@@ -148,7 +148,7 @@ class MyPings extends React.Component {
     } else {
       markerLikes = JSON.parse(likes);
     }
-    return markerLikes.length;
+    return markerLikes;
   }
 
   // return the expiration time of a marker
