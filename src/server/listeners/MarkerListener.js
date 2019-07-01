@@ -69,7 +69,7 @@ class MarkerListener {
         // query the database to receive the markers
         this.dbConn.query(query, [id], (error, result) => {
           if(!error) {
-            // emit a message with the nearest markers to the client
+            // emit a message with the markers of the account
             this.socket.emit("receiveMyMarkers", {
               success: true,
               message: JSON.stringify(result)
