@@ -176,7 +176,15 @@ class MyPings extends React.Component {
 
   // load the edit ping page
   loadEditPingPage(marker) {
+    let socket = this.props.navigation.state.params.socket;
 
+    // navigate to the edit ping page
+    this.props.navigation.navigate("EditPing", {
+      socket: socket,
+      id: this.props.navigation.state.params.id,
+      token: this.props.navigation.state.params.token,
+      marker: marker
+    });
   }
 
   // go back a page

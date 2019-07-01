@@ -109,7 +109,6 @@ class Loading extends React.Component {
       token: account.token,
       name: account.name,
       email: account.email,
-      points: account.points,
       profile_photo: account.profile_photo
     });
   }

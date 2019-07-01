@@ -6,6 +6,7 @@ import {NavigationActions} from "react-navigation";
 import {StyleSheet, AsyncStorage, Image, SafeAreaView,
   Text, TouchableOpacity, View} from "react-native";
 import {Avatar, Divider, ListItem, Icon} from "react-native-elements";
+import Spinner from 'react-native-loading-spinner-overlay';
 
 // style sheet
 const styles = StyleSheet.create({
@@ -64,8 +65,39 @@ class Menu extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      points: this.props.navigation.state.params.points
+      loading: false,
+      points: "..."
     }
+  }
+
+  // called whenever the component loads
+  componentDidMount() {
+    this.receivePoints();
+  }
+
+  // receive the points of this account
+  async receivePoints() {
+    let socket = this.props.navigation.state.params.socket;
+
+    // send an emit to receive the points
+    this.setState({loading: true});
+    socket.emit("receivePoints", {
+      message: {
+        id: this.props.navigation.state.params.id,
+        token: this.props.navigation.state.params.token
+      },
+      handle: "handleReceivePoints"
+    });
+
+    // listen for the edit account response from the server
+    socket.on("receivePoints", (data) => {
+      this.setState({loading: false});
+      if(data.success) {
+        // set the points state
+        this.setState({points: data.message.points});
+      }
+      socket.off("receivePoints");
+    });
   }
 
   // render the component's views
@@ -75,6 +107,7 @@ class Menu extends React.Component {
 
     return (
       <SafeAreaView style={styles.container}>
+        <Spinner visible={this.state.loading} />
         <View style={styles.navbar}>
           <View style={styles.small_spacing}>
             <Icon name="chevron-left" onPress={() => this.goBackPage()}

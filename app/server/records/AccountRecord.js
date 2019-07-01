@@ -70,11 +70,29 @@ class AccountRecord {
     });
   }
 
+  // return a promise to get points of an account id
+  static async getPoints(dbConn, id) {
+    return new Promise((resolve, reject) => {
+      // create a prepared statement to select from the account record
+      let query = "SELECT points FROM AccountRecord WHERE id=?";
+
+      // query the database to receive the points of an account
+      dbConn.query(query, [id], (error, result) => {
+        if(!error) {
+          // received the points
+          let points = JSON.parse(JSON.stringify(result))[0].points;
+          resolve(points);
+        }
+        reject(error);
+      });
+    });
+  }
+
   // return a promise to add points to an account id
   static async addPoints(dbConn, id, points) {
     return new Promise((resolve, reject) => {
       // create a prepared statement to select from the account record
-      let query = "UPDATE AccountRecord SET points = points + ? WHERE id = ?";
+      let query = "UPDATE AccountRecord SET points = points + ? WHERE id=?";
 
       // query the database to increase the points of an account
       dbConn.query(query, [points, id], (error, result) => {

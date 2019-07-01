@@ -18,6 +18,7 @@ class AccountListener {
     socket.on("loginAccount", (data) => {this.loginAccount(data)});
     socket.on("registerAccount", (data) => {this.registerAccount(data)});
     socket.on("editAccount", (data) => {this.editAccount(data)});
+    socket.on("receivePoints", (data) => {this.receivePoints(data)});
   }
 
   // load an account
@@ -235,6 +236,34 @@ class AccountListener {
       }
     }).catch((error) => {
       failure(error, "A query error occurred when editing the account...");
+    });
+  }
+
+  // receive the points of an account
+  async receivePoints(data) {
+    // interpret the variables passed from the client
+    let id = data.message.id;
+    let token = data.message.token;
+
+    // call the verify author id and get points promises
+    let isAccountIdValid = AccountRecord.isAccountIdValid(this.dbConn, id, token);
+    let getPoints = AccountRecord.getPoints(this.dbConn, id);
+    await Promise.all([isAccountIdValid, getPoints]).then((resolved) => {
+      // reference the resolved Array into variables
+      let isValid = resolved[0];
+      let points = resolved[1];
+
+      if(isValid) {
+        // emit a message with the points to the client
+        this.socket.emit("receivePoints", {
+          success: true,
+          message: {
+            points: points
+          }
+        });
+      }
+    }).catch((error) => {
+      console.log(error);
     });
   }
 
