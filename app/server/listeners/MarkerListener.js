@@ -1,5 +1,6 @@
 // record packages
 var AccountRecord = require("../records/AccountRecord");
+var MarkerRecord = require("../records/MarkerRecord");
 
 // utils packages
 var UploadUtils = require("../utils/UploadUtils");
@@ -199,66 +200,46 @@ class MarkerListener {
     let userToken = data.message.user_token;
     let markerId = data.message.marker_id;
 
-    // verify the user id and token are valid
-    await AccountRecord.isAccountIdValid(this.dbConn, userId, userToken).then((valid) => {
-      if(valid) {
-        // create a prepared statement to receive the liked marker
-        let query = "SELECT author_id, likes FROM MarkerRecord WHERE id=?";
+    // called whenever there exists a failure
+    let socket = this.socket;
+    function failure(error, errorMessage) {
+      // emit a failed attempt to the client
+      console.log(error);
+      socket.emit("addLike", {
+        success: false,
+        message: errorMessage
+      });
+    }
 
-        // query the database to find the liked marker
-        this.dbConn.query(query, [markerId], (error, result) => {
-          if(!error) {
-            // update the likes Array
-            let authorId = JSON.parse(JSON.stringify(result))[0].author_id;
-            let likes = JSON.parse(JSON.parse(JSON.stringify(result))[0].likes);
-            this.updateLikes(userId, authorId, markerId, likes);
+    // verify the user id and token are valid
+    let dbConn = this.dbConn;
+    await AccountRecord.isAccountIdValid(dbConn, userId, userToken).then((valid) => {
+      if(valid) {
+        MarkerRecord.addLike(dbConn, userId, markerId).then((added) => {
+          if(added.success) {
+            // emit a message of success to the client
+            console.log("Added a like for markerId: " + markerId);
+            socket.emit("addLike", {
+              success: true,
+              message: "Successfully added the like!"
+            });
+
+            // increase the author's points
+            const authorId = added.authorId;
+            const points = 1;
+            AccountRecord.addPoints(dbConn, authorId, points).then((added) => {
+              console.log("Added " + points + " points to account id " + authorId);
+            }).catch((error) => {
+              console.log(error);
+            });
           } else {
-            console.log(error);
+            failure("Like Error for Marker ID: " + markerId, "Error adding like for the marker!");
           }
+        }).catch((error) => {
+          failure(error, "Error querying into the database to add the like!");
         });
       }
     });
-  }
-
-  // update a like for a marker
-  async updateLikes(userId, authorId, markerId, likes) {
-    let alreadyAddedLike = false;
-    if(!likes) {
-      // likes is null, initialize it with this user as the first like
-      likes = [userId];
-    } else if(!likes.includes(userId)) {
-      // add the user's like
-      likes.push(userId);
-    } else {
-      alreadyAddedLike = true;
-    }
-    if(!alreadyAddedLike) {
-      // created a prepared statement to update the liked marker
-      let query = "UPDATE MarkerRecord SET likes=? WHERE id=?";
-
-      // query the database to add the liked marker
-      likes = JSON.stringify(likes);
-      this.dbConn.query(query, [likes, markerId], (error, result) => {
-        if(!error) {
-          // emit a message of success to the client
-          console.log("Added a like for markerId: " + markerId);
-          this.socket.emit("updateLikes", {
-            success: true,
-            message: "Successfully added the like!"
-          });
-
-          // increase the author's points
-          const points = 1;
-          AccountRecord.addPoints(this.dbConn, authorId, points).then((added) => {
-            console.log("Added " + points + " points to account id " + authorId);
-          }).catch((error) => {
-            console.log(error);
-          });
-        } else {
-          console.log(error);
-        }
-      });
-    }
   }
 
   // return a future time stamp in UTC based on the current time

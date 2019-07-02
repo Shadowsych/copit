@@ -126,8 +126,8 @@ class ViewPing extends React.Component {
         handle: "addLike"
       });
 
-      // receive an updated likes response from the server
-      socket.on("updateLikes", (data) => {
+      // receive an add likes response from the server
+      socket.on("addLike", (data) => {
         if(data.success) {
           let updateAllMarkers = this.props.marker_params.updateAllMarkers;
 
@@ -137,7 +137,7 @@ class ViewPing extends React.Component {
             updateMarkers();
           }
         }
-        socket.off("updateLikes");
+        socket.off("addLike");
       });
     }
   }
