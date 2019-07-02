@@ -68,7 +68,7 @@ class MyPings extends React.Component {
     this.receiveMyMarkers();
   }
 
-  //
+  // receive markers of the account
   async receiveMyMarkers() {
     let socket = this.props.navigation.state.params.socket;
 
