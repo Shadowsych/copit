@@ -215,6 +215,7 @@ class MarkerListener {
     let dbConn = this.dbConn;
     await AccountRecord.isAccountIdValid(dbConn, userId, userToken).then((valid) => {
       if(valid) {
+        // add a like from the user for the marker
         MarkerRecord.addLike(dbConn, userId, markerId).then((added) => {
           if(added.success) {
             // emit a message of success to the client
