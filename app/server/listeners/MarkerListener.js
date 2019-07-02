@@ -295,9 +295,8 @@ class MarkerListener {
     }
 
     // call the verify id and get marker query promises
-    let dbConn = this.dbConn;
-    let isAccountIdValid = AccountRecord.isAccountIdValid(dbConn, authorId, authorToken);
-    let getMarker = MarkerRecord.getMarker(dbConn, markerId);
+    let isAccountIdValid = AccountRecord.isAccountIdValid(this.dbConn, authorId, authorToken);
+    let getMarker = MarkerRecord.getMarker(this.dbConn, markerId);
     await Promise.all([isAccountIdValid, getMarker]).then((resolved) => {
       // reference the resolved Array into variables
       let isValid = resolved[0];
@@ -312,7 +311,7 @@ class MarkerListener {
         UploadUtils.deleteFile("/media/ping_photos/", file);
 
         // delete the marker from the database
-        MarkerRecord.deleteMarker(dbConn, markerId).then((deleted) => {
+        MarkerRecord.deleteMarker(this.dbConn, markerId).then((deleted) => {
           if(deleted) {
             // emit a message of success to the client
             console.log("Deleted markerId: " + markerId);
