@@ -143,8 +143,8 @@ class EditAccount extends React.Component {
         <TouchableOpacity onPress={() => this.uploadPicture()}
           style={styles.avatar} activeOpacity={0.8}>
           {!this.state.profile_photo_base64 ? (
-            <Avatar rounded icon={{name: "camera-off", type: "feather"}} activeOpacity={0.7}
-              size="xlarge" source={{uri: this.props.navigation.state.params.profile_photo}} />
+            <Avatar rounded icon={{name: "camera-off", type: "feather"}} size="xlarge"
+              source={{uri: this.props.navigation.state.params.profile_photo}} />
           ) : (
             <Avatar rounded size="xlarge"
               source={

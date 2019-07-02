@@ -137,7 +137,7 @@ class AddPing extends React.Component {
     let socket = this.props.navigation.state.params.socket;
 
     // determine whether the author is anonymous
-    let author = this.props.navigation.state.params.name
+    let author = this.props.navigation.state.params.name;
     if(this.state.anonymous) {
       author = "Anonymous";
     }
@@ -161,17 +161,15 @@ class AddPing extends React.Component {
     // listen for a response from the server
     socket.on("addMarker", (data) => {
       if(data.success) {
-        // navigate back to the home screen
-        this.setState({loading: false});
         Alert.alert("Added Ping!", data.message);
 
         // navigate back to the home screen, then update location
         this.props.navigation.popToTop();
         this.props.navigation.state.params.updateLocation();
       } else {
-        this.setState({loading: false});
         Alert.alert("Database Error!", data.message);
       }
+      this.setState({loading: false});
       socket.off("addMarker");
     });
   }

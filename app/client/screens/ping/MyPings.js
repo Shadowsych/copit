@@ -44,8 +44,15 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     fontFamily: "ubuntu-regular"
   },
-  card_btn: {
+  card_edit_btn: {
     backgroundColor: "#75B1DE",
+    borderRadius: 15,
+    marginLeft: 0,
+    marginRight: 0,
+    marginBottom: 5,
+  },
+  card_delete_btn: {
+    backgroundColor: "#EE4035",
     borderRadius: 15,
     marginLeft: 0,
     marginRight: 0,
@@ -76,8 +83,8 @@ class MyPings extends React.Component {
     this.setState({loading: true});
     socket.emit("receiveMyMarkers", {
       message: {
-        id: this.props.navigation.state.params.id,
-        token: this.props.navigation.state.params.token
+        authorId: this.props.navigation.state.params.id,
+        authorToken: this.props.navigation.state.params.token
       },
       handle: "handleReceiveMyMarkers"
     });
@@ -94,6 +101,35 @@ class MyPings extends React.Component {
       }
       this.setState({loading: false});
       socket.off("receiveMyMarkers");
+    });
+  }
+
+  // delete a marker
+  async deleteMarker(marker) {
+    let socket = this.props.navigation.state.params.socket;
+
+    // emit a message to delete the marker
+    this.setState({loading: true});
+    socket.emit("deleteMarker", {
+      message: {
+        author_id: this.props.navigation.state.params.id,
+        author_token: this.props.navigation.state.params.token,
+        marker_id: marker.id
+      },
+      handle: "handleDeleteMarker"
+    });
+
+    // listen for a response from the server
+    socket.on("deleteMarker", (data) => {
+      if(data.success) {
+        // update the markers state
+        Alert.alert("Delete Successful!", data.message);
+        this.receiveMyMarkers();
+      } else {
+        Alert.alert("Ping Delete Error!", data.message);
+      }
+      this.setState({loading: false});
+      socket.off("deleteMarker");
     });
   }
 
@@ -129,9 +165,13 @@ class MyPings extends React.Component {
               <Text style={styles.card_text}>{this.getExpirationTime(marker)}</Text>
               <Text style={styles.card_text}>{marker.description}</Text>
               <Button
-                buttonStyle={styles.card_btn}
+                buttonStyle={styles.card_edit_btn}
                 onPress={() => this.loadEditPingPage(marker)}
                 title="EDIT PING" />
+              <Button
+                buttonStyle={styles.card_delete_btn}
+                onPress={() => this.confirmDeleteMarker(marker)}
+                title="DELETE PING" />
             </Card>
           ))}
         </ScrollView>
@@ -174,6 +214,17 @@ class MyPings extends React.Component {
     return expires;
   }
 
+  // confirm to delete a marker
+  confirmDeleteMarker(marker) {
+    Alert.alert("Delete " + marker.title + "?", "Press Delete to confirm.", [
+      {text: "Cancel"},
+      {
+        text: "Delete",
+        onPress: () => this.deleteMarker(marker)
+      }
+    ], {cancelable: true});
+  }
+
   // load the edit ping page
   loadEditPingPage(marker) {
     let socket = this.props.navigation.state.params.socket;
@@ -183,7 +234,9 @@ class MyPings extends React.Component {
       socket: socket,
       id: this.props.navigation.state.params.id,
       token: this.props.navigation.state.params.token,
-      marker: marker
+      name: this.props.navigation.state.params.name,
+      marker: marker,
+      updateMyMarkers: this.receiveMyMarkers.bind(this)
     });
   }
 

@@ -198,19 +198,19 @@ class AccountListener {
         if(this.isFieldsValid(name, email, newPassword)) {
           // set the new profile photo if it exists
           let newProfilePhoto = profilePhoto;
-          if(newProfilePhoto) {
+          if(newProfilePhoto && accountData.profile_photo) {
             // receive the file of the old profile photo
-            const profilePhoto = accountData.profile_photo;
-            let fileIndex = profilePhoto.lastIndexOf("/") + 1;
-            let oldFile = profilePhoto.substring(fileIndex, profilePhoto.length);
+            let fileIndex = accountData.profile_photo.lastIndexOf("/") + 1;
+            let oldFile = accountData.profile_photo.substring(
+              fileIndex, accountData.profile_photo.length);
 
             // delete the old profile photo's file
             UploadUtils.deleteFile("/media/profile_photos/", oldFile);
-          } else {
+          } else if(accountData.profile_photo) {
             newProfilePhoto = accountData.profile_photo;
           }
 
-          // create a prepared statement to insert the account information
+          // create a prepared statement to update the account information
           let query = "UPDATE AccountRecord SET name=?, email=?, "
             + "password=?, profile_photo=? WHERE id=?";
 

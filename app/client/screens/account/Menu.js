@@ -202,7 +202,8 @@ class Menu extends React.Component {
     this.props.navigation.navigate("MyPings", {
       socket: socket,
       id: this.props.navigation.state.params.id,
-      token: this.props.navigation.state.params.token
+      token: this.props.navigation.state.params.token,
+      name: this.props.navigation.state.params.name
     });
   }
 

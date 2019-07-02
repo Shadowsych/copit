@@ -1,3 +1,6 @@
+// global constants
+const guestIdToken = -1;
+
 class AccountRecord {
   // return a promise to receive account data using an account token
   static async getAccount(dbConn, token) {
@@ -25,7 +28,6 @@ class AccountRecord {
   static async isAccountIdValid(dbConn, id, token) {
     return new Promise((resolve, reject) => {
       // guests have an imaginary id and token
-      let guestIdToken = -1;
       if(id == guestIdToken && token == guestIdToken) {
         resolve(true);
       }
@@ -73,15 +75,24 @@ class AccountRecord {
   // return a promise to get points of an account id
   static async getPoints(dbConn, id) {
     return new Promise((resolve, reject) => {
+      // guests have no points
+      if(id == guestIdToken) {
+        resolve(0);
+      }
+
       // create a prepared statement to select from the account record
       let query = "SELECT points FROM AccountRecord WHERE id=?";
 
       // query the database to receive the points of an account
       dbConn.query(query, [id], (error, result) => {
         if(!error) {
-          // received the points
-          let points = JSON.parse(JSON.stringify(result))[0].points;
-          resolve(points);
+          result = JSON.parse(JSON.stringify(result));
+          if(result.length != 0) {
+            // received the points
+            let points = result[0].points;
+            resolve(points);
+          }
+          reject("Error no such Account ID exists!");
         }
         reject(error);
       });

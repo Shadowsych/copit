@@ -1,4 +1,42 @@
 class MarkerRecord {
+  // return a promise to receive marker data using a marker id
+  static async getMarker(dbConn, id) {
+    return new Promise((resolve, reject) => {
+      // create a prepared statement to select from the marker record
+      let query = "SELECT * FROM MarkerRecord WHERE id=?";
+
+      // query the database to receive the marker information
+      dbConn.query(query, [id], (error, result) => {
+        if(!error) {
+          let markerData = JSON.parse(JSON.stringify(result));
+          if(markerData.length != 0) {
+            // found the marker data
+            resolve(markerData[0]);
+          }
+          // there was no such marker
+          resolve(undefined);
+        }
+        reject(error);
+      });
+    });
+  }
+
+  // return a promise to delete a marker using a marker id
+  static async deleteMarker(dbConn, id) {
+    return new Promise((resolve, reject) => {
+      // create a prepared statement to delete from the marker record
+      let query = "DELETE FROM MarkerRecord WHERE id=?";
+
+      // query the database to delete from the marker record
+      dbConn.query(query, [id], (error, result) => {
+        if(!error) {
+          resolve(true);
+        }
+        reject(error);
+      });
+    });
+  }
+
   // return a promise to like a marker
   static async addLike(dbConn, userId, markerId) {
     // return an Array of likes with the user's id
