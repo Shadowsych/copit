@@ -7,7 +7,7 @@ Frea uses [Express](https://expressjs.com/), [Socket.IO](https://socket.io/), an
 - Socket.IO is used to run the socket server, which wraps around the Express server
 - MySQL is the database management server
 
-Configure the server properties in the ```server.json``` file located in the ```app/config``` directory of the project.
+Configure the server properties in the ```server.json``` file located in the ```config``` directory of the project.
 - ```serverDomain``` is the public domain of your web-server
 - ```serverPort``` is the port of your web-server
 - ```dbHost``` is the host of your MySQL database

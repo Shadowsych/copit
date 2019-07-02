@@ -8,7 +8,7 @@ var AccountRecord = require("../records/AccountRecord");
 var UploadUtils = require("../utils/UploadUtils");
 
 class AccountListener {
-  // construct the record using the socket and database connections
+  // construct the listeer using the socket and database connections
   constructor(socket, dbConn) {
     this.socket = socket;
     this.dbConn = dbConn;

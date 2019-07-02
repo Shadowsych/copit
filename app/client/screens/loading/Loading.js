@@ -7,7 +7,7 @@ import {StyleSheet, Alert, AsyncStorage, Image, View, SafeAreaView} from "react-
 import * as Animatable from 'react-native-animatable';
 
 // socket.io packages
-import config from "../../../config/server.json";
+import config from "../../../../config/server.json";
 import io from "socket.io-client";
 
 // style sheet

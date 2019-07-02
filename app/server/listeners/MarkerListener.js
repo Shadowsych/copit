@@ -6,7 +6,7 @@ var MarkerRecord = require("../records/MarkerRecord");
 var UploadUtils = require("../utils/UploadUtils");
 
 class MarkerListener {
-  // construct the record using the socket and database connections
+  // construct the listener using the socket and database connections
   constructor(socket, dbConn) {
     this.socket = socket;
     this.dbConn = dbConn;
@@ -317,7 +317,7 @@ class MarkerListener {
             console.log("Deleted markerId: " + markerId);
             socket.emit("deleteMarker", {
               success: true,
-              message: "Successfully deleted the marker!"
+              message: "Successfully deleted the marker! Refresh the map to view the changes."
             });
           } else {
             failure("Delete Error for Marker ID: " + markerId, "Error deleting the marker!");

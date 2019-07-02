@@ -1,5 +1,5 @@
 class LeaderboardListener {
-  // construct the record using the socket and database connections
+  // construct the listener using the socket and database connections
   constructor(socket, dbConn) {
     this.socket = socket;
     this.dbConn = dbConn;

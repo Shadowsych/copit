@@ -210,6 +210,15 @@ class Menu extends React.Component {
   // load the points shop page
   loadPointsShopPage() {
     let socket = this.props.navigation.state.params.socket;
+
+    // navigate to the my points shop page
+    this.props.navigation.navigate("PointsShop", {
+      socket: socket,
+      id: this.props.navigation.state.params.id,
+      token: this.props.navigation.state.params.token,
+      name: this.props.navigation.state.params.name,
+      points: this.state.points
+    });
   }
 
   // load the leaderboards page
