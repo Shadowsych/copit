@@ -135,6 +135,7 @@ class EditPing extends React.Component {
       if(data.success) {
         // update the account's markers state
         Alert.alert("Updated Ping!", data.message);
+        this.props.navigation.state.params.updateMarkers();
         this.props.navigation.state.params.updateMyMarkers();
       } else {
         Alert.alert("Database Error!", data.message);

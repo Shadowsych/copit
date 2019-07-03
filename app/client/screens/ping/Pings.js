@@ -121,7 +121,7 @@ class Pings extends React.Component {
       id: this.props.navigation.state.params.id,
       token: this.props.navigation.state.params.token,
       name: this.props.navigation.state.params.name,
-      updateLocation: this.props.navigation.state.params.updateLocation
+      updateMarkers: this.props.navigation.state.params.updateMarkers
     });
   }
 }

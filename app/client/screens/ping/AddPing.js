@@ -185,9 +185,9 @@ class AddPing extends React.Component {
       if(data.success) {
         Alert.alert("Added Ping!", data.message);
 
-        // navigate back to the home screen, then update location
+        // navigate back to the home screen, then update the markers state
         this.props.navigation.popToTop();
-        this.props.navigation.state.params.updateLocation();
+        this.props.navigation.state.params.updateMarkers();
       } else {
         Alert.alert("Database Error!", data.message);
       }

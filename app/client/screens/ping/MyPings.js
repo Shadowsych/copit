@@ -125,6 +125,7 @@ class MyPings extends React.Component {
         // update the markers state
         Alert.alert("Delete Successful!", data.message);
         this.receiveMyMarkers();
+        this.props.navigation.state.params.updateMarkers();
       } else {
         Alert.alert("Ping Delete Error!", data.message);
       }
@@ -236,6 +237,7 @@ class MyPings extends React.Component {
       token: this.props.navigation.state.params.token,
       name: this.props.navigation.state.params.name,
       marker: marker,
+      updateMarkers: this.props.navigation.state.params.updateMarkers,
       updateMyMarkers: this.receiveMyMarkers.bind(this)
     });
   }

@@ -312,7 +312,8 @@ class Home extends React.Component {
       token: this.props.navigation.state.params.token,
       name: this.props.navigation.state.params.name,
       email: this.props.navigation.state.params.email,
-      profile_photo: this.props.navigation.state.params.profile_photo
+      profile_photo: this.props.navigation.state.params.profile_photo,
+      updateMarkers: this.updateLocation.bind(this)
     });
   }
 
@@ -337,7 +338,7 @@ class Home extends React.Component {
       id: this.props.navigation.state.params.id,
       token: this.props.navigation.state.params.token,
       name: this.props.navigation.state.params.name,
-      updateLocation: this.updateLocation.bind(this)
+      updateMarkers: this.updateLocation.bind(this)
     });
   }
 }

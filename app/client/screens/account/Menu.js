@@ -194,7 +194,8 @@ class Menu extends React.Component {
       socket: socket,
       id: this.props.navigation.state.params.id,
       token: this.props.navigation.state.params.token,
-      name: this.props.navigation.state.params.name
+      name: this.props.navigation.state.params.name,
+      updateMarkers: this.props.navigation.state.params.updateMarkers
     });
   }
 
