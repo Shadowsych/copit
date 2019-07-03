@@ -22,6 +22,7 @@
     "react-native-loading-spinner-overlay": "^1.0.1",
     "react-native-map-link": "^2.4.5",
     "react-native-maps": "^0.24.2",
+    "react-native-numeric-input": "^1.8.0",
     "react-native-swipe-gestures": "^1.0.3",
     "react-native-web": "^0.11.4",
     "react-navigation": "^3.11.0",

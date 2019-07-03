@@ -28,9 +28,6 @@ import Search from "./screens/ping/Search";
 import MyPings from "./screens/ping/MyPings";
 import EditPing from "./screens/ping/EditPing";
 
-// shop screens
-import PointsShop from "./screens/shop/PointsShop";
-
 // custom animation transitions
 const handleCustomTransition = ({ scenes }) => {
   const prevScene = scenes[scenes.length - 2];
@@ -108,9 +105,6 @@ const Navigation = createStackNavigator({
   },
   EditPing: {
     screen: EditPing
-  },
-  PointsShop: {
-    screen: PointsShop
   },
   Leaderboards: {
     screen: Leaderboards

@@ -115,5 +115,22 @@ class AccountRecord {
       });
     });
   }
+
+  // return a promise to remove points from an account id
+  static async removePoints(dbConn, id, points) {
+    return new Promise((resolve, reject) => {
+      // create a prepared statement to select from the account record
+      let query = "UPDATE AccountRecord SET points = points - ? WHERE id=?";
+
+      // query the database to decrease the points of an account
+      dbConn.query(query, [points, id], (error, result) => {
+        if(!error) {
+          // increased the points
+          resolve(true);
+        }
+        reject(error);
+      });
+    });
+  }
 }
 module.exports = AccountRecord;

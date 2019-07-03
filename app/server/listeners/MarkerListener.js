@@ -4,6 +4,7 @@ var MarkerRecord = require("../records/MarkerRecord");
 
 // utils packages
 var UploadUtils = require("../utils/UploadUtils");
+var TimeUtils = require("../utils/TimeUtils");
 
 class MarkerListener {
   // construct the listener using the socket and database connections
@@ -149,16 +150,19 @@ class MarkerListener {
     let author = data.message.author;
     let title = data.message.title;
     let description = data.message.description;
+    let time = data.message.time;
     let longitude = data.message.longitude;
     let latitude = data.message.latitude;
     let picture = await UploadUtils.uploadBase64(
       data.message.picture_base64, "/media/ping_photos/");
     let category = data.message.category;
-    let createdDate = this.getFutureTimeStamp(0, 0, 0, 0, 0, 0);
+    let createdDate = TimeUtils.getFutureTimeStamp(0, 0, 0, 0, 0, 0);
 
-    // this marker expires after the given hours
-    const hoursTillExpires = 4;
-    let expires = this.getFutureTimeStamp(0, 0, 0, hoursTillExpires, 0, 0);
+    // determine the cost to post this marker
+    let pointsCost = TimeUtils.getPingTimeCost(time);
+
+    // this marker expires after the given time in minutes
+    let expires = TimeUtils.getFutureTimeStamp(0, 0, 0, 0, time, 0);
 
     // called whenever there exists a failure
     let socket = this.socket;
@@ -171,9 +175,15 @@ class MarkerListener {
       });
     }
 
-    // verify the author id and token are valid
-    await AccountRecord.isAccountIdValid(this.dbConn, authorId, authorToken).then((valid) => {
-      if(valid) {
+    // call the verify id and get points query promises
+    let isAccountIdValid = AccountRecord.isAccountIdValid(this.dbConn, authorId, authorToken);
+    let getPoints = AccountRecord.getPoints(this.dbConn, authorId);
+    await Promise.all([isAccountIdValid, getPoints]).then((resolved) => {
+      // reference the resolved Array into variables
+      let isValid = resolved[0];
+      let points = resolved[1];
+
+      if(isValid && points >= pointsCost) {
         // create a prepared statement to insert this marker
         let query = "INSERT INTO MarkerRecord (author_id, author, title, description,"
           + " longitude, latitude, picture, category, created_date, expires) VALUES"
@@ -193,8 +203,16 @@ class MarkerListener {
             failure(error, "Error querying into the Database to add ping...");
           }
         });
+
+        // decrease the author's points
+        AccountRecord.removePoints(this.dbConn, authorId, pointsCost).then((removed) => {
+          console.log("Removed " + points + " points from account id " + authorId);
+        }).catch((error) => {
+          console.log(error);
+        });
       } else {
-        failure("Invalid Token: " + token, "The account id and token are invalid...");
+        failure("Invalid Account Token or Points Fund for " + authorToken,
+          "Insufficient funds or the account is invalid.");
       }
     }).catch((error) => {
       failure(error, "Error querying into the Database to verify account...");
@@ -383,20 +401,6 @@ class MarkerListener {
     }).catch((error) => {
       failure(error, "Error querying into the Database to verify account...");
     });
-  }
-
-  // return a future time stamp in UTC based on the current time
-  getFutureTimeStamp(years, months, days, hours, minutes, seconds) {
-    var today = new Date();
-
-    // increase the date from today, then return the future timestamp as UTC
-    today.setUTCFullYear(today.getUTCFullYear() + years);
-    today.setUTCMonth(today.getUTCMonth() + months);
-    today.setUTCDate(today.getUTCDate() + days);
-    today.setUTCHours(today.getUTCHours() + hours);
-    today.setUTCMinutes(today.getUTCMinutes() + minutes);
-    today.setUTCSeconds(today.getUTCSeconds() + seconds);
-    return today.getTime();
   }
 }
 module.exports = MarkerListener;

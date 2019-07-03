@@ -10,7 +10,6 @@ var config = require("../../config/server.json");
 var AccountListener = require("./listeners/AccountListener");
 var MarkerListener = require("./listeners/MarkerListener");
 var LeaderboardListener = require("./listeners/LeaderboardListener");
-var ShopListener = require("./listeners/ShopListener");
 
 // initiate an express server
 const app = express();
@@ -48,5 +47,4 @@ io.on("connection", (socket) => {
   new AccountListener(socket, dbConn);
   new MarkerListener(socket, dbConn);
   new LeaderboardListener(socket, dbConn);
-  new ShopListener(socket, dbConn);
 });

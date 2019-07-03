@@ -8,8 +8,11 @@ import * as ImagePicker from 'expo-image-picker';
 // styling packages
 import {StyleSheet, Dimensions, Image, KeyboardAvoidingView, SafeAreaView,
   Text, Alert, TouchableOpacity, View} from "react-native";
-import {Header, Input, CheckBox, Icon} from "react-native-elements";
+import {Header, Overlay, Input, Button, CheckBox, Icon} from "react-native-elements";
 import Spinner from 'react-native-loading-spinner-overlay';
+
+// component classes
+import PingTimer from "../../components/ping/PingTimer";
 
 // style sheet
 const styles = StyleSheet.create({
@@ -43,21 +46,37 @@ const styles = StyleSheet.create({
     width: Dimensions.get("window").width * 0.90,
     height: "100%"
   },
-  input_text_form: {
+  input_form_container: {
     flex: 0.525,
     justifyContent: "center",
     alignItems: "center"
   },
   input_text_container: {
     flex: 0.25,
+    alignItems: "center",
+    justifyContent: "center",
     width: Dimensions.get("window").width * 0.90
   },
   input_text: {
     color: "#909090",
     fontFamily: "ubuntu-regular"
   },
-  anonymous_checkbox_container: {
-    flex: 0.25
+  input_time_btn_container: {
+    flex: 0.20,
+    backgroundColor: "rgba(0, 0, 0, 0)",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    height: "100%"
+  },
+  input_time_btn_text: {
+    color: "#75B1DE",
+    fontSize: 16,
+    fontFamily: "ubuntu-regular"
+  },
+  input_misc_container: {
+    flex: 0.15,
+    justifyContent: "center",
+    alignItems: "center"
   },
   anonymous_checkbox_text: {
     color: "#909090"
@@ -87,8 +106,10 @@ class AddPing extends React.Component {
     super(props);
     this.state = {
       loading: false,
+      ping_timer_visibie: false,
       title: "",
       description: "",
+      time: 120,
       picture_base64: undefined,
       anonymous: false
     }
@@ -150,6 +171,7 @@ class AddPing extends React.Component {
         author: author,
         title: this.state.title,
         description: this.state.description,
+        time: this.state.time,
         longitude: position.coords.longitude,
         latitude: position.coords.latitude,
         picture_base64: this.state.picture_base64,
@@ -201,6 +223,20 @@ class AddPing extends React.Component {
     return (
       <SafeAreaView style={styles.container}>
         <Spinner visible={this.state.loading} />
+        <Overlay
+          animationType="slide"
+          borderRadius={20}
+          transparent={true}
+          isVisible={this.state.ping_timer_visibie}
+          height="50%"
+          onBackdropPress={() => this.setState({ping_timer_visibie: false})}>
+          <PingTimer
+            socket={this.props.navigation.state.params.socket}
+            id={this.props.navigation.state.params.id}
+            token={this.props.navigation.state.params.token}
+            time={this.state.time}
+            setTime={this.setTime.bind(this)} />
+        </Overlay>
         <Header containerStyle={styles.navbar}>
           <Icon name="chevron-left" onPress={() => this.goBackPage()}
             type="entypo" color="#D3D3D3" size={22} />
@@ -225,31 +261,33 @@ class AddPing extends React.Component {
             />
           )}
         </TouchableOpacity>
-        <KeyboardAvoidingView keyboardVerticalOffset={NavHeader.HEIGHT - 84}
-          behavior="padding" style={styles.input_text_form}>
-          <Input
-            containerStyle={styles.input_text_container}
-            inputStyle={styles.input_text}
-            maxLength={24}
-            selectionColor="#909090"
-            placeholder="Input title here...*"
-            onChangeText={(text) => this.setState({title: text})}
-            rightIcon={
-              <Icon name="title" type="material" color="#D3D3D3" size={28} />
-            }
-          />
-          <Input
-            containerStyle={styles.input_text_container}
-            inputStyle={styles.input_text}
-            maxLength={128}
-            selectionColor="#909090"
-            placeholder="Input short description here...*"
-            onChangeText={(text) => this.setState({description: text})}
-            rightIcon={
-              <Icon name="form" type="antdesign" color="#D3D3D3" size={28} />
-            }
-          />
-          <View style={styles.anonymous_checkbox_container}>
+        <KeyboardAvoidingView keyboardVerticalOffset={NavHeader.HEIGHT - 128}
+          behavior="padding" style={styles.input_form_container}>
+          <View style={styles.input_text_container}>
+            <Input
+              inputStyle={styles.input_text}
+              maxLength={24}
+              selectionColor="#909090"
+              placeholder="Input title here...*"
+              onChangeText={(text) => this.setState({title: text})}
+              rightIcon={
+                <Icon name="title" type="material" color="#D3D3D3" size={28} />
+              }
+            />
+          </View>
+          <View style={styles.input_text_container}>
+            <Input
+              inputStyle={styles.input_text}
+              maxLength={128}
+              selectionColor="#909090"
+              placeholder="Input short description here...*"
+              onChangeText={(text) => this.setState({description: text})}
+              rightIcon={
+                <Icon name="form" type="antdesign" color="#D3D3D3" size={28} />
+              }
+            />
+          </View>
+          <View style={styles.input_misc_container}>
             <CheckBox
               textStyle={styles.anonymous_checkbox_text}
               title="Post This Ping Anonymously"
@@ -258,7 +296,16 @@ class AddPing extends React.Component {
               onPress={() => this.setState({anonymous: !this.state.anonymous})}
             />
           </View>
-          <Text style={styles.notice_text}>Notice: This will ping your current location.</Text>
+          <TouchableOpacity
+            onPress={() => this.setState({ping_timer_visibie: true})}
+            activeOpacity={0.8}
+            style={styles.input_time_btn_container}>
+            <Text style={styles.input_time_btn_text}>Set Expiration Time</Text>
+            <Text style={styles.input_time_btn_text}>({this.state.time} minutes)</Text>
+          </TouchableOpacity>
+          <View style={styles.input_misc_container}>
+            <Text style={styles.notice_text}>Notice: This will ping your current location.</Text>
+          </View>
         </KeyboardAvoidingView>
         <TouchableOpacity
           onPress={() => this.addPing()}
@@ -268,6 +315,11 @@ class AddPing extends React.Component {
         </TouchableOpacity>
       </SafeAreaView>
     );
+  }
+
+  // set the time state
+  setTime(time) {
+    this.setState({time: time});
   }
 
   // go back a page

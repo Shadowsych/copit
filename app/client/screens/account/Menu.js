@@ -146,15 +146,6 @@ class Menu extends React.Component {
           onPress={() => this.loadMyPingsPage()}
           />
           <ListItem
-          title="Points Shop"
-          titleStyle={styles.list_item_title}
-          subtitle="Redeem in-app rewards."
-          subtitleStyle={styles.list_item_subtitle}
-          leftIcon={{name: "shoppingcart", type: "antdesign", color: "#75B1DE"}}
-          rightIcon={{name: "chevron-right", type: "fontawesome", color: "#C7D0D7"}}
-          onPress={() => this.loadPointsShopPage()}
-          />
-          <ListItem
           title="Leaderboards"
           titleStyle={styles.list_item_title}
           subtitle="View users with the highest points."
@@ -204,20 +195,6 @@ class Menu extends React.Component {
       id: this.props.navigation.state.params.id,
       token: this.props.navigation.state.params.token,
       name: this.props.navigation.state.params.name
-    });
-  }
-
-  // load the points shop page
-  loadPointsShopPage() {
-    let socket = this.props.navigation.state.params.socket;
-
-    // navigate to the my points shop page
-    this.props.navigation.navigate("PointsShop", {
-      socket: socket,
-      id: this.props.navigation.state.params.id,
-      token: this.props.navigation.state.params.token,
-      name: this.props.navigation.state.params.name,
-      points: this.state.points
     });
   }
 

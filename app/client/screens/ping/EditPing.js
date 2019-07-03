@@ -230,7 +230,7 @@ class EditPing extends React.Component {
               onPress={() => this.setState({anonymous: !this.state.anonymous})}
             />
           </View>
-          <Text style={styles.notice_text}>Notice: This will NOT update the ping's location.</Text>
+          <Text style={styles.notice_text}>Notice: This will not update the ping's location.</Text>
         </KeyboardAvoidingView>
         <TouchableOpacity
           onPress={() => this.editPing()}
