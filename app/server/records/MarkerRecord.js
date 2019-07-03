@@ -41,14 +41,21 @@ class MarkerRecord {
   static async addLike(dbConn, userId, markerId) {
     // return an Array of likes with the user's id
     function addUserLike(userId, likes) {
+      let alreadyLiked = false;
       if(!likes) {
         // likes is null, initialize it with this user as the first like
         likes = [userId];
       } else if(!likes.includes(userId)) {
         // the user has not liked this marker, add the user's like
         likes.push(userId);
+      } else {
+        // the user has already liked this marker
+        alreadyLiked = true;
       }
-      return likes;
+      return {
+        likes: likes,
+        alreadyLiked: alreadyLiked
+      };
     }
 
     return new Promise((resolve, reject) => {
@@ -61,23 +68,34 @@ class MarkerRecord {
           // update the likes Array
           let authorId = JSON.parse(JSON.stringify(result))[0].author_id;
           let likes = JSON.parse(JSON.parse(JSON.stringify(result))[0].likes);
-          likes = addUserLike(userId, likes);
 
-          // created a prepared statement to update the liked marker
-          let query = "UPDATE MarkerRecord SET likes=? WHERE id=?";
+          // update the like result once adding the user's like
+          let likeResult = addUserLike(userId, likes);
+          likes = likeResult.likes;
+          let alreadyLiked = likeResult.alreadyLiked;
+          
+          if(!alreadyLiked) {
+            // created a prepared statement to update the liked marker
+            let query = "UPDATE MarkerRecord SET likes=? WHERE id=?";
 
-          // query the database to update the liked Array for the marker
-          likes = JSON.stringify(likes);
-          dbConn.query(query, [likes, markerId], (error, result) => {
-            if(!error) {
-              // added the like successfully
-              resolve({
-                success: true,
-                authorId: authorId
-              });
-            }
-            reject(error);
-          });
+            // query the database to update the liked Array for the marker
+            likes = JSON.stringify(likes);
+            dbConn.query(query, [likes, markerId], (error, result) => {
+              if(!error) {
+                // added the like successfully
+                resolve({
+                  success: true,
+                  authorId: authorId
+                });
+              }
+              reject(error);
+            });
+          } else {
+            // the user already liked the marker
+            resolve({
+              success: false,
+            });
+          }
         } else {
           reject(error);
         }

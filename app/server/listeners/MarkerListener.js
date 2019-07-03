@@ -392,7 +392,7 @@ class MarkerListener {
               console.log(error);
             });
           } else {
-            failure("Like Error for Marker ID: " + markerId, "Error adding like for the marker!");
+            failure("Already Liked Marker ID: " + markerId, "You have already liked this ping!");
           }
         }).catch((error) => {
           failure(error, "Error querying into the database to add the like!");
