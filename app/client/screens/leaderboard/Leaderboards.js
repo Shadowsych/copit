@@ -2,7 +2,7 @@
 import React from "react";
 
 // styling packages
-import {StyleSheet, ScrollView, RefreshControl,
+import {StyleSheet, ScrollView, RefreshControl, Platform,
   Image, View, Text, SafeAreaView} from "react-native";
 import {Header, ListItem, Icon} from "react-native-elements";
 
@@ -33,6 +33,7 @@ const styles = StyleSheet.create({
     fontFamily: "ubuntu-regular"
   },
   leaderboard_subtitle: {
+    color: "#6A6F73",
     fontFamily: "ubuntu-regular"
   }
 });

@@ -91,7 +91,7 @@ class Search extends React.Component {
     let currentPosition = undefined;
     if (status === "granted") {
       this.setState({loading: true});
-      Location.getCurrentPositionAsync({enableHighAccuracy: true}).then((position) => {
+      Location.getCurrentPositionAsync({enableBalancedAccuracy: true}).then((position) => {
         // set the current position
         currentPosition = position;
         this.searchMarkers(position);

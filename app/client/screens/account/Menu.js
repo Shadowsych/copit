@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
     fontFamily: "ubuntu-regular"
   },
   list_item_subtitle: {
+    color: "#6A6F73",
     fontFamily: "ubuntu-regular"
   },
   logout_btn: {

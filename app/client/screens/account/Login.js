@@ -10,6 +10,9 @@ import {Input, Icon, Button} from "react-native-elements";
 import * as Animatable from 'react-native-animatable';
 import Spinner from 'react-native-loading-spinner-overlay';
 
+// security packages
+import md5 from "md5";
+
 // style sheet
 const styles = StyleSheet.create({
   container: {
@@ -41,14 +44,14 @@ const styles = StyleSheet.create({
     fontFamily: "ubuntu-regular"
   },
   login_btn_container: {
-    flex: 0.05,
+    flex: 0.075,
     width: "75%"
   },
   login_btn: {
     backgroundColor: "#75B1DE"
   },
   text_btn_container: {
-    flex: 0.10,
+    flex: 0.075,
     justifyContent: "center",
     alignItems: "center"
   },
@@ -88,7 +91,7 @@ class Login extends React.Component {
     socket.emit("loginAccount", {
       message: {
         email: email,
-        password: password
+        password: md5(password)
       },
       handle: "handleLoginAccount"
     });

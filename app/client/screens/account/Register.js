@@ -10,6 +10,9 @@ import {StyleSheet, Alert, Image, Text, TouchableOpacity,
 import {Input, Icon, Header, Button, Avatar} from "react-native-elements";
 import Spinner from 'react-native-loading-spinner-overlay';
 
+// security packages
+import md5 from "md5";
+
 // style sheet
 const styles = StyleSheet.create({
   container: {
@@ -23,6 +26,9 @@ const styles = StyleSheet.create({
   },
   spacing: {
     flex: 0.05
+  },
+  small_spacing: {
+    flex: 0.025
   },
   avatar: {
     flex: 0.235,
@@ -43,7 +49,7 @@ const styles = StyleSheet.create({
     fontFamily: "ubuntu-regular"
   },
   register_btn_container: {
-    flex: 0.05,
+    flex: 0.075,
     width: "80%"
   },
   register_btn: {
@@ -86,7 +92,7 @@ class Register extends React.Component {
         message: {
           name: name,
           email: email,
-          password: password,
+          password: md5(password),
           profile_photo_base64: profilePhotoBase64
         },
         handle: "handleRegisterAccount"
@@ -194,7 +200,7 @@ class Register extends React.Component {
         <Button title="Register" buttonStyle={styles.register_btn}
           onPress={() => this.registerAccount()}
           containerStyle={styles.register_btn_container} />
-        <View style={styles.spacing} />
+        <View style={styles.small_spacing} />
         <View style={styles.spacing}>
           <Text style={styles.register_disclaimer_text}>
             By registering I agree to the terms of service.

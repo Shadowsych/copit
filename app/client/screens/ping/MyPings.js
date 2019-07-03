@@ -2,7 +2,7 @@
 import React from "react";
 
 // styling packages
-import {StyleSheet, ScrollView, Alert, Image,
+import {StyleSheet, ScrollView, Alert, Image, Platform,
   RefreshControl, Text, View, SafeAreaView} from "react-native";
 import {Icon, Button, Header, Card} from 'react-native-elements';
 

@@ -110,9 +110,40 @@ class AddPing extends React.Component {
       title: "",
       description: "",
       time: 120,
+      points: 0,
       picture_base64: undefined,
       anonymous: false
     }
+  }
+
+  // called whenever the component loads
+  componentDidMount() {
+    this.receivePoints();
+  }
+
+  // receive the points of this account
+  async receivePoints() {
+    let socket = this.props.navigation.state.params.socket;
+
+    // send an emit to receive the points
+    this.setState({loading: true});
+    socket.emit("receivePoints", {
+      message: {
+        id: this.props.navigation.state.params.id,
+        token: this.props.navigation.state.params.token
+      },
+      handle: "handleReceivePoints"
+    });
+
+    // listen for the edit account response from the server
+    socket.on("receivePoints", (data) => {
+      this.setState({loading: false});
+      if(data.success) {
+        // set the points state
+        this.setState({points: data.message.points});
+      }
+      socket.off("receivePoints");
+    });
   }
 
   // add ping
@@ -183,8 +214,6 @@ class AddPing extends React.Component {
     // listen for a response from the server
     socket.on("addMarker", (data) => {
       if(data.success) {
-        Alert.alert("Added Ping!", data.message);
-
         // navigate back to the home screen, then update the markers state
         this.props.navigation.popToTop();
         this.props.navigation.state.params.updateMarkers();
@@ -235,6 +264,7 @@ class AddPing extends React.Component {
             id={this.props.navigation.state.params.id}
             token={this.props.navigation.state.params.token}
             time={this.state.time}
+            points={this.state.points}
             setTime={this.setTime.bind(this)} />
         </Overlay>
         <Header containerStyle={styles.navbar}>

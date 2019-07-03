@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     backgroundColor: "rgba(0, 0, 0, 0)",
     width: "100%",
-    height: Platform.OS === "ios" ? 150 : 75,
+    height: Platform.OS === "ios" ? 135 : 75,
     bottom: 0,
     justifyContent: "center",
     alignItems: "center"
@@ -64,7 +64,7 @@ class Home extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: true,
+      loading: false,
       location: {
         longitude: -97.73675,
         latitude: 30.28265
@@ -77,6 +77,9 @@ class Home extends React.Component {
       marker_visible: false,
       marker_params: {}
     }
+
+    // initial map view
+    this.mapView = undefined;
   }
 
   // called whenever the component loads
@@ -89,12 +92,14 @@ class Home extends React.Component {
     let {status} = await Permissions.askAsync(Permissions.LOCATION);
     if (status === "granted") {
       this.setState({loading: true});
-      Location.getCurrentPositionAsync({enableHighAccuracy: true}).then((position) => {
+      Location.getCurrentPositionAsync({enableBalancedAccuracy: true}).then((position) => {
         // receive the markers from the server
         this.receiveMarkers(position);
         return;
       }).catch((error) => {
-        this.setState({loading: false});
+        this.setState({loading: false}, () => {
+          this.setState({loading: false});
+        });
         Alert.alert("GPS Error!", "Please make sure your location (GPS) is turned on.");
       });
     }
@@ -116,6 +121,20 @@ class Home extends React.Component {
     // listen for the markers from the server
     socket.on("receiveMarkers", (data) => {
       if(data.success) {
+        // animate the map view's coordinate change
+        if(this.mapView) {
+          // the transition time in miliseconds
+          let transitionTime = 1000;
+
+          // animate the camera to the region
+          this.mapView.animateCamera({
+            center: {
+              longitude: position.coords.longitude,
+              latitude: position.coords.latitude
+            }
+          }, transitionTime);
+        }
+
         // set the markers and update the current location
         this.setState({
           location: {
@@ -160,8 +179,9 @@ class Home extends React.Component {
         <Icon containerStyle={styles.search_btn} raised name="search"
           onPress={() => this.loadSearchPage()} color="#1C7ED7" size={22} />
         <MapView
+          ref={(mapView) => {this.mapView = mapView}}
           style={styles.map}
-          region={{
+          initialRegion={{
             longitude: this.state.location.longitude,
             longitudeDelta: this.state.locationDelta.longitudeDelta,
             latitude: this.state.location.latitude,

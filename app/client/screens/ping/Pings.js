@@ -2,7 +2,7 @@
 import React from "react";
 
 // styling packages
-import {StyleSheet, Image, Text, SafeAreaView, View} from "react-native";
+import {StyleSheet, Image, Platform, Text, SafeAreaView, View} from "react-native";
 import {Header, Icon} from "react-native-elements";
 
 // style sheet

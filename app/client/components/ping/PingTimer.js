@@ -78,8 +78,8 @@ class PingTimer extends React.Component {
     super(props);
     this.state = {
       loading: false,
-      points: "...",
-      remaining_points: "...",
+      points: this.props.points,
+      remaining_points: this.props.points,
       time: this.props.time,
       max_time: 0
     }
@@ -87,36 +87,8 @@ class PingTimer extends React.Component {
 
   // called whenever the component loads
   componentDidMount() {
-    this.receivePoints();
-  }
-
-  // receive the points of this account
-  async receivePoints() {
-    let socket = this.props.socket;
-
-    // send an emit to receive the points
-    this.setState({loading: true});
-    socket.emit("receivePoints", {
-      message: {
-        id: this.props.id,
-        token: this.props.token
-      },
-      handle: "handleReceivePoints"
-    });
-
-    // listen for the edit account response from the server
-    socket.on("receivePoints", (data) => {
-      this.setState({loading: false});
-      if(data.success) {
-        // set the points state
-        this.setState({points: data.message.points});
-
-        // set the time state
-        this.changeTime(this.props.time);
-        this.setMaxTime(data.message.points);
-      }
-      socket.off("receivePoints");
-    });
+    this.changeTime(this.props.time);
+    this.setMaxTime(this.props.points);
   }
 
   // render the component's views

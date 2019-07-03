@@ -10,6 +10,9 @@ import {StyleSheet, Alert, Image, Text, TouchableOpacity,
 import {Input, Icon, Header, Button, Avatar} from "react-native-elements";
 import Spinner from 'react-native-loading-spinner-overlay';
 
+// security packages
+import md5 from "md5";
+
 // style sheet
 const styles = StyleSheet.create({
   container: {
@@ -20,6 +23,9 @@ const styles = StyleSheet.create({
     flex: 0.05,
     backgroundColor: "rgba(0, 0, 0, 0)",
     borderBottomWidth: 0
+  },
+  small_spacing: {
+    flex: 0.025
   },
   spacing: {
     flex: 0.05
@@ -43,7 +49,7 @@ const styles = StyleSheet.create({
     fontFamily: "ubuntu-regular"
   },
   update_btn_container: {
-    flex: 0.05,
+    flex: 0.075,
     width: "80%"
   },
   update_btn: {
@@ -80,6 +86,11 @@ class EditAccount extends React.Component {
     let profilePhotoBase64 = this.state.profile_photo_base64;
 
     if(this.isEditValid(name, email, password)) {
+      // hash the password if its available
+      if(password) {
+        password = md5(password);
+      }
+
       // emit a message to edit the account
       this.setState({loading: true});
       socket.emit("editAccount", {
@@ -98,7 +109,6 @@ class EditAccount extends React.Component {
         this.setState({loading: false});
         if(data.success) {
           // edited the account, then reload the home page
-          Alert.alert("Edited Account!", data.message);
           this.reloadHomePage();
         } else if(!data.success) {
           // an error occurred when editing the account
@@ -199,7 +209,7 @@ class EditAccount extends React.Component {
         <Button title="Update Account" buttonStyle={styles.update_btn}
           onPress={() => this.editAccount()}
           containerStyle={styles.update_btn_container} />
-        <View style={styles.spacing} />
+        <View style={styles.small_spacing} />
         <View style={styles.spacing}>
           <Text style={styles.update_disclaimer_text}>
             By updating I agree to the terms of service.
