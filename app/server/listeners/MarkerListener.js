@@ -240,7 +240,7 @@ class MarkerListener {
     function failure(error, errorMessage) {
       // emit a failed attempt to the client
       console.log(error);
-      socket.emit("addMarker", {
+      socket.emit("editMarker", {
         success: false,
         message: errorMessage
       });
