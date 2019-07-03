@@ -4,6 +4,7 @@ import React from "react";
 // styling packages
 import {StyleSheet, SafeAreaView, Image, Text, View} from "react-native";
 import {Icon} from "react-native-elements";
+import Spinner from 'react-native-loading-spinner-overlay';
 import NumericInput from "react-native-numeric-input";
 
 // style sheet
@@ -122,6 +123,7 @@ class PingTimer extends React.Component {
   render() {
     return (
       <SafeAreaView style={styles.container}>
+        <Spinner visible={this.state.loading} />
         <View style={styles.navbar}>
           <Text style={styles.title}>Ping Expiration Time</Text>
           <View style={styles.points_container}>
