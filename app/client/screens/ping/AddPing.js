@@ -224,11 +224,11 @@ class AddPing extends React.Component {
       <SafeAreaView style={styles.container}>
         <Spinner visible={this.state.loading} />
         <Overlay
-          animationType="slide"
+          animationType="fade"
           borderRadius={20}
           transparent={true}
           isVisible={this.state.ping_timer_visibie}
-          height="50%"
+          height="35%"
           onBackdropPress={() => this.setState({ping_timer_visibie: false})}>
           <PingTimer
             socket={this.props.navigation.state.params.socket}

@@ -148,7 +148,7 @@ class Home extends React.Component {
       <View style={styles.container}>
         <Spinner visible={this.state.loading} />
         <Overlay
-          animationType="slide"
+          animationType="fade"
           borderRadius={20}
           transparent={true}
           isVisible={this.state.marker_visible}
