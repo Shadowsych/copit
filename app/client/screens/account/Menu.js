@@ -106,6 +106,9 @@ class Menu extends React.Component {
     // guests have an imaginary id and token
     let guestIdToken = -1;
 
+    // is the user a guest
+    let isGuest = this.props.navigation.state.params.id == guestIdToken;
+
     return (
       <SafeAreaView style={styles.container}>
         <Spinner visible={this.state.loading} />
@@ -127,23 +130,23 @@ class Menu extends React.Component {
         </View>
         <View style={styles.list_view}>
           <ListItem
-          title="Account"
+          title={"Account" + ((isGuest) ? " (Disabled for Guests)" : "")}
           titleStyle={styles.list_item_title}
           subtitle="Edit name, picture, password, etc."
           subtitleStyle={styles.list_item_subtitle}
-          leftIcon={{name: "user", type: "antdesign", color: "#75B1DE"}}
+          leftIcon={{name: "user", type: "antdesign", color: ((isGuest) ? "#C7D0D7" : "#75B1DE")}}
           rightIcon={{name: "chevron-right", type: "fontawesome", color: "#C7D0D7"}}
-          disabled={this.props.navigation.state.params.id == guestIdToken}
+          disabled={isGuest}
           onPress={() => this.loadEditAccountPage()}
           />
           <ListItem
-          title="Pings"
+          title={"Pings" + ((isGuest) ? " (Disabled for Guests)" : "")}
           titleStyle={styles.list_item_title}
           subtitle={"Edit name, description, picture, etc."}
           subtitleStyle={styles.list_item_subtitle}
-          leftIcon={{name: "globe", type: "entypo", color: "#75B1DE"}}
+          leftIcon={{name: "globe", type: "entypo", color: ((isGuest) ? "#C7D0D7" : "#75B1DE")}}
           rightIcon={{name: "chevron-right", type: "fontawesome", color: "#C7D0D7"}}
-          disabled={this.props.navigation.state.params.id == guestIdToken}
+          disabled={isGuest}
           onPress={() => this.loadMyPingsPage()}
           />
           <ListItem

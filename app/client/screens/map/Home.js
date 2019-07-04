@@ -3,10 +3,11 @@ import React from "react";
 import MapView from "react-native-maps";
 import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
+import Constants from "expo-constants";
 
 // styling packages
 import {StyleSheet, Image, TouchableOpacity, Platform,
-  Button, Text, Alert, View} from "react-native";
+  StatusBar, Button, Text, Alert, View} from "react-native";
 import GestureRecognizer from 'react-native-swipe-gestures';
 import {Icon, Overlay} from "react-native-elements";
 import * as Animatable from 'react-native-animatable';
@@ -24,12 +25,12 @@ const styles = StyleSheet.create({
   },
   menu_btn: {
     position: "absolute",
-    top: Platform.OS === "ios" ? 60 : 10,
+    top: Constants.statusBarHeight - 14,
     left: 10
   },
   search_btn: {
     position: "absolute",
-    top: Platform.OS === "ios" ? 120 : 70,
+    top: Constants.statusBarHeight + 46,
     left: 10
   },
   map: {
