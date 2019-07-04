@@ -25,12 +25,12 @@ const styles = StyleSheet.create({
   },
   menu_btn: {
     position: "absolute",
-    top: Constants.statusBarHeight - 14,
+    top: Constants.statusBarHeight,
     left: 10
   },
   search_btn: {
     position: "absolute",
-    top: Constants.statusBarHeight + 46,
+    top: Constants.statusBarHeight + 60,
     left: 10
   },
   map: {
