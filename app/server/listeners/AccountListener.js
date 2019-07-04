@@ -23,6 +23,7 @@ class AccountListener {
 
   // load an account
   async loadAccount(data) {
+    // interpret the variables passed from the client
     let token = data.message.token;
 
     // called whenever there exists a failure
