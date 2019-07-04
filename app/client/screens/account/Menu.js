@@ -8,6 +8,9 @@ import {StyleSheet, AsyncStorage, Image, SafeAreaView,
 import {Avatar, Divider, ListItem, Icon} from "react-native-elements";
 import Spinner from 'react-native-loading-spinner-overlay';
 
+// config packages
+import guestConfig from "../../../../config/guest.json";
+
 // style sheet
 const styles = StyleSheet.create({
   container: {
@@ -103,11 +106,8 @@ class Menu extends React.Component {
 
   // render the component's views
   render() {
-    // guests have an imaginary id and token
-    let guestIdToken = -1;
-
     // is the user a guest
-    let isGuest = this.props.navigation.state.params.id == guestIdToken;
+    let isGuest = this.props.navigation.state.params.id == guestConfig.id;
 
     return (
       <SafeAreaView style={styles.container}>

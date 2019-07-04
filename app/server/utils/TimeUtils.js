@@ -1,25 +1,12 @@
+// config packages
+var {amnestyTime, timeIncrement, costRate} = require("../../../config/shop/ping_timer.json");
+
 class TimeUtils {
   // return the points cost for creating a ping with a given time in minutes
   static getPingTimeCost(time) {
-    /*
-      Time utilities constants to determine the price for extra time.
-
-      If you change any constant here, then don't forget to
-      change the constants in the PingTimer.js client-side, as well.
-    */
-
-    // amnesty time in minutes to not incur a cost for a ping
-    const amnestyTime = 120;
-
-    // the increment of time in minutes multiplied by the cost rate
-    const timeIncrement = 30;
-
-    // the rate at which to increase the points cost per points increment
-    const costRate = 3;
-
-    // determine the cost in points for the time in minutes
     let pointsCost = 0;
     if(time > amnestyTime) {
+      // determine the cost in points for the time in minutes
       let costlyTime = (time - amnestyTime) / timeIncrement;
       pointsCost = Math.ceil(costlyTime * costRate);
     }

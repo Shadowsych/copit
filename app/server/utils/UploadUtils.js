@@ -1,7 +1,9 @@
 // file system packages
 var fs = require("fs");
 var uuidv4 = require("uuid/v4");
-var config = require("../../../config/server.json");
+
+// config packages
+var serverConfig = require("../../../config/server.json");
 
 class UploadUtils {
   // upload a base64 picture, then return its directory
@@ -18,10 +20,10 @@ class UploadUtils {
         }
       });
       // return the URL of the uploaded image
-      return config.serverDomain + ":" + config.serverPort + uploadFile;
+      return serverConfig.serverDomain + ":" + serverConfig.serverPort + uploadFile;
     }
     // return the default icon URL
-    return config.serverDomain + ":" + config.serverPort + "/assets/icons/no_icon.png";
+    return serverConfig.serverDomain + ":" + serverConfig.serverPort + "/assets/icons/no_icon.png";
   }
 
   // delete a file

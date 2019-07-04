@@ -6,8 +6,10 @@ import * as Font from "expo-font";
 import {StyleSheet, Alert, AsyncStorage, Image, View, SafeAreaView} from "react-native";
 import * as Animatable from 'react-native-animatable';
 
+// config packages
+import serverConfig from "../../../../config/server.json";
+
 // socket.io packages
-import config from "../../../../config/server.json";
 import io from "socket.io-client";
 
 // style sheet
@@ -36,7 +38,7 @@ class Loading extends React.Component {
   // load the application
   async loadApp() {
     // initiate the socket connection
-    var socket = io.connect(config.serverDomain + ":" + config.serverPort);
+    var socket = io.connect(serverConfig.serverDomain + ":" + serverConfig.serverPort);
 
     socket.on("connect", (data) => {
       // attempt to load the account token

@@ -10,6 +10,9 @@ import {Input, Icon, Button} from "react-native-elements";
 import * as Animatable from 'react-native-animatable';
 import Spinner from 'react-native-loading-spinner-overlay';
 
+// config packages
+import guestConfig from "../../../../config/guest.json";
+
 // security packages
 import md5 from "md5";
 
@@ -166,11 +169,9 @@ class Login extends React.Component {
 
   // login as a guest
   loginGuest() {
-    // guests have an imaginary id and token
-    let guestIdToken = -1;
     this.loadHomePage({
-      id: guestIdToken,
-      token: guestIdToken,
+      id: guestConfig.id,
+      token: guestConfig.token,
       name: "Guest",
       points: 0
     });
@@ -186,11 +187,8 @@ class Login extends React.Component {
 
   // load the home page
   loadHomePage(account) {
-    // guests have an imaginary id and token
-    let guestIdToken = -1;
-
     // store the account token in the storage
-    if(account.id != guestIdToken) {
+    if(account.id != guestConfig.id) {
       AsyncStorage.setItem("token", account.token);
     }
 

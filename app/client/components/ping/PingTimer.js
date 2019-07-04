@@ -7,6 +7,9 @@ import {Icon} from "react-native-elements";
 import Spinner from 'react-native-loading-spinner-overlay';
 import NumericInput from "react-native-numeric-input";
 
+// config packages
+import {amnestyTime, timeIncrement, costRate} from "../../../../config/shop/ping_timer.json";
+
 // style sheet
 const styles = StyleSheet.create({
   container: {
@@ -55,22 +58,6 @@ const styles = StyleSheet.create({
     fontSize: 16
   }
 });
-
-/*
-  Time utilities constants to determine the price for extra time.
-
-  If you change any constant here, then don't forget to
-  change the constants in the TimeUtils.js server-side, as well.
-*/
-
-// amnesty time in minutes to not incur a cost for a ping
-const amnestyTime = 120;
-
-// the increment of time in minutes multiplied by the cost rate
-const timeIncrement = 30;
-
-// the rate at which to increase the points cost per points increment
-const costRate = 3;
 
 class PingTimer extends React.Component {
   // construct the state of the component

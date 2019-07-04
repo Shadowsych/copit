@@ -1,5 +1,5 @@
-// global constants
-const guestIdToken = -1;
+// config packages
+var guestConfig = require("../../../config/guest.json");
 
 class AccountRecord {
   // return a promise to receive account data using an account token
@@ -28,7 +28,7 @@ class AccountRecord {
   static async isAccountIdValid(dbConn, id, token) {
     return new Promise((resolve, reject) => {
       // guests have an imaginary id and token
-      if(id == guestIdToken && token == guestIdToken) {
+      if(id == guestConfig.id && token == guestConfig.token) {
         resolve(true);
       }
 
@@ -76,7 +76,7 @@ class AccountRecord {
   static async getPoints(dbConn, id) {
     return new Promise((resolve, reject) => {
       // guests have no points
-      if(id == guestIdToken) {
+      if(id == guestConfig.id) {
         resolve(0);
       }
 
