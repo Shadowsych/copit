@@ -7,7 +7,7 @@ import * as ImagePicker from 'expo-image-picker';
 // styling packages
 import {StyleSheet, Alert, Image, Text, TouchableOpacity,
   SafeAreaView, Dimensions, KeyboardAvoidingView, View} from "react-native";
-import {Input, Icon, Header, Button, Avatar} from "react-native-elements";
+import {Input, Icon, Button, Avatar} from "react-native-elements";
 import Spinner from 'react-native-loading-spinner-overlay';
 
 // security packages
@@ -20,9 +20,20 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   navbar: {
-    flex: 0.05,
-    backgroundColor: "rgba(0, 0, 0, 0)",
-    borderBottomWidth: 0
+    flex: 0.10,
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0)"
+  },
+  navbar_small_spacing: {
+    flex: 0.15,
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  navbar_large_spacing: {
+    flex: 0.35
   },
   small_spacing: {
     flex: 0.025
@@ -31,7 +42,7 @@ const styles = StyleSheet.create({
     flex: 0.05
   },
   avatar: {
-    flex: 0.235,
+    flex: 0.1835,
     justifyContent: "center",
     alignItems: "center"
   },
@@ -146,10 +157,15 @@ class EditAccount extends React.Component {
     return (
       <SafeAreaView style={styles.container}>
         <Spinner visible={this.state.loading} />
-        <Header containerStyle={styles.navbar}>
-          <Icon name="chevron-left" onPress={() => this.goBackPage()}
-            type="entypo" color="#D3D3D3" size={22} />
-        </Header>
+        <View style={styles.navbar}>
+          <View style={styles.navbar_small_spacing}>
+            <Icon name="chevron-left" onPress={() => this.goBackPage()}
+              type="entypo" color="#D3D3D3" size={22} />
+          </View>
+          <View style={styles.navbar_large_spacing} />
+          <View style={styles.navbar_large_spacing} />
+          <View style={styles.navbar_small_spacing} />
+        </View>
         <TouchableOpacity onPress={() => this.uploadPicture()}
           style={styles.avatar} activeOpacity={0.8}>
           {!this.state.profile_photo_base64 ? (

@@ -3,7 +3,7 @@ import React from "react";
 
 // styling packages
 import {StyleSheet, Image, Platform, Text, SafeAreaView, View} from "react-native";
-import {Header, Icon} from "react-native-elements";
+import {Icon} from "react-native-elements";
 
 // style sheet
 const styles = StyleSheet.create({
@@ -11,9 +11,20 @@ const styles = StyleSheet.create({
     flex: 1
   },
   navbar: {
-    flex: 0.05,
-    backgroundColor: "rgba(0, 0, 0, 0)",
-    borderBottomWidth: 0
+    flex: 0.10,
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0)"
+  },
+  navbar_small_spacing: {
+    flex: 0.15,
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  navbar_large_spacing: {
+    flex: 0.35
   },
   title_text: {
     color: "#D3D3D3",
@@ -21,7 +32,7 @@ const styles = StyleSheet.create({
     fontFamily: "ubuntu-regular"
   },
   grid_container: {
-    flex: 0.95
+    flex: 0.90
   },
   row: {
     flex: 0.333,
@@ -45,11 +56,16 @@ class Pings extends React.Component {
   render() {
     return (
       <SafeAreaView style={styles.container}>
-        <Header containerStyle={styles.navbar}>
-          <Icon name="chevron-left" onPress={() => this.goBackPage()}
-            type="entypo" color="#D3D3D3" size={22} />
+        <View style={styles.navbar}>
+          <View style={styles.navbar_small_spacing}>
+            <Icon name="chevron-left" onPress={() => this.goBackPage()}
+              type="entypo" color="#D3D3D3" size={22} />
+          </View>
+          <View style={styles.navbar_large_spacing} />
           <Text style={styles.title_text}>Add Ping</Text>
-        </Header>
+          <View style={styles.navbar_large_spacing} />
+          <View style={styles.navbar_small_spacing} />
+        </View>
         <View style={styles.grid_container}>
           <View style={styles.row}>
             <View style={styles.column}>

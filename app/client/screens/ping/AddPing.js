@@ -8,7 +8,7 @@ import * as ImagePicker from 'expo-image-picker';
 // styling packages
 import {StyleSheet, Dimensions, Image, KeyboardAvoidingView, SafeAreaView,
   Text, Alert, TouchableOpacity, View} from "react-native";
-import {Header, Overlay, Input, Button, CheckBox, Icon} from "react-native-elements";
+import {Overlay, Input, Button, CheckBox, Icon} from "react-native-elements";
 import Spinner from 'react-native-loading-spinner-overlay';
 
 // component classes
@@ -20,22 +20,30 @@ const styles = StyleSheet.create({
     flex: 1
   },
   navbar: {
-    flex: 0.05,
-    backgroundColor: "rgba(0, 0, 0, 0)",
-    borderBottomWidth: 0
+    flex: 0.125,
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0)"
+  },
+  navbar_small_spacing: {
+    flex: 0.15,
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  navbar_large_spacing: {
+    flex: 0.35
   },
   title_text: {
     color: "#D3D3D3",
     fontSize: 24,
     fontFamily: "ubuntu-regular"
   },
-  spacing: {
-    flex: 0.05
-  },
   upload_picture_btn: {
-    flex: 0.35,
+    flex: 0.325,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   upload_picture_text: {
     color: "#D3D3D3",
@@ -267,14 +275,18 @@ class AddPing extends React.Component {
             points={this.state.points}
             setTime={this.setTime.bind(this)} />
         </Overlay>
-        <Header containerStyle={styles.navbar}>
-          <Icon name="chevron-left" onPress={() => this.goBackPage()}
-            type="entypo" color="#D3D3D3" size={22} />
+        <View style={styles.navbar}>
+          <View style={styles.navbar_small_spacing}>
+            <Icon name="chevron-left" onPress={() => this.goBackPage()}
+              type="entypo" color="#D3D3D3" size={22} />
+          </View>
+          <View style={styles.navbar_large_spacing} />
           <Text style={styles.title_text}>
             {this.props.navigation.state.params.category}
           </Text>
-        </Header>
-        <View style={styles.spacing} />
+          <View style={styles.navbar_large_spacing} />
+          <View style={styles.navbar_small_spacing} />
+        </View>
         <TouchableOpacity
           activeOpacity={0.8}
           onPress={() => this.uploadPicture()}

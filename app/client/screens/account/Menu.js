@@ -22,12 +22,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "rgba(0, 0, 0, 0)"
   },
-  small_spacing: {
+  navbar_small_spacing: {
     flex: 0.15,
     justifyContent: "center",
     alignItems: "center"
   },
-  large_spacing: {
+  navbar_large_spacing: {
     flex: 0.35
   },
   points_text: {
@@ -110,17 +110,17 @@ class Menu extends React.Component {
       <SafeAreaView style={styles.container}>
         <Spinner visible={this.state.loading} />
         <View style={styles.navbar}>
-          <View style={styles.small_spacing}>
+          <View style={styles.navbar_small_spacing}>
             <Icon name="chevron-left" onPress={() => this.goBackPage()}
               type="entypo" color="#D3D3D3" size={22} />
           </View>
-          <View style={styles.large_spacing}></View>
+          <View style={styles.navbar_large_spacing} />
           <View>
             <Avatar rounded icon={{name: "camera-off", type: "feather"}} activeOpacity={0.7}
               size="large" source={{uri: this.props.navigation.state.params.profile_photo}} />
           </View>
-          <View style={styles.large_spacing} />
-          <View style={styles.small_spacing}>
+          <View style={styles.navbar_large_spacing} />
+          <View style={styles.navbar_small_spacing}>
             <Icon name="medal" type="entypo" color="#75B1DE" size={22} />
             <Text style={styles.points_text}>{this.state.points}</Text>
           </View>
