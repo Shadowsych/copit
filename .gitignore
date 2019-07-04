@@ -9,6 +9,7 @@ npm-debug.*
 *.orig.*
 web-build/
 web-report/
+metro-cache/
 
 # media ignore
 app/server/media/ping_photos/*

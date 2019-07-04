@@ -28,7 +28,12 @@
       "supportsTablet": true
     },
     "android": {
-      "package": "com.freatech.frea"
+      "package": "com.freatech.frea",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyBXmDByqwhGhD4lYY-pIvu-t8h17rS-1d8"
+        }
+      }
     }
   }
 }

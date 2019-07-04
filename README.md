@@ -45,8 +45,10 @@ expo start
 then follow the instructions on the console to load the app on your phone or emulator.
 
 ### Expo MapView
-Frea uses Expo's [MapView](https://docs.expo.io/versions/latest/sdk/map-view/), which is a Map component that uses Apple or Google Maps on IOS and Android phones.
+Frea uses Google Maps for Android phones and Apple Maps for IOS phones.
 
-MapView will work when testing on the Expo client, but when publishing to the Apple or Google Play store the MapView will not render due to API key limitations and security purposes.
+In order to render the map, Frea uses Expo's [MapView](https://docs.expo.io/versions/latest/sdk/map-view/), which is a Map component that uses Google or Maps on Android or IOS phones, respectively.
+
+MapView will work when testing on the Expo client, but when publishing to the Apple or Google Play store the MapView will not render due to API key limitations.
 
 In order for the map to render once publishing the app, follow the instructions from the Expo documentation [here](https://docs.expo.io/versions/latest/sdk/map-view/).
