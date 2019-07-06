@@ -3,8 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jun 27, 2019 at 09:29 PM
--- Server version: 5.7.26-0ubuntu0.18.04.1
+-- Generation Time: Jul 05, 2019 at 10:36 PM
+-- Server version: 8.0.16
 -- PHP Version: 7.2.19-0ubuntu0.18.04.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -57,6 +57,18 @@ CREATE TABLE `MarkerRecord` (
   `expires` bigint(20) DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `SerialRecord`
+--
+
+CREATE TABLE `SerialRecord` (
+  `email` varchar(256) NOT NULL,
+  `serial` int(11) DEFAULT '0',
+  `expires` bigint(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 --
 -- Indexes for dumped tables
 --
@@ -65,13 +77,21 @@ CREATE TABLE `MarkerRecord` (
 -- Indexes for table `AccountRecord`
 --
 ALTER TABLE `AccountRecord`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `token` (`token`),
+  ADD UNIQUE KEY `email` (`email`);
 
 --
 -- Indexes for table `MarkerRecord`
 --
 ALTER TABLE `MarkerRecord`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `SerialRecord`
+--
+ALTER TABLE `SerialRecord`
+  ADD PRIMARY KEY (`email`);
 
 --
 -- AUTO_INCREMENT for dumped tables

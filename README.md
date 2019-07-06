@@ -8,12 +8,6 @@ Frea uses [Express](https://expressjs.com/), [Socket.IO](https://socket.io/), an
 - MySQL is the database management server
 
 Configure the server properties in the ```server.json``` file located in the ```config``` directory of the project.
-- ```serverDomain``` is the public domain of your web-server
-- ```serverPort``` is the port of your web-server
-- ```dbHost``` is the host of your MySQL database
-- ```dbUser``` is the user to access your MySQL database
-- ```dbPassword``` is the password of the user
-- ```dbName``` is the name of your MySQL database
 
 Then setup the database by importing the ```frea.sql``` file in MySQL. The file is located in the ```app/sql``` directory of the project.
 
