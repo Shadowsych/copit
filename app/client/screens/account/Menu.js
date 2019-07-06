@@ -185,7 +185,8 @@ class Menu extends React.Component {
       token: this.props.navigation.state.params.token,
       name: this.props.navigation.state.params.name,
       email: this.props.navigation.state.params.email,
-      profile_photo: this.props.navigation.state.params.profile_photo
+      profile_photo: this.props.navigation.state.params.profile_photo,
+      removeWatch: this.props.navigation.state.params.removeWatch
     });
   }
 
@@ -216,6 +217,9 @@ class Menu extends React.Component {
   // logout the account
   logOut() {
     let socket = this.props.navigation.state.params.socket;
+
+    // unwatch the location
+    this.props.navigation.state.params.removeWatch();
 
     // remove the token stored in the storage
     AsyncStorage.removeItem("token");

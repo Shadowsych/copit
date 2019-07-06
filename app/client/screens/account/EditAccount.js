@@ -274,6 +274,9 @@ class EditAccount extends React.Component {
   reloadHomePage() {
     let socket = this.props.navigation.state.params.socket
 
+    // unwatch the location
+    this.props.navigation.state.params.removeWatch();
+
     // load the account
     this.setState({loading: true});
     socket.emit("loadAccount", {

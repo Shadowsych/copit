@@ -16,6 +16,9 @@ import Spinner from 'react-native-loading-spinner-overlay';
 // component classes
 import ViewPing from "../../components/ping/ViewPing";
 
+// config packages
+import {timeInterval, distanceInterval} from "../../../../config/map/watch_position.json";
+
 // style sheet
 const styles = StyleSheet.create({
   container: {
@@ -81,11 +84,36 @@ class Home extends React.Component {
 
     // initial map view
     this.mapView = undefined;
+
+    // remove watch location
+    this.removeWatch = undefined;
   }
 
   // called whenever the component loads
   componentDidMount() {
-    this.updateLocation();
+    this.watchLocation();
+  }
+
+  // watch the location of the user
+  async watchLocation() {
+    let {status} = await Permissions.askAsync(Permissions.LOCATION);
+    if (status === "granted") {
+      this.setState({loading: true});
+
+      // continously watch the location of the user
+      Location.watchPositionAsync({enableBalancedAccuracy: true, timeInterval: timeInterval,
+        distanceInterval: distanceInterval}, (position) => {
+        // receive the markers from the server
+        this.receiveMarkers(position);
+      }).then((resolved) => {
+        // set the remove watch function
+        this.removeWatch = resolved.remove;
+        return;
+      }).catch((error) => {
+        this.setState({loading: false});
+        Alert.alert("GPS Error!", "Please make sure your location (GPS) is turned on.");
+      });
+    }
   }
 
   // update the location of the user
@@ -98,9 +126,7 @@ class Home extends React.Component {
         this.receiveMarkers(position);
         return;
       }).catch((error) => {
-        this.setState({loading: false}, () => {
-          this.setState({loading: false});
-        });
+        this.setState({loading: false});
         Alert.alert("GPS Error!", "Please make sure your location (GPS) is turned on.");
       });
     }
@@ -334,7 +360,8 @@ class Home extends React.Component {
       name: this.props.navigation.state.params.name,
       email: this.props.navigation.state.params.email,
       profile_photo: this.props.navigation.state.params.profile_photo,
-      updateMarkers: this.updateLocation.bind(this)
+      updateMarkers: this.updateLocation.bind(this),
+      removeWatch: this.removeWatch
     });
   }
 
@@ -347,7 +374,7 @@ class Home extends React.Component {
     this.props.navigation.navigate("Search", {
       socket: socket,
       markers: this.state.markers.slice(0, loadMarkers),
-      loadViewPingPage: this.loadViewPingPage.bind(this)
+      loadViewPingPage: this.loadViewPingPage.bind(this),
     });
   }
 
