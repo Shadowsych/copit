@@ -52,3 +52,8 @@ In order to render the map, Frea uses Expo's [MapView](https://docs.expo.io/vers
 MapView will work when testing on the Expo client, but when publishing to the Apple or Google Play store the MapView will not render due to API key limitations.
 
 In order for the map to render once publishing the app, follow the instructions from the Expo documentation [here](https://docs.expo.io/versions/latest/sdk/map-view/).
+
+### SMTP Service
+Frea uses the ```nodemailer``` package to send emails from the the server to users.
+
+To setup SMTP, edit the ```email_service.json``` using your SMTP service. The file is located in the ```config/email``` directory.
