@@ -1,3 +1,6 @@
+// utils packages
+var EmailUtils = require("../utils/EmailUtils");
+
 class EmailListener {
   // construct the listener using the socket and database connections
   constructor(socket, dbConn) {

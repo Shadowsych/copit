@@ -1,5 +1,5 @@
 {
-  "serverDomain": "http://192.168.0.18",
+  "serverDomain": "http://192.168.1.15",
   "serverPort": "3000",
   "dbHost": "localhost",
   "dbPort": "3306",
