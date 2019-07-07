@@ -4,7 +4,7 @@ import {Platform, StatusBar} from 'react-native';
 import {createStackNavigator, createAppContainer} from 'react-navigation';
 
 // style packages
-import {fadeIn, fromBottom, fromTop, fromLeft, zoomIn} from 'react-navigation-transitions';
+import {fromBottom, fromTop, fromLeft, zoomIn} from 'react-navigation-transitions';
 
 // account screens
 import Login from "./screens/account/Login";
@@ -56,8 +56,8 @@ const handleCustomTransition = ({ scenes }) => {
   } else if(prevScene
     && prevScene.route.routeName == "Pings"
     && nextScene.route.routeName == "AddPing") {
-      // transition fade in from the pings to the add ping page
-      return fadeIn();
+      // transition from the bottom from the pings to the add ping page
+      return fromBottom();
   } else if(prevScene && prevScene.route.routeName == "Menu") {
       // transition from the the bottom from the menu to any other page
       return fromBottom();
