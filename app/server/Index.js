@@ -11,6 +11,9 @@ var AccountListener = require("./listeners/AccountListener");
 var MarkerListener = require("./listeners/MarkerListener");
 var LeaderboardListener = require("./listeners/LeaderboardListener");
 
+// crontab classes
+var DeleteExpired = require("./crontabs/DeleteExpired");
+
 // initiate an express server
 const app = express();
 const serverPort = serverConfig.serverPort;
@@ -37,6 +40,9 @@ dbConn.connect((error) => {
   }
   console.log("Connected to the MySQL server.");
 });
+
+// initiate the crontabs
+new DeleteExpired(dbConn);
 
 // initiate a socket.io server
 const io = socket(server);
