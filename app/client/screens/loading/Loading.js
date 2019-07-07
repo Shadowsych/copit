@@ -39,7 +39,7 @@ class Loading extends React.Component {
 
     // schedule a notification to relogin
     NotificationUtils.scheduleLocalNotification(reloginNotification.title,
-      reloginNotification.text, reloginNotification.minutes);
+      reloginNotification.text, reloginNotification.minutes, "week");
   }
 
   // load the application

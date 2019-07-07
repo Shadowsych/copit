@@ -20,7 +20,7 @@ class NotificationUtils {
   }
 
   // schedule a local notification
-  static async scheduleLocalNotification(title, text, minutes) {
+  static async scheduleLocalNotification(title, text, minutes, repeat) {
     let {status} = await Permissions.askAsync(Permissions.NOTIFICATIONS);
     if(status == "granted") {
       // cancel all previously scheduled notifications
@@ -36,7 +36,8 @@ class NotificationUtils {
       const mToMs = 60000;
       const timeInMs = minutes * mToMs;
       let schedulingOptions = {
-        time: (new Date().getTime()) + timeInMs
+        time: (new Date().getTime()) + timeInMs,
+        repeat: repeat
       }
 
       // notify the user of the notification after the schedule
