@@ -6,7 +6,11 @@ import * as Font from "expo-font";
 import {StyleSheet, Alert, AsyncStorage, Image, View, SafeAreaView} from "react-native";
 import * as Animatable from 'react-native-animatable';
 
+// utils packages
+import NotificationUtils from "../../utils/NotificationUtils";
+
 // config packages
+import reloginNotification from "../../../../config/notifications/relogin.json";
 import serverConfig from "../../../../config/server.json";
 
 // socket.io packages
@@ -26,19 +30,22 @@ const styles = StyleSheet.create({
 });
 
 class Loading extends React.Component {
-
   // called whenever the component is loaded
   componentDidMount() {
     // load custom fonts
     Font.loadAsync({
       "ubuntu-regular": require("../../../../assets/fonts/Ubuntu-R.ttf")
     });
+
+    // schedule a notification to relogin
+    NotificationUtils.scheduleLocalNotification(reloginNotification.title,
+      reloginNotification.text, reloginNotification.minutes);
   }
 
   // load the application
   async loadApp() {
     // initiate the socket connection
-    var socket = io.connect(serverConfig.serverDomain + ":" + serverConfig.serverPort);
+    let socket = io.connect(serverConfig.serverDomain + ":" + serverConfig.serverPort);
 
     socket.on("connect", (data) => {
       // attempt to load the account token
