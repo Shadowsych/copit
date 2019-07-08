@@ -26,6 +26,7 @@ app.use(express.static(__dirname));
 
 // mysql server credentials
 const dbConn = mysql.createConnection({
+  multipleStatements: true,
   host: serverConfig.dbHost,
   port: serverConfig.dbPort,
   user: serverConfig.dbUser,

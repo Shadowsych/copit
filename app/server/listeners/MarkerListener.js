@@ -258,12 +258,8 @@ class MarkerListener {
         // set the new ping photo if it exists
         let newPicture = picture;
         if(newPicture && marker.picture) {
-          // receive the file of the old ping photo
-          let fileIndex = marker.picture.lastIndexOf("/") + 1;
-          let oldFile = marker.picture.substring(fileIndex, marker.picture.length);
-
           // delete the old ping photo's file
-          UploadUtils.deleteFile("/media/ping_photos/", oldFile);
+          UploadUtils.deleteFileURL(marker.picture, "/media/ping_photos/");
         } else if(marker.picture) {
           newPicture = marker.picture;
         }
@@ -321,12 +317,8 @@ class MarkerListener {
       let marker = resolved[1];
 
       if(isValid && marker.author_id == authorId) {
-        // receive the file of the ping photo
-        let fileIndex = marker.picture.lastIndexOf("/") + 1;
-        let file = marker.picture.substring(fileIndex, marker.picture.length);
-
         // delete the ping photo's file
-        UploadUtils.deleteFile("/media/ping_photos/", file);
+        UploadUtils.deleteFileURL(marker.picture, "/media/ping_photos/");
 
         // delete the marker from the database
         MarkerRecord.deleteMarker(this.dbConn, markerId).then((deleted) => {

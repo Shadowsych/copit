@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jul 05, 2019 at 10:36 PM
+-- Generation Time: Jul 08, 2019 at 01:43 PM
 -- Server version: 8.0.16
 -- PHP Version: 7.2.19-0ubuntu0.18.04.1
 
@@ -66,7 +66,7 @@ CREATE TABLE `MarkerRecord` (
 CREATE TABLE `SerialRecord` (
   `email` varchar(256) NOT NULL,
   `serial` int(11) DEFAULT '0',
-  `expires` bigint(20) DEFAULT NULL
+  `expires` bigint(20) DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --

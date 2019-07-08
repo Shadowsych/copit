@@ -37,5 +37,15 @@ class UploadUtils {
       }
     });
   }
+
+  // delete a file using the URL
+  static async deleteFileURL(url, directory) {
+    // get the file from the url
+    let fileIndex = url.lastIndexOf("/") + 1;
+    let oldFile = url.substring(fileIndex, url.length);
+
+    // delete the old profile photo's file
+    UploadUtils.deleteFile(directory, oldFile);
+  }
 }
 module.exports = UploadUtils;

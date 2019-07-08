@@ -200,13 +200,8 @@ class AccountListener {
           // set the new profile photo if it exists
           let newProfilePhoto = profilePhoto;
           if(newProfilePhoto && accountData.profile_photo) {
-            // receive the file of the old profile photo
-            let fileIndex = accountData.profile_photo.lastIndexOf("/") + 1;
-            let oldFile = accountData.profile_photo.substring(
-              fileIndex, accountData.profile_photo.length);
-
             // delete the old profile photo's file
-            UploadUtils.deleteFile("/media/profile_photos/", oldFile);
+            UploadUtils.deleteFileURL(accountData.profile_photo, "/media/profile_photos/");
           } else if(accountData.profile_photo) {
             newProfilePhoto = accountData.profile_photo;
           }
