@@ -1,5 +1,5 @@
 // config packages
-var guestConfig = require("../../../config/guest.json");
+var guestConfig = require("../../../config/accounts/guest.json");
 
 class AccountRecord {
   // return a promise to receive account data using an account token

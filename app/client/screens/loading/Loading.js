@@ -11,7 +11,7 @@ import NotificationUtils from "../../utils/NotificationUtils";
 
 // config packages
 import reloginNotification from "../../../../config/notifications/relogin.json";
-import serverConfig from "../../../../config/server.json";
+import serverConfig from "../../../../config/server/server.json";
 
 // socket.io packages
 import io from "socket.io-client";

@@ -9,7 +9,7 @@ import {Avatar, Divider, ListItem, Icon} from "react-native-elements";
 import Spinner from 'react-native-loading-spinner-overlay';
 
 // config packages
-import guestConfig from "../../../../config/guest.json";
+import guestConfig from "../../../../config/accounts/guest.json";
 
 // style sheet
 const styles = StyleSheet.create({

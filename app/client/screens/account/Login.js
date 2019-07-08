@@ -11,7 +11,7 @@ import * as Animatable from 'react-native-animatable';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 // config packages
-import guestConfig from "../../../../config/guest.json";
+import guestConfig from "../../../../config/accounts/guest.json";
 
 // security packages
 import md5 from "md5";

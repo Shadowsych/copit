@@ -3,7 +3,7 @@ var fs = require("fs");
 var uuidv4 = require("uuid/v4");
 
 // config packages
-var serverConfig = require("../../../config/server.json");
+var serverConfig = require("../../../config/server/server.json");
 
 class UploadUtils {
   // upload a base64 picture, then return its directory
