@@ -16,7 +16,7 @@ class UploadUtils {
       let uploadFile = directory + file;
       fs.writeFile("." + uploadFile, base64, {encoding: "base64"}, (error) => {
         if(error) {
-          console.log(error);
+          console.log("The file " + uploadFile + " could not be uploaded!");
         }
       });
       // return the URL of the uploaded image
@@ -33,7 +33,7 @@ class UploadUtils {
     // delete the file from the system
     fs.unlink("." + uploadFile, (error) => {
       if(error) {
-        console.log(error);
+        console.log("The file " + uploadFile + " could not be deleted!");
       }
     });
   }

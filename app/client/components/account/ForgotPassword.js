@@ -92,7 +92,7 @@ class ForgotPassword extends React.Component {
         socket.off("emailForgotPassword");
       });
     } else {
-      this.setState({email_message_text: "Please use a valid email address!"});
+      this.setState({email_message_text: "Please enter a valid email address!"});
     }
   }
 
@@ -122,7 +122,7 @@ class ForgotPassword extends React.Component {
       });
     } else {
       this.setState({
-        serial_message_text: "Please use a valid email address and serial key!"
+        serial_message_text: "Please enter a valid email address and serial key!"
       });
     }
   }
