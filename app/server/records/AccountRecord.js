@@ -24,6 +24,28 @@ class AccountRecord {
     });
   }
 
+  // return a promise to receive account data using an email
+  static async getEmailAccount(dbConn, email) {
+    return new Promise((resolve, reject) => {
+      // create a prepared statement to select from the account record
+      let query = "SELECT * FROM AccountRecord WHERE email=?";
+
+      // query the database to receive the account information
+      dbConn.query(query, [email], (error, result) => {
+        if(!error) {
+          let accountData = JSON.parse(JSON.stringify(result));
+          if(accountData.length != 0) {
+            // found the account data
+            resolve(accountData[0]);
+          }
+          // there was no such account
+          resolve(undefined);
+        }
+        reject(error);
+      });
+    });
+  }
+
   // return a promise to check if an account id is valid using an account token
   static async isAccountIdValid(dbConn, id, token) {
     return new Promise((resolve, reject) => {

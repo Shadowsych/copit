@@ -178,6 +178,7 @@ class Register extends React.Component {
             containerStyle={styles.input_text_container}
             inputStyle={styles.input_text}
             placeholder="Profile Name*"
+            maxLength={256}
             onChangeText={(text) => this.setState({name: text})}
             rightIcon={
               <Icon name="person" type="material" size={24} color="#ADD8E6"/>
@@ -186,6 +187,7 @@ class Register extends React.Component {
             containerStyle={styles.input_text_container}
             inputStyle={styles.input_text}
             placeholder="Email*"
+            maxLength={256}
             onChangeText={(text) => this.setState({email: text})}
             errorMessage={this.state.failed_email_text}
             rightIcon={
@@ -195,6 +197,7 @@ class Register extends React.Component {
             containerStyle={styles.input_text_container}
             inputStyle={styles.input_text}
             placeholder="Password*"
+            maxLength={256}
             secureTextEntry={true}
             onChangeText={(text) => this.setState({password: text})}
             errorMessage={this.state.failed_password_text}
@@ -205,6 +208,7 @@ class Register extends React.Component {
             containerStyle={styles.input_text_container}
             inputStyle={styles.input_text}
             placeholder="Confirm Password*"
+            maxLength={256}
             secureTextEntry={true}
             onChangeText={(text) => this.setState({confirm_password: text})}
             errorMessage={this.state.failed_password_text}

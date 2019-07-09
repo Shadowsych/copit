@@ -33,10 +33,10 @@ const handleCustomTransition = ({ scenes }) => {
   const prevScene = scenes[scenes.length - 2];
   const nextScene = scenes[scenes.length - 1];
 
-  if(prevScene
-    && prevScene.route.routeName == "Login"
+  if(prevScene &&
+    prevScene.route.routeName == "Login"
     && nextScene.route.routeName == "Register") {
-      // transition from the bottom from the login to register page
+      // transition from the bottom from the login to the register page
       return fromBottom();
   } else if(prevScene
     && prevScene.route.routeName == "Home"

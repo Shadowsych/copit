@@ -10,6 +10,8 @@ var serverConfig = require("../../config/server/server.json");
 var AccountListener = require("./listeners/AccountListener");
 var MarkerListener = require("./listeners/MarkerListener");
 var LeaderboardListener = require("./listeners/LeaderboardListener");
+var EmailListener = require("./listeners/EmailListener");
+var SerialListener = require("./listeners/SerialListener");
 
 // crontab classes
 var DeleteExpired = require("./crontabs/DeleteExpired");
@@ -54,4 +56,6 @@ io.on("connection", (socket) => {
   new AccountListener(socket, dbConn);
   new MarkerListener(socket, dbConn);
   new LeaderboardListener(socket, dbConn);
+  new EmailListener(socket, dbConn);
+  new SerialListener(socket, dbConn);
 });

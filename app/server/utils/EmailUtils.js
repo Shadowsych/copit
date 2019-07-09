@@ -6,7 +6,7 @@ var emailServiceConfig = require("../../../config/email/email_service.json");
 
 class EmailUtils {
   // send an email to the email service
-  static async sendEmail(from, to, subject, html) {
+  static async sendEmail(to, subject, html) {
     // create an email transporter
     let transporter = nodemailer.createTransport({
       host: emailServiceConfig.host,
@@ -20,7 +20,7 @@ class EmailUtils {
 
     // setup the mail options
     let mailOptions = {
-      from: from,
+      from: emailServiceConfig.user,
       to: to,
       subject: subject,
       html: html

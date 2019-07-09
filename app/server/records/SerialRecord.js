@@ -24,7 +24,7 @@ class SerialRecord {
   }
 
   // return a promise to get a serial key for an email
-  static async getSerial(dbConn, email, serial) {
+  static async getSerial(dbConn, email) {
     return new Promise((resolve, reject) => {
       // create a prepared statement to get a serial key from the email
       let query = "SELECT serial FROM SerialRecord WHERE email=?";

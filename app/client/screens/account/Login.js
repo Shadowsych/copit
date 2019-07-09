@@ -1,14 +1,17 @@
 // react packages
 import React from "react";
-import Constants from 'expo-constants'
+import Constants from "expo-constants";
 import {NavigationActions, Header as NavHeader} from "react-navigation";
 
 // styling packages
 import {StyleSheet, AsyncStorage, Dimensions, Image, TouchableOpacity,
   SafeAreaView, KeyboardAvoidingView, Alert, Text, View} from "react-native";
-import {Input, Icon, Button} from "react-native-elements";
+import {Input, Icon, Overlay, Button} from "react-native-elements";
 import * as Animatable from 'react-native-animatable';
 import Spinner from 'react-native-loading-spinner-overlay';
+
+// component classes
+import ForgotPassword from "../../components/account/ForgotPassword";
 
 // config packages
 import guestConfig from "../../../../config/accounts/guest.json";
@@ -55,6 +58,7 @@ const styles = StyleSheet.create({
   },
   text_btn_container: {
     flex: 0.075,
+    flexDirection: "row",
     justifyContent: "center",
     alignItems: "center"
   },
@@ -66,7 +70,14 @@ const styles = StyleSheet.create({
   guest_btn_text: {
     color: "#C0C0C0",
     fontSize: 16,
-    fontFamily: "ubuntu-regular"
+    fontFamily: "ubuntu-regular",
+    marginRight: 5
+  },
+  forgot_password_btn_text: {
+    color: "#C0C0C0",
+    fontSize: 16,
+    fontFamily: "ubuntu-regular",
+    marginLeft: 5
   }
 });
 
@@ -76,6 +87,7 @@ class Login extends React.Component {
     super(props);
     this.state = {
       loading: false,
+      forgot_password_visible: false,
       email: "",
       password: "",
       failed_email_text: "",
@@ -121,6 +133,16 @@ class Login extends React.Component {
     return (
       <SafeAreaView style={styles.container}>
         <Spinner visible={this.state.loading} />
+        <Overlay
+          animationType="fade"
+          borderRadius={20}
+          transparent={true}
+          isVisible={this.state.forgot_password_visible}
+          height="75%"
+          onBackdropPress={() => this.setState({forgot_password_visible: false})}>
+          <ForgotPassword loadHomePage={this.loadHomePage.bind(this)}
+            socket={this.props.navigation.state.params.socket} />
+        </Overlay>
         <View style={styles.header_spacing} />
         <View style={styles.logo_container}>
           <Animatable.Image
@@ -134,6 +156,7 @@ class Login extends React.Component {
             containerStyle={styles.input_text_container}
             inputStyle={styles.input_text}
             placeholder="Email"
+            maxLength={256}
             onChangeText={(text) => this.setState({email: text})}
             errorMessage={this.state.failed_email_text}
             rightIcon={
@@ -143,6 +166,7 @@ class Login extends React.Component {
             containerStyle={styles.input_text_container}
             inputStyle={styles.input_text}
             placeholder="Password"
+            maxLength={256}
             secureTextEntry={true}
             onChangeText={(text) => this.setState({password: text})}
             errorMessage={this.state.failed_password_text}
@@ -158,10 +182,14 @@ class Login extends React.Component {
           style={styles.text_btn_container}>
           <Text style={styles.register_btn_text}>New to our app? Register Here.</Text>
         </TouchableOpacity>
-        <TouchableOpacity activeOpacity={0.8}
-          onPress={() => this.loginGuest()}
-          style={styles.text_btn_container}>
-          <Text style={styles.guest_btn_text}>Login as Guest</Text>
+        <TouchableOpacity activeOpacity={0.8} style={styles.text_btn_container}>
+          <Text onPress={() => this.loginGuest()} style={styles.guest_btn_text}>
+            Login as Guest
+          </Text>
+          <Text onPress={() => this.setState({forgot_password_visible: true})}
+            style={styles.forgot_password_btn_text}>
+            Forgot Password
+          </Text>
         </TouchableOpacity>
       </SafeAreaView>
     );

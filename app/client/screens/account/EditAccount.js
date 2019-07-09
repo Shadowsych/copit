@@ -186,6 +186,7 @@ class EditAccount extends React.Component {
             containerStyle={styles.input_text_container}
             inputStyle={styles.input_text}
             placeholder="New Profile Name*"
+            maxLength={256}
             value={this.state.name}
             onChangeText={(text) => this.setState({name: text})}
             rightIcon={
@@ -195,6 +196,7 @@ class EditAccount extends React.Component {
             containerStyle={styles.input_text_container}
             inputStyle={styles.input_text}
             placeholder="New Email*"
+            maxLength={256}
             value={this.state.email}
             onChangeText={(text) => this.setState({email: text})}
             errorMessage={this.state.failed_email_text}
@@ -205,6 +207,7 @@ class EditAccount extends React.Component {
             containerStyle={styles.input_text_container}
             inputStyle={styles.input_text}
             placeholder="New Password"
+            maxLength={256}
             secureTextEntry={true}
             onChangeText={(text) => this.setState({password: text})}
             errorMessage={this.state.failed_password_text}
@@ -215,6 +218,7 @@ class EditAccount extends React.Component {
             containerStyle={styles.input_text_container}
             inputStyle={styles.input_text}
             placeholder="Confirm New Password"
+            maxLength={256}
             secureTextEntry={true}
             onChangeText={(text) => this.setState({confirm_password: text})}
             errorMessage={this.state.failed_password_text}
