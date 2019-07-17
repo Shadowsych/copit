@@ -86,9 +86,9 @@ class Pings extends React.Component {
           </View>
           <View style={styles.row}>
             <View style={styles.column}>
-              <Icon reverse name="percent" onPress={() => this.goPingPage("Discounts")}
-                type="feather" color="#3E9C35" size={48} />
-              <Text style={styles.icon_text}>Discounts</Text>
+              <Icon reverse name="ios-american-football" onPress={() => this.goPingPage("Sports")}
+                type="ionicon" color="#3E9C35" size={48} />
+              <Text style={styles.icon_text}>Sports</Text>
             </View>
             <View style={styles.column}>
               <Icon reverse name="drink" onPress={() => this.goPingPage("Party")}

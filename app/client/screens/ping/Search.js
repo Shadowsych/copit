@@ -157,8 +157,8 @@ class Search extends React.Component {
               type="material-community" color="#E4181B" size={22} />
             <Icon reverse name="school" onPress={() => this.updateSearch("School")}
               type="material-community" color="#FF7A1D" size={22} />
-            <Icon reverse name="percent" onPress={() => this.updateSearch("Discounts")}
-              type="feather" color="#3E9C35" size={22} />
+            <Icon reverse name="ios-american-football" onPress={() => this.updateSearch("Sports")}
+              type="ionicon" color="#3E9C35" size={22} />
             <Icon reverse name="drink" onPress={() => this.updateSearch("Party")}
               type="entypo" color="#BD8DE3" size={22} />
             <Icon reverse name="calendar" onPress={() => this.updateSearch("Org Events")}

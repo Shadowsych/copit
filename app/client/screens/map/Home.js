@@ -259,8 +259,8 @@ class Home extends React.Component {
       return <Icon name="tshirt-crew-outline" type="material-community" color="#E4181B" size={40} />;
     } else if(category == "School") {
       return <Icon name="school" type="material-community" color="#FF7A1D" size={40} />;
-    } else if(category == "Discounts") {
-      return <Icon name="percent" type="feather" color="#3E9C35" size={40} />;
+    } else if(category == "Sports") {
+      return <Icon name="ios-american-football" type="ionicon" color="#3E9C35" size={40} />;
     } else if(category == "Party") {
       return <Icon name="drink" type="entypo" color="#BD8DE3" size={40} />;
     } else if(category == "Org Events") {
