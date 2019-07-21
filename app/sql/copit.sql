@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jul 08, 2019 at 01:43 PM
+-- Generation Time: Jul 21, 2019 at 11:13 AM
 -- Server version: 8.0.16
 -- PHP Version: 7.2.19-0ubuntu0.18.04.1
 
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `frea`
+-- Database: `copit`
 --
 
 -- --------------------------------------------------------

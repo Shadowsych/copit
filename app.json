@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Frea",
-    "slug": "frea",
+    "name": "Copit",
+    "slug": "copit",
     "privacy": "public",
     "sdkVersion": "33.0.0",
     "platforms": [
@@ -19,11 +19,11 @@
       "**/*"
     ],
     "ios": {
-      "bundleIdentifier": "com.freatech.frea",
+      "bundleIdentifier": "com.freatech.copit",
       "supportsTablet": true
     },
     "android": {
-      "package": "com.freatech.frea",
+      "package": "com.freatech.copit",
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyBXmDByqwhGhD4lYY-pIvu-t8h17rS-1d8"
