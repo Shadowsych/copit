@@ -1,9 +1,9 @@
 {
-  "serverDomain": "http://172.16.128.129",
+  "serverDomain": "http://34.66.31.83",
   "serverPort": "3000",
-  "dbHost": "localhost",
+  "dbHost": "34.67.81.72",
   "dbPort": "3306",
   "dbUser": "root",
-  "dbPassword": "root",
+  "dbPassword": "",
   "dbName": "copit"
 }
