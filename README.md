@@ -1,3 +1,5 @@
+<img src="assets/icon.png" height="20%" width="20%"></img>
+
 # Copit
 An IOS and Android app that notifies people of freebies, events, parties, and many other things that are nearby their area.
 
